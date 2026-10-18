@@ -2256,7 +2256,6 @@ legacy_icons_backup="$HOME/.local/share/applications/icons.omarchy-upgrade-to-qu
 if [[ -d $legacy_icons_dir ]]; then
   mkdir -p "$legacy_icons_backup"
   for icon in \
-    Basecamp.png \
     Battle.net.png \
     ChatGPT.png \
     Cliamp.png \

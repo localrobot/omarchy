@@ -8,7 +8,6 @@ system_shims_dir = "~/.local/share/mise/shims"
 # Agent CLIs update themselves before they run, at most once every four hours (mise auto_update).
 [tools]
 antigravity-cli = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
-basecamp = { version = "latest", lazy = true, minimum_release_age = "0s" }
 claude = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
 codex = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
 copilot = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }

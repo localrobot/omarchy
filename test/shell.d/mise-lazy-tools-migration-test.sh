@@ -56,7 +56,6 @@ EOF
 }
 
 write_wrapper cursor-agent cursor-agent
-write_wrapper github:basecamp/basecamp-cli basecamp
 write_wrapper 'http:muse[url=https://api.meta.ai/muse-launcher.sh,bin=muse,version_list_url=https://api.meta.ai/muse-code/channels/muse-stable,version_json_path=.version]' muse
 write_wrapper codex codex
 write_wrapper npm:playwright playwright
@@ -71,7 +70,7 @@ chmod +x "$test_home/.local/bin/hunk"
 
 bash -euo pipefail "$ROOT/migrations/1791382872.sh" >/dev/null
 
-for command in codex playwright omp agy cf cursor-agent basecamp muse; do
+for command in codex playwright omp agy cf cursor-agent muse; do
   [[ ! -e $test_home/.local/bin/$command ]] || fail "lazy-tool migration removes the recognized $command wrapper"
 done
 grep -Fx 'echo user-owned' "$test_home/.local/bin/hunk" >/dev/null || fail "lazy-tool migration preserves a user-owned command"
