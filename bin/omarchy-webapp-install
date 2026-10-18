@@ -195,7 +195,7 @@ elif [[ -f $ICON_REF ]]; then
   ICON_VALUE=$(install_user_icon "$ICON_REF" "$(safe_icon_name "$APP_NAME")")
 else
   # Bundled Omarchy icons are package-owned under /usr/share/icons/hicolor.
-  # Accept either "HEY" or the historical "HEY.png" argument form.
+  # Accept either "Discord" or the historical "Discord.png" argument form.
   ICON_VALUE=$(icon_name_from_ref "$ICON_REF")
 fi
 
@@ -236,7 +236,7 @@ fi
 
 # Floating titlebars name the window after this entry rather than its page
 # title, and the dock finds the entry for its windows by it. A custom Exec,
-# such as HEY's mailto handler, still opens the web app at this URL.
+# such as a mailto handler, still opens the web app at this URL.
 if [[ -n $APP_URL ]]; then
   printf 'StartupWMClass=%s\n' "$(desktop_string_escape "$(omarchy-webapp-window-class "$APP_URL")")" >>"$DESKTOP_FILE"
 fi

@@ -14,12 +14,6 @@ When you're in a web app, you can copy the current URL to the clipboard using `S
 
 By default, Omarchy already ships with an assortment of default apps:
 
-## HEY
-
-[HEY](https://www.hey.com/) is an email and calendar service that serves as a great alternative to people tired of Gmail, Outlook, or Apple Mail. It's made by [37signals](https://37signals.com/) where Omarchy originated.
-
-You can start HEY Email using `Super + Shift + E`, jump straight to composing a new email using `Super + Shift + Alt + E`, and start HEY Calendar using `Super + Shift + C`.
-
 ## ChatGPT
 
 [ChatGPT](https://chatgpt.com) is the most popular AI chat bot in the world.

@@ -28,7 +28,7 @@ Do not add handwritten wrappers for ordinary tools. Hermes keeps its custom inst
 
 ## Choose the registry name
 
-Before adding a GitHub- or Aqua-backed tool, run `mise registry <name>` and inspect the result. The tool name and command may differ: `hey-cli` provides `hey`, for example.
+Before adding a GitHub- or Aqua-backed tool, run `mise registry <name>` and inspect the result. The tool name and command may differ: `oh-my-pi` provides `omp`, for example.
 
 Use the registry shorthand instead of an explicit `github:` or `aqua:` backend. Shorthands let mise use <https://mise-versions.jdx.dev> for cached version and public GitHub release metadata, reducing GitHub API requests during installation and updates.
 

@@ -16,7 +16,6 @@ cursor-agent = { version = "latest", lazy = true, auto_update = "4h", minimum_re
 gh = { version = "latest", lazy = true, minimum_release_age = "0s" }
 ghui = { version = "latest", lazy = true, minimum_release_age = "0s" }
 grok = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
-hey-cli = { version = "latest", lazy = true, minimum_release_age = "0s" }
 hunk = { version = "latest", lazy = true, minimum_release_age = "0s" }
 muse = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
 node = { version = "latest", lazy = true, minimum_release_age = "0s" }

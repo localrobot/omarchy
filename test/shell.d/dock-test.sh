@@ -85,12 +85,12 @@ assertDeepEqual(
 
 const terminalEntries = [
   { id: 'nvim', execString: 'nvim %F', command: ['nvim', '%F'], runInTerminal: true },
-  { id: 'HEY TUI', execString: 'xdg-terminal-exec --app-id=org.omarchy.hey -e hey tui', command: ['xdg-terminal-exec', '--app-id=org.omarchy.hey', '-e', 'hey', 'tui'], runInTerminal: false },
+  { id: 'Mail TUI', execString: 'xdg-terminal-exec --app-id=org.omarchy.mail -e mail tui', command: ['xdg-terminal-exec', '--app-id=org.omarchy.mail', '-e', 'mail', 'tui'], runInTerminal: false },
   { id: 'btop', execString: '/usr/bin/btop', command: ['/usr/bin/btop'], runInTerminal: true }
 ]
 assertEqual(dock.claimingEntryId('org.omarchy.nvim', terminalEntries), 'nvim', 'dock gives Neovim launched by the TUI launcher its own entry')
 assertEqual(dock.claimingEntryId('org.omarchy.btop', terminalEntries), 'btop', 'dock matches a terminal entry by its program name')
-assertEqual(dock.claimingEntryId('org.omarchy.hey', terminalEntries), 'HEY TUI', 'dock matches an entry that hands the terminal its app id')
+assertEqual(dock.claimingEntryId('org.omarchy.mail', terminalEntries), 'Mail TUI', 'dock matches an entry that hands the terminal its app id')
 assertEqual(dock.claimingEntryId('org.omarchy.agent', terminalEntries), '', 'dock leaves an app id no entry claims unclaimed')
 assertEqual(dock.claimingEntryId('Alacritty', terminalEntries), '', 'dock leaves a terminal of its own to its own entry')
 

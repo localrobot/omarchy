@@ -31,7 +31,7 @@ icons_dir="$tmp_dir/home/.local/share/icons/hicolor/256x256/apps"
 # the message: creating the launcher directly in the applications directory
 # already makes the redirect fail on its own, so a bare non-zero exit would pass
 # just as well with no validation at all.
-output=$(run_install "http://example.test/oops" "https://example.com" hey 2>&1) &&
+output=$(run_install "http://example.test/oops" "https://example.com" generic 2>&1) &&
   fail "webapp install rejects a name containing a slash"
 [[ $output == *"App name cannot contain '/'"* ]] ||
   fail "webapp install says why it refused a slashed name" "$output"
@@ -41,7 +41,7 @@ pass "webapp install rejects a name that would nest the launcher"
 
 # The name was a path fragment until something said otherwise, so ../ climbed
 # out of the applications directory entirely and wrote wherever it landed.
-if run_install "../../../../escaped" "https://example.com" hey >/dev/null 2>&1; then
+if run_install "../../../../escaped" "https://example.com" generic >/dev/null 2>&1; then
   fail "webapp install rejects a name that climbs out of the applications directory"
 fi
 [[ -e "$tmp_dir/escaped.desktop" ]] &&
@@ -92,7 +92,7 @@ fi
 pass "webapp install refuses a slashed name before fetching its icon"
 
 # A normal name still installs and removes.
-run_install "Example App" "https://example.com" hey >/dev/null
+run_install "Example App" "https://example.com" generic >/dev/null
 [[ -f "$apps_dir/Example App.desktop" ]] ||
   fail "webapp install writes the launcher for an ordinary name"
 run_remove "Example App" >/dev/null

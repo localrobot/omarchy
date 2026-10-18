@@ -257,7 +257,7 @@ omarchy-agent-account-rename claude main Personal >/dev/null
   fail "the primary account can be renamed and keeps ~/.claude"
 omarchy-agent-account-rename claude personal Main >/dev/null
 # `primary` reaches the first login whatever it's called, as the manual says.
-omarchy-agent-account-rename claude primary Hey >/dev/null ||
+omarchy-agent-account-rename claude primary Custom >/dev/null ||
   fail "primary names the primary account"
 omarchy-agent-account-rename claude primary Main >/dev/null
 [[ $(omarchy-agent-account-list claude --json | jq -r '.[0].accounts[] | select(.primary) | .id') == "main" ]] ||

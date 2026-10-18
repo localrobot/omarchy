@@ -2267,7 +2267,6 @@ if [[ -d $legacy_icons_dir ]]; then
     "Google Maps.png" \
     "Google Messages.png" \
     "Google Photos.png" \
-    HEY.png \
     imv.png \
     "Retro Gaming.png" \
     WhatsApp.png \
@@ -2294,9 +2293,6 @@ if command -v update-desktop-database >/dev/null 2>&1; then
 fi
 if command -v xdg-settings >/dev/null 2>&1; then
   env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser chromium.desktop || true
-fi
-if command -v xdg-mime >/dev/null 2>&1; then
-  xdg-mime default HEY.desktop x-scheme-handler/mailto || true
 fi
 
 # This script is fetched from the branch and runs against whatever packaged
