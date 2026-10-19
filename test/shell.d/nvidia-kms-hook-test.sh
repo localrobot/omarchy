@@ -84,6 +84,11 @@ write_pci_devices 0x1002:0x030000 0x10de:0x030200
 assert_hooks "hybrid system keeps kms for the iGPU" \
   "$nvidia_modules" "$with_kms"
 
+# Workstation dedicated compute setup: AMD iGPU display and compute-only NVIDIA modules (no nvidia_drm)
+write_pci_devices 0x1002:0x030000 0x10de:0x030000
+assert_hooks "workstation compute-only modules without nvidia_drm keep kms" \
+  "amdgpu nvidia nvidia_uvm" "$with_kms"
+
 # NVIDIA audio function only: no display controller found.
 write_pci_devices 0x10de:0x040300
 assert_hooks "no display controller found keeps kms" \

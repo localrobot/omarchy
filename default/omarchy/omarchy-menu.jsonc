@@ -132,7 +132,6 @@
   "trigger.tests": {"icon":"󰓅","label":"Speed Test"},
   "trigger.hardware.laptop-display": {"icon":"󰛧","label":"Laptop Display","when":"omarchy-hw-laptop","action":"omarchy-hyprland-monitor-internal toggle"},
   "trigger.hardware.mirror-display": {"icon":"󰍹","label":"Mirror Display","when":"omarchy-hw-laptop","action":"omarchy-hyprland-monitor-internal-mirror toggle"},
-  "trigger.hardware.hybrid-gpu": {"icon":"","label":"Hybrid GPU","when":"omarchy-hw-hybrid-gpu","action":"omarchy-launch-floating-terminal-with-presentation omarchy-toggle-hybrid-gpu"},
   "trigger.hardware.touchpad": {"icon":"󰟸","label":"Touchpad","when":"omarchy-hw-touchpad","action":"omarchy-toggle-touchpad"},
   "trigger.hardware.touchscreen": {"icon":"󰆽","label":"Touchscreen","when":"omarchy-hw-touchscreen","action":"omarchy-toggle-touchscreen"},
   "trigger.reminder.set": {"icon":"󰢌","label":"Set one","aliases":["reminder-set","remind"],"action":"omarchy-reminder -i"},
