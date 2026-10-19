@@ -39,9 +39,7 @@ The manual lives in [`manual/`](manual/), which is its authoritative source.
 - [Browsers](manual/23-browsers.md)
 - [Commercial apps/services](manual/24-commercial-apps-services.md)
 - [Web Apps](manual/25-web-apps.md)
-- [Gaming](manual/26-gaming.md)
 - [Filling out PDFs](manual/27-filling-out-pdfs.md)
-- [Windows VM](manual/28-windows-vm.md)
 - [Other Packages](manual/29-other-packages.md)
 
 **Configuration**

@@ -117,10 +117,9 @@ run_remove "127.0.0.1:4000" >/dev/null
   fail "webapp remove deletes a launcher left nested by an older install"
 pass "webapp remove reaches a nested legacy launcher"
 
-# Removing by name on a machine with no applications directory yet must stay
-# quiet: omarchy-remove-gaming-xbox-cloud calls it without hiding stderr.
+# Removing by name on a machine with no applications directory yet must stay quiet.
 noise=$(HOME="$tmp_dir/empty" PATH="$tmp_dir/bin:$PATH" OMARCHY_REMOVE_NOTIFY=false \
-  "$ROOT/bin/omarchy-webapp-remove" "Xbox Cloud Gaming" 2>&1 >/dev/null)
+  "$ROOT/bin/omarchy-webapp-remove" "Test Web App" 2>&1 >/dev/null)
 [[ -n $noise ]] &&
   fail "webapp remove stays quiet with no applications directory" "$noise"
 pass "webapp remove stays quiet when there is no applications directory"

@@ -19,10 +19,10 @@ group `theme` and name `set`, with remaining hyphens becoming spaces
 Every command registers two routes: the canonical route `omarchy <group>
 <name>` after metadata overrides, and the filename route with *all* hyphens
 turned to spaces. When metadata moves nothing, they are the same route. When it
-does, both keep working — `# omarchy:name=gaming xbox-cloud` on
-`omarchy-install-gaming-xbox-cloud` keeps the hyphen inside the name, so
-`omarchy install gaming xbox-cloud` is canonical while the filename route
-`omarchy install gaming xbox cloud` still resolves. An explicitly *empty* `#
+does, both keep working — `# omarchy:name=dev-env` on
+`omarchy-install-dev-env` keeps the hyphen inside the name, so
+`omarchy install dev-env` is canonical while the filename route
+`omarchy install dev env` still resolves. An explicitly *empty* `#
 omarchy:name=` makes a command the root of its group: `omarchy-menu-share` sets
 `group=share` and an empty name, so its canonical route is `omarchy share`
 while `omarchy menu share` remains as the filename route. Alias routes register

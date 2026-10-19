@@ -37,7 +37,7 @@ mkdir -p "$stub_bin" "$omarchy_path/install/helpers" "$omarchy_path/config"
 printf 'browser_policy_setup_dir() { :; }\nbrowser_policy_setup_firefox_distribution() { :; }\nas_root() { "$@"; }\n' \
   >"$omarchy_path/install/helpers/browser-policy.sh"
 cp "$ROOT/config/chromium-flags.conf" "$omarchy_path/config/"
-for command in omarchy-pkg-add omarchy-pkg-aur-add omarchy-pkg-drop omarchy-install-gaming-gpu-lib32; do
+for command in omarchy-pkg-add omarchy-pkg-aur-add omarchy-pkg-drop; do
   printf '#!/bin/bash\nprintf "%%s %%s\\n" "%s" "$*" >>"%s"\n' "$command" "$tmp/calls" >"$stub_bin/$command"
 done
 for command in omarchy-install-chromium-copy-url omarchy-install-chromium-ytdlp omarchy-theme-set-browser setsid; do
@@ -88,57 +88,3 @@ for browser in chromium brave-origin zen; do
 done
 rm -f "$tmp/fail"
 pass "x86: browser installs run no hook, even with Mac entrypoints on disk"
-
-# ── Steam ────────────────────────────────────────────────────────────────────
-
-run apple "$ROOT/bin/omarchy-install-gaming-steam" || fail "apple: Steam installs" "$(cat "$tmp/output")"
-[[ $(cat "$tmp/calls") == $'omarchy-install-gaming-gpu-lib32 \nomarchy-pkg-add steam\npost-install steam' ]] ||
-  fail "apple: Steam's hook runs after the 32-bit drivers and the package" "$(cat "$tmp/calls")"
-run apple "$ROOT/bin/omarchy-remove-gaming-steam" || fail "apple: Steam is removed" "$(cat "$tmp/output")"
-[[ $(head -n 2 "$tmp/calls") == $'pre-remove steam\nomarchy-pkg-drop steam' ]] ||
-  fail "apple: Steam's pre-remove hook runs before the package goes" "$(cat "$tmp/calls")"
-touch "$tmp/fail"
-if run apple "$ROOT/bin/omarchy-install-gaming-steam"; then
-  fail "apple: a failed Steam hook fails the install"
-fi
-if run apple "$ROOT/bin/omarchy-remove-gaming-steam"; then
-  fail "apple: a failed pre-remove hook stops the removal"
-fi
-! grep -q '^omarchy-pkg-drop' "$tmp/calls" || fail "apple: a failed pre-remove hook removes nothing" "$(cat "$tmp/calls")"
-pass "apple: Steam's install and removal run their hooks in order, and fail with them"
-
-run x86 "$ROOT/bin/omarchy-install-gaming-steam" || fail "x86: Steam installs" "$(cat "$tmp/output")"
-[[ $(cat "$tmp/calls") == $'omarchy-install-gaming-gpu-lib32 \nomarchy-pkg-add steam' ]] ||
-  fail "x86: Steam installs as before" "$(cat "$tmp/calls")"
-run x86 "$ROOT/bin/omarchy-remove-gaming-steam" || fail "x86: Steam is removed" "$(cat "$tmp/output")"
-[[ $(cat "$tmp/calls") == "omarchy-pkg-drop steam" ]] || fail "x86: Steam is removed as before" "$(cat "$tmp/calls")"
-rm -f "$tmp/fail"
-pass "x86: Steam installs and is removed as before, running no hook"
-
-# ── 32-bit drivers ───────────────────────────────────────────────────────────
-
-# Without an Intel, AMD or NVIDIA GPU there is nothing to add, which must not
-# fail the Steam install that asked.
-gpu_bin=$tmp/gpu-bin
-mkdir -p "$gpu_bin"
-printf '#!/bin/bash\necho "00:02.0 VGA compatible controller: %s"\n' '${GPU:-Apple Inc. AGX}' >"$gpu_bin/lspci"
-printf '#!/bin/bash\nexit "${ARCH_X86:-0}"\n' >"$gpu_bin/omarchy-hw-x86"
-printf '#!/bin/bash\nexit 1\n' >"$gpu_bin/omarchy-hw-nvidia-gsp"
-printf '#!/bin/bash\nexit 1\n' >"$gpu_bin/omarchy-hw-nvidia-without-gsp"
-printf '#!/bin/bash\necho "omarchy-pkg-add $*" >>"%s"\n' "$tmp/calls" >"$gpu_bin/omarchy-pkg-add"
-chmod +x "$gpu_bin"/*
-rm -f "$tmp/calls"
-PATH="$gpu_bin:$PATH" bash "$ROOT/bin/omarchy-install-gaming-gpu-lib32" >"$tmp/output" 2>&1 ||
-  fail "no supported GPU is not a failure" "$(cat "$tmp/output")"
-[[ ! -e $tmp/calls ]] || fail "no supported GPU installs nothing" "$(cat "$tmp/calls")"
-GPU="Advanced Micro Devices, Inc. [AMD/ATI] Navi 31" PATH="$gpu_bin:$PATH" bash "$ROOT/bin/omarchy-install-gaming-gpu-lib32" >/dev/null 2>&1 ||
-  fail "an AMD GPU installs its 32-bit driver"
-[[ $(cat "$tmp/calls") == "omarchy-pkg-add lib32-vulkan-radeon" ]] || fail "an AMD GPU gets lib32-vulkan-radeon" "$(cat "$tmp/calls")"
-pass "32-bit drivers: a machine with no supported GPU adds nothing without failing"
-
-# Multilib only exists on x86_64; an ARM machine runs the native arm64 Steam.
-rm -f "$tmp/calls"
-ARCH_X86=1 GPU="Advanced Micro Devices, Inc. [AMD/ATI] Navi 31" PATH="$gpu_bin:$PATH" bash "$ROOT/bin/omarchy-install-gaming-gpu-lib32" >/dev/null 2>&1 ||
-  fail "aarch64 skips the 32-bit drivers without failing"
-[[ ! -e $tmp/calls ]] || fail "aarch64 installs no 32-bit driver" "$(cat "$tmp/calls")"
-pass "32-bit drivers: aarch64 adds none, even with a supported GPU"

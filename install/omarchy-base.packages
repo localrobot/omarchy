@@ -25,7 +25,6 @@ docker
 docker-buildx
 docker-compose
 dosfstools
-dotnet-runtime
 evince
 exfatprogs
 expac
@@ -55,7 +54,6 @@ gpu-screen-recorder
 gum
 gvfs-mtp
 gvfs-nfs
-gvfs-smb
 herdr
 hype
 hyprland
@@ -84,7 +82,6 @@ man-db
 mariadb-libs
 mise-bin
 monologue
-moonlight-qt
 mpv
 mpv-mpris
 nautilus
@@ -97,7 +94,6 @@ nss-mdns
 nvim
 obsidian
 omacalc
-omacut
 omawrite
 omarchy-nvim
 omarchy-hyprland-titlebars

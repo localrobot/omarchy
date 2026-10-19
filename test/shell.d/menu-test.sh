@@ -306,7 +306,7 @@ assert(!defaultById['install.ai.crush'], 'menu removes Crush from Install > AI')
 // web player where its client can't run, so it never hides. Any other `when:`
 // here is a row that went back to vanishing once installed.
 const windowsGuard = 'omarchy-hw-x86'
-const x86OnlyInstalls = ['install.windows', 'install.browser.edge', 'install.gaming.minecraft', 'install.gaming.heroic', 'install.gaming.geforce-now', 'install.gaming.battlenet', 'install.gaming.lutris']
+const x86OnlyInstalls = ['install.browser.edge']
 const fourKPageGuard = '[[ $(getconf PAGESIZE) == 4096 ]]'
 assertDeepEqual(
   defaultItems
@@ -318,7 +318,7 @@ assertDeepEqual(
 )
 assert(
   x86OnlyInstalls.every(id => defaultById[id].when === windowsGuard),
-  'menu hides the Windows VM and the x86_64-only installers only off x86_64'
+  'menu hides the x86_64-only installers only off x86_64'
 )
 assertEqual(
   defaultById['install.service.dropbox'].when,
@@ -331,7 +331,7 @@ assert(
   'menu offers Spotify on every platform and dims it once its client or web player is installed'
 )
 assert(
-  ['install.browser.zen', 'install.editor.vscode', 'install.gaming.steam', 'install.development.rust', 'install.windows'].every(
+  ['install.browser.zen', 'install.editor.vscode', 'install.development.rust'].every(
     id => defaultById[id].disabled && (!defaultById[id].when || defaultById[id].when === windowsGuard)
   ),
   'menu dims the Install rows for software that is already installed'
@@ -364,11 +364,9 @@ assertDeepEqual(
     'remove.service',
     'remove.development',
     'remove.theme',
-    'remove.gaming',
     'remove.browser',
     'remove.webapp',
     'remove.tui',
-    'remove.windows',
     'remove.preinstalls',
     'remove.security'
   ],

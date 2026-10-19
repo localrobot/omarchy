@@ -61,8 +61,6 @@
         "bin/omarchy-update-boot",
         "bin/omarchy-drive-password",
         "bin/omarchy-install-browser",
-        "bin/omarchy-install-gaming-steam",
-        "bin/omarchy-remove-gaming-steam",
         "install/provisioning/**",
         "install/hardware/platform-setup.sh",
         "install/user/platform-setup.sh"
