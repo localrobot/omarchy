@@ -32,30 +32,6 @@ You can start Grok using `Super + Shift + Alt + A`.
 
 You can start WhatsApp using `Super + Shift + Alt + G`.
 
-## Google apps
-
-Google Messages, Google Photos, Google Maps, and Google Contacts are all included as web apps too.
-
-You can start Google Messages using `Super + Shift + Ctrl + G`, Google Photos using `Super + Shift + P`, and Google Maps using `Super + Shift + Alt + S`. Google Contacts is available through the app launcher (`Super + Space`).
-
-## X
-
-X is where news break.
-
-You can start X using `Super + Shift + X` and go straight to writing a new post with `Super + Shift + Alt + X`.
-
-## YouTube
-
-[YouTube](https://youtube.com/) is the most popular video platform in the world.
-
-You can start YouTube using `Super + Shift + Y`.
-
-## Zoom
-
-[Zoom](https://zoom.us/) is the most popular video chat system used in the US. Great connections across the world. And 40-minute meetings can be held without a paying account. Omarchy wraps Zoom's web client, and zoom meeting links will open straight into it.
-
-You start Zoom using the application launcher (`Super + Space`).
-
 ## Microsoft apps
 
 Select _Install > Service > Microsoft_ to add Outlook, Word, Excel, PowerPoint, Teams, and OneDrive as web apps. Each app has its own launcher and opens directly, using the commercial Microsoft 365 URLs and your existing browser profile. They open in the same browser app windows as Omarchy's other web apps; they do not install the separate Teams for Linux client.

@@ -37,7 +37,7 @@ pass "webapp install names the window Chromium opens, so titlebars can show the 
 
 for case in \
   "https://web.whatsapp.com/|chrome-web.whatsapp.com__-Default" \
-  "https://maps.google.com|chrome-maps.google.com__-Default" \
+  "https://openstreetmap.org|chrome-openstreetmap.org__-Default" \
   "https://slack.com/channels/@me|chrome-slack.com__channels_@me-Default" \
   "https://Example.com:8443/a/b?x=1#y|chrome-example.com__a_b-Default"; do
   [[ $("$ROOT/bin/omarchy-webapp-window-class" "${case%%|*}") == "${case#*|}" ]] ||

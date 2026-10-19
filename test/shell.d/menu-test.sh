@@ -746,15 +746,15 @@ const nonAppItems = {
 const nonAppOrder = ['root', 'apps']
 const appRowsFor = ids => ids.map(id => ({ id: `apps.${id}`, kind: 'app', parent: 'apps', label: id, appId: id }))
 
-const firstMerge = menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['alacritty', 'youtube']))
+const firstMerge = menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['alacritty', 'firefox']))
 assert(
-  firstMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.youtube',
+  firstMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox',
   'app merge appends app rows after the static menu items'
 )
 
-const secondMerge = menu.mergeAppRows(firstMerge.items, firstMerge.itemOrder, appRowsFor(['alacritty', 'youtube']))
+const secondMerge = menu.mergeAppRows(firstMerge.items, firstMerge.itemOrder, appRowsFor(['alacritty', 'firefox']))
 assert(
-  secondMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.youtube',
+  secondMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox',
   'repeating the app merge with the same entries does not duplicate rows'
 )
 
@@ -765,23 +765,23 @@ assert(
 )
 
 assert(
-  menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['youtube', 'youtube'])).itemOrder.join(',')
-    === 'root,apps,apps.youtube',
+  menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['firefox', 'firefox'])).itemOrder.join(',')
+    === 'root,apps,apps.firefox',
   'app merge lists an app once even when two desktop entries share an id'
 )
 
 const orphanedItems = {}
 for (const key in firstMerge.items) orphanedItems[key] = firstMerge.items[key]
-delete orphanedItems['apps.youtube']
-const healed = menu.mergeAppRows(orphanedItems, firstMerge.itemOrder, appRowsFor(['alacritty', 'youtube']))
+delete orphanedItems['apps.firefox']
+const healed = menu.mergeAppRows(orphanedItems, firstMerge.itemOrder, appRowsFor(['alacritty', 'firefox']))
 assert(
-  healed.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.youtube'
-    && !!healed.items['apps.youtube'],
+  healed.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox'
+    && !!healed.items['apps.firefox'],
   'app merge heals an order entry whose item went missing instead of duplicating it'
 )
 
 assert(
-  !firstMerge.items['apps.youtube'].hasOwnProperty('__probe')
+  !firstMerge.items['apps.firefox'].hasOwnProperty('__probe')
     && (() => {
       const before = Object.keys(nonAppItems).length
       menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['gimp']))

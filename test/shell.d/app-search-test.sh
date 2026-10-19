@@ -12,11 +12,11 @@ const appLibraryQml = fs.readFileSync(path.join(root, 'shell/services/AppLibrary
 
 const entries = [
   {
-    name: 'Google Contacts',
+    name: 'GNOME Contacts',
     genericName: 'Address Book',
     comment: 'Manage contacts',
     keywords: ['contacts', 'address book', 'people'],
-    id: 'google-contacts.desktop'
+    id: 'org.gnome.Contacts.desktop'
   },
   {
     name: 'Calculator',
@@ -64,7 +64,7 @@ for (const query of ['', 'hermes']) {
 }
 
 const contactMatches = search.sortedEntries(entries, 'contact').map(row => search.entryName(row.entry))
-assertDeepEqual(contactMatches, ['Google Contacts'], 'contact search only returns direct contact matches')
+assertDeepEqual(contactMatches, ['GNOME Contacts'], 'contact search only returns direct contact matches')
 
 assert(
   search.fuzzyScore(entries[1], 'contact') < 0,
@@ -72,7 +72,7 @@ assert(
 )
 
 const acronymMatches = search.sortedEntries(entries, 'gc').map(row => search.entryName(row.entry))
-assertEqual(acronymMatches[0], 'Google Contacts', 'short acronym matching still works')
+assertEqual(acronymMatches[0], 'GNOME Contacts', 'short acronym matching still works')
 
 const directMatches = search.sortedEntries(entries, 'obs').map(row => search.entryName(row.entry))
 assertEqual(directMatches[0], 'OBS Studio', 'direct app-name matching still works')

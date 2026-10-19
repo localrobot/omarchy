@@ -26,7 +26,6 @@ If you hold down `Super` and use the mouse to click on a window, you'll be able 
 
 You close a window on `Super + W` or `Super + Q` (and close all windows on `Ctrl + Alt + Delete`).
 
-You can also go full screen with `Super + F` or even just full-width (keeping the top bar) with `Super + Alt + F` or full-screen within a window with `Super + Ctrl + F` (good for YouTube!).
 
 ### Dwindle vs scrolling layout
 

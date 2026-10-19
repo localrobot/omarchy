@@ -918,7 +918,6 @@ remove_retired_default_packages() {
     wiremix
     wl-screenrec
     yay-bin-debug
-    zoom
   )
 
   log "Removing packages retired from the Omarchy quattro default install"
@@ -2262,17 +2261,10 @@ if [[ -d $legacy_icons_dir ]]; then
     "Disk Usage.png" \
     Docker.png \
     GitHub.png \
-    "Google Contacts.png" \
-    "Google Maps.png" \
-    "Google Messages.png" \
-    "Google Photos.png" \
     imv.png \
     "Retro Gaming.png" \
     WhatsApp.png \
-    windows.png \
-    X.png \
-    YouTube.png \
-    Zoom.png; do
+    windows.png; do
     if [[ -e $legacy_icons_dir/$icon ]]; then
       mv -f "$legacy_icons_dir/$icon" "$legacy_icons_backup/"
     fi

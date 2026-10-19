@@ -17,7 +17,7 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "wayland")
 hl.env("OZONE_PLATFORM", "wayland")
 hl.env("XDG_SESSION_TYPE", "wayland")
 
--- Allow better support for screen sharing (Google Meet, Zoom, etc).
+-- Allow better support for screen sharing (Google Meet, etc).
 hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
 hl.env("XDG_SESSION_DESKTOP", "Hyprland")
 
