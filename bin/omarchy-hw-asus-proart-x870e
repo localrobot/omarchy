@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# omarchy:summary=Detect ASUS ProArt X870E-CREATOR WIFI motherboard.
+
+omarchy-hw-match "ProArt X870E"

@@ -136,7 +136,7 @@ assert_output_contains "hardware group includes touchpad" "$output" "omarchy hw 
 
 output=$("$CLI" hw asus)
 assert_output_contains "partial hardware prefix renders matching commands" "$output" "omarchy hw asus rog"
-assert_output_contains "partial hardware prefix includes nested match" "$output" "omarchy hw asus zenbook ux5406aa"
+assert_output_contains "partial hardware prefix includes nested match" "$output" "omarchy hw asus proart x870e"
 
 # omarchy-agent takes only flags, so a word after it names the account
 # commands rather than reaching the agent launcher.

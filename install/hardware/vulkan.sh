@@ -1,25 +1,6 @@
-# Install Vulkan drivers matching detected GPU hardware
-# (NVIDIA Vulkan is handled by nvidia.sh via nvidia-utils)
+# Install Vulkan driver for AMD Radeon display GPU
+# (NVIDIA card is dedicated to CUDA/AI compute and invisible to graphics)
 
-declare -A VULKAN_DRIVERS=(
-  [Intel]=vulkan-intel
-  [AMD]=vulkan-radeon
-  [Apple]=vulkan-asahi
-)
-
-PACKAGES=()
-
-for vendor in "${!VULKAN_DRIVERS[@]}"; do
-  if lspci | grep -iE "(VGA|Display).*$vendor" > /dev/null; then
-    PACKAGES+=("${VULKAN_DRIVERS[$vendor]}")
-  fi
-done
-
-# Adreno GPUs are platform devices, so lspci never sees them.
-if omarchy-hw-aarch64-qualcomm; then
-  PACKAGES+=(vulkan-freedreno)
-fi
-
-if (( ${#PACKAGES[@]} > 0 )); then
-  omarchy-pkg-add "${PACKAGES[@]}"
+if lspci | grep -iE "(VGA|Display).*AMD" > /dev/null; then
+  omarchy-pkg-add vulkan-radeon
 fi
