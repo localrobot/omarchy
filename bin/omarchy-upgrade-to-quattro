@@ -2259,7 +2259,6 @@ if [[ -d $legacy_icons_dir ]]; then
     Battle.net.png \
     ChatGPT.png \
     Cliamp.png \
-    Discord.png \
     "Disk Usage.png" \
     Docker.png \
     GitHub.png \

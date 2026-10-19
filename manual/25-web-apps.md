@@ -56,12 +56,6 @@ You can start YouTube using `Super + Shift + Y`.
 
 You start Zoom using the application launcher (`Super + Space`).
 
-## Discord
-
-[Discord](https://discord.com/) is where most gaming and open source communities hang out, including [Omarchy's own](https://discord.gg/tXFUdasqhY).
-
-You start Discord using the application launcher (`Super + Space`).
-
 ## Microsoft apps
 
 Select _Install > Service > Microsoft_ to add Outlook, Word, Excel, PowerPoint, Teams, and OneDrive as web apps. Each app has its own launcher and opens directly, using the commercial Microsoft 365 URLs and your existing browser profile. They open in the same browser app windows as Omarchy's other web apps; they do not install the separate Teams for Linux client.
