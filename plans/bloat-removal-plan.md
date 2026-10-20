@@ -1,0 +1,214 @@
+# Bloat Removal Plan: 9 Discrete Execution Blocks
+
+This document defines the 9 discrete execution blocks to eliminate non-workstation bloat from `bin/`, configuration trees, and test suites for the ASUS ProArt X870E and RTX 5060 Ti workstation. Each block is self-contained, keeps the codebase coherent, prunes dead code and dead tests simultaneously, and maintains green test suite passes at every step.
+
+Documentation overhead across these blocks is minimal because `manual/`, `.github/`, `.greptile/`, and upstream plans have already been purged. Only internal architecture references in `AGENTS.md` and `docs/file-layout.md` are updated where applicable.
+
+---
+
+## Execution Sequence
+
+```mermaid
+flowchart TD
+  B1["Block 1: Foreign Architectures & Pacman Templates"] --> B2["Block 2: Laptops, Battery & Lid Power Subsystems"]
+  B2 --> B3["Block 3: Touchpads, Touchscreens & Mobile Input"]
+  B3 --> B4["Block 4: Biometric Authentication (Fingerprint & FIDO2)"]
+  B4 --> B5["Block 5: Commercial Apps & 3rd-Party Services"]
+  B5 --> B6["Block 6: Proprietary AI Models & Account Switchers"]
+  B6 --> B7["Block 7: Dead Audio Tuning & Unused Dev Environments"]
+  B7 --> B8["Block 8: Chromium-to-Chrome Cleanup & Renaming"]
+  B8 --> B9["Block 9: Final Pass & Comprehensive Verification"]
+```
+
+---
+
+### Block 1: Foreign Architectures & Pacman Templates
+
+- **Objective**: Remove ARM, Apple Silicon, Qualcomm Snapdragon, and NVIDIA N1x/GB10 detectors, helpers, and repository templates.
+- **Files to Remove**:
+  - `bin/omarchy-hw-aarch64`
+  - `bin/omarchy-hw-aarch64-apple`
+  - `bin/omarchy-hw-aarch64-qualcomm`
+  - `bin/omarchy-hw-aarch64-n1x`
+  - `bin/omarchy-hw-aarch64-gb10`
+  - `bin/omarchy-hw-apple-silicon`
+  - `bin/omarchy-hw-n1x`
+  - `bin/omarchy-hw-mac`
+  - `bin/omarchy-hw-x86` (streamline to unconditional 0 / x86 native)
+  - `bin/omarchy-hw-match-device-tree`
+  - `bin/omarchy-brightness-display-apple`
+  - `bin/omarchy-hyprland-monitor-focused-apple`
+  - `default/pacman/aarch64/`
+  - `default/pacman/aarch64-apple/`
+- **Code Paths & Helpers to Update**:
+  - `bin/omarchy-hw-platform`: streamline to return `x86` directly.
+  - `bin/omarchy-hw-x86`: streamline to return 0.
+  - `install/helpers/pacman.sh`: remove ARM template resolution, point directly to `default/pacman`.
+  - `AGENTS.md`: align platform section with x86 workstation focus.
+- **Tests to Prune / Align**:
+  - `test/shell.d/pacman-templates-test.sh` (drop ARM template tests)
+  - `test/shell.d/channel-sudo-boundary-test.sh` (drop ARM template fixtures)
+  - `test/shell.d/hw-platform-test.sh` & `test/shell.d/hw-match-device-tree-test.sh`
+  - `test/shell.d/mkinitcpio-apple-drop-ins-test.sh`
+  - `test/shell.d/brightness-display-apple-cache-test.sh`
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 2: Laptops, Battery & Lid Power Subsystems
+
+- **Objective**: Purge mobile laptop battery telemetry, low-power alerts, and lid-switch event handlers.
+- **Files to Remove**:
+  - `bin/omarchy-hw-laptop`
+  - `bin/omarchy-hw-laptop-closed`
+  - `bin/omarchy-battery-low`
+  - `bin/omarchy-battery-present`
+  - `bin/omarchy-battery-status`
+  - `bin/omarchy-power-present`
+  - `bin/omarchy-system-lid-close`
+  - `bin/omarchy-system-lid-inhibit`
+- **Code Paths & Helpers to Update**:
+  - `default/hypr/bindings/`: remove `switch:on:Lid Switch` binds.
+  - Shell / Top-bar battery modules: verify desktop bypass.
+- **Tests to Prune / Align**:
+  - `test/shell.d/battery-present-test.sh`
+  - `test/shell.d/battery-status-test.sh`
+  - `test/shell.d/battery-test.sh`
+  - `test/shell.d/power-present-test.sh`
+  - `test/shell.d/power-no-battery-test.sh`
+  - `test/shell.d/hw-laptop-test.sh`
+  - `test/shell.d/lid-close-test.sh`
+  - `test/shell.d/lid-inhibit-test.sh`
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 3: Touchpads, Touchscreens & Mobile Input
+
+- **Objective**: Remove trackpad and touchscreen toggle scripts, gestures, and hotkeys.
+- **Files to Remove**:
+  - `bin/omarchy-hw-touchpad`
+  - `bin/omarchy-hw-touchscreen`
+  - `bin/omarchy-toggle-touchpad`
+  - `bin/omarchy-toggle-touchscreen`
+- **Code Paths & Helpers to Update**:
+  - `default/omarchy/omarchy-menu.jsonc`: prune toggle touchpad/touchscreen rows.
+  - `default/hypr/bindings/`: remove touchpad toggle hotkeys.
+- **Tests to Prune / Align**:
+  - `test/shell.d/hw-touchpad-test.sh`
+  - `test/shell.d/toggle-input-device-test.sh`
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 4: Biometric Authentication (Fingerprint & FIDO2)
+
+- **Objective**: Purge `fprintd` hardware helpers, fingerprint PAM enrollment tools, and FIDO2 setup scripts.
+- **Files to Remove**:
+  - `bin/omarchy-hw-fingerprint`
+  - `bin/omarchy-security-fingerprint*` (enroll, clear, status, users)
+  - `bin/omarchy-security-fido2*`
+  - `bin/omarchy-setup-security-fingerprint`
+  - `bin/omarchy-setup-security-fido2`
+  - `bin/omarchy-remove-security-fingerprint`
+  - `bin/omarchy-remove-security-fido2`
+- **Code Paths & Helpers to Update**:
+  - `default/omarchy/omarchy-menu.jsonc`: remove fingerprint/FIDO2 menu rows.
+  - `etc/pam.d/`: ensure no dangling fprintd PAM configuration.
+- **Tests to Prune / Align**:
+  - `test/shell.d/hw-fingerprint-test.sh`
+  - `test/shell.d/fingerprint-invitation-test.sh`
+  - `test/shell.d/fingerprint-package-test.sh`
+  - `test/shell.d/fprintd-resume-hook-test.sh`
+  - `test/shell.d/lock-fingerprint-*.sh`
+  - `test/shell.d/security-fingerprint-remove-test.sh`
+  - `test/shell.d/security-fido2-*.sh`
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 5: Commercial Apps & 3rd-Party Proprietary Services
+
+- **Objective**: Remove proprietary third-party commercial sync tools and streaming host services.
+- **Files to Remove**:
+  - `bin/omarchy-install-service-dropbox`, `bin/omarchy-remove-service-dropbox`
+  - `bin/omarchy-install-service-spotify`
+  - `bin/omarchy-install-service-nordvpn`
+  - `bin/omarchy-install-service-signal`
+  - `bin/omarchy-install-service-sunshine`, `bin/omarchy-remove-service-sunshine`
+- **Code Paths & Helpers to Update**:
+  - `default/omarchy/omarchy-menu.jsonc`: remove entries for Dropbox, Spotify, NordVPN, Signal, Sunshine.
+- **Tests to Prune / Align**:
+  - `test/shell.d/dropbox-test.sh`
+  - `test/shell.d/menu-test.sh` (remove Dropbox row assertions)
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 6: Proprietary AI Models, Account Switchers & Redundant Runtimes
+
+- **Objective**: Keep strictly `antigravity-cli` (system default), `opencode` (universal harness), and `llama-server`. Purge multi-account quota rotation scripts and redundant agent wrappers.
+- **Files to Remove**:
+  - Multi-account rotation: `bin/omarchy-agent-account-*` (10 scripts: `add`, `copy`, `exec`, `home`, `list`, `mode`, `remove`, `rename`, `state`, `transfer`, `use`)
+  - Quota scanners: `bin/omarchy-agent-usage-fireworks`, `bin/omarchy-agent-usage-kimi`, `bin/omarchy-agent-usage-update`
+  - Unused AI installers & removers:
+    - `bin/omarchy-install-ai-chatgpt`, `bin/omarchy-remove-ai-chatgpt`
+    - `bin/omarchy-install-ai-claude`, `bin/omarchy-remove-ai-claude`
+    - `bin/omarchy-remove-ai-grok-bot`
+    - `bin/omarchy-install-ai-hermes`, `bin/omarchy-remove-ai-hermes`, `bin/omarchy-install-hermes-cli`
+    - `bin/omarchy-install-ai-openclaw`, `bin/omarchy-remove-ai-openclaw`, `bin/omarchy-install-openclaw-cli`
+- **Code Paths & Helpers to Update**:
+  - `default/omarchy/omarchy-menu.jsonc`: prune account-switch options.
+- **Tests to Prune / Align**:
+  - `test/shell.d/agent-account-*.sh` (5 tests)
+  - `test/shell.d/agent-usage-*.sh` (4 tests)
+  - `test/shell.d/remove-ai-test.sh`
+  - `test/shell.d/openclaw-*.sh` (2 tests)
+  - `test/shell.d/hermes-*.sh` (4 tests)
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 7: Dead Audio Tuning & Unused Dev Environments
+
+- **Objective**: Remove obsolete laptop speaker filter chains and prune unused esoteric language environments.
+- **Files to Remove**:
+  - `bin/omarchy-audio-tuning`
+  - `default/audio/filter-chain-host.conf`
+  - `docs/audio-tuning.md`
+- **Code Paths & Helpers to Update**:
+  - `bin/omarchy-install-dev-env`: prune esoteric/unused language setups (PHP, Laravel, Symfony, OCaml, Elixir, Phoenix, Clojure, Scala, .NET), keeping modern workstation core (Rust, Go, Python/uv, Node/Bun/Deno, Java/Zig).
+- **Tests to Prune / Align**:
+  - Prune dead audio tuning tests and align dev environment CLI assertions.
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 8: Chromium-to-Chrome Cleanup & File Renaming
+
+- **Objective**: Complete the transition from Chromium to Google Chrome across filesystem assets, native messaging hosts, and scripts.
+- **Renames & Refactoring**:
+  - Rename `default/chromium/` -> `default/chrome/`
+  - Rename `bin/omarchy-install-chromium-copy-url` -> `bin/omarchy-install-chrome-copy-url`
+  - Rename `bin/omarchy-install-chromium-ytdlp` -> `bin/omarchy-install-chrome-ytdlp`
+  - Rename `bin/omarchy-chromium-copy-url-host` -> `bin/omarchy-chrome-copy-url-host`
+  - Rename `bin/omarchy-chromium-ytdlp-host` -> `bin/omarchy-chrome-ytdlp-host`
+  - Delete `bin/omarchy-install-chromium-claude`
+  - Update `config/chrome-flags.conf` to load extensions from `/usr/share/omarchy/default/chrome/extensions/...`
+  - Update `bin/omarchy-install-browser` and `bin/omarchy-refresh-chrome`
+  - Update native messaging host JSON definitions.
+- **Tests to Prune / Align**:
+  - Update `test/shell.d/chromium-*.sh` tests -> `chrome-*.sh`
+  - Update browser launch tests in `test/shell.d/launch-browser-test.sh`.
+- **Verification**: `./test/cli`.
+
+---
+
+### Block 9: Final Pass & Comprehensive Verification
+
+- **Objective**: Perform an end-to-end audit to ensure the repository is completely green and dead-code free.
+- **Actions**:
+  - Run `omarchy commands --check` to ensure every remaining CLI command has valid metadata and routing.
+  - Run `./test/cli` (120 test suites).
+  - Verify 0 broken symlinks (`find . -xtype l`).
+  - Verify clean `git status`.
