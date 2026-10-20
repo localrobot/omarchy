@@ -22,7 +22,7 @@ cat >"$mock_bin/omarchy-font-set" <<'SH'
 printf 'font:%s\n' "$*" >>"$OMARCHY_TEST_LOG"
 SH
 
-for command in omarchy-pkg-aur-add omarchy-install-emacs omazed omarchy-theme-set-vscode omarchy-lifecycle-dispatch; do
+for command in omarchy-pkg-aur-add omarchy-theme-set-vscode omarchy-lifecycle-dispatch; do
   cat >"$mock_bin/$command" <<'SH'
 #!/bin/bash
 exit 0
@@ -71,9 +71,7 @@ assert_detached_installer_launch() {
   pass "$script detaches its scoped desktop-entry launch"
 }
 
-assert_detached_installer_launch omarchy-install-editor-emacs emacsclient
 assert_detached_installer_launch omarchy-install-editor-vscode code
-assert_detached_installer_launch omarchy-install-editor-zed dev.zed.Zed
 
 bash "$ROOT/bin/omarchy-install-and-launch" "Example App" "alpha beta" "Disk Usage"
 presentation_command=$(<"$OMARCHY_TEST_PRESENTATION")

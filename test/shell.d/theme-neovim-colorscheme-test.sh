@@ -10,6 +10,6 @@ if matches=$(grep -rn 'catppuccin-nvim' "$ROOT/themes/"); then
 fi
 pass "stock themes avoid the newer-only catppuccin colorscheme name"
 
-grep -Fq 'colorscheme = "catppuccin-mocha"' "$ROOT/themes/catppuccin/neovim.lua" ||
-  fail "catppuccin theme uses its flavour colorscheme"
-pass "catppuccin theme uses its flavour colorscheme"
+grep -Fq 'colorscheme = "everforest"' "$ROOT/themes/everforest/neovim.lua" ||
+  fail "everforest theme uses its colorscheme"
+pass "everforest theme uses its colorscheme"

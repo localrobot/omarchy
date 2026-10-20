@@ -28,9 +28,9 @@ assertDeepEqual(dock.pinnedIds({ pinned: [] }, { pinned: ['obsidian'] }), [], 'd
 
 const app = (key, id, extra) => Object.assign({ key, id, hasEntry: true, workspaceId: 3 }, extra)
 const items = dock.buildItems(['google-chrome', 'foot'], [
-  app('signal', 1),
+  app('nautilus', 1),
   app('google-chrome', 2),
-  app('signal', 3),
+  app('nautilus', 3),
   app('org.omarchy.agent', 4, { hasEntry: false }),
   app('foot', 5, { workspaceId: -98 })
 ])
@@ -39,7 +39,7 @@ assertDeepEqual(
   [
     ['google-chrome', true, [2]],
     ['foot', true, []],
-    ['signal', false, [1, 3]]
+    ['nautilus', false, [1, 3]]
   ],
   'dock lists pinned apps first, then running apps grouped by app, leaving out helpers and special workspaces'
 )
@@ -54,32 +54,32 @@ assertEqual(dock.dropIndex(2, 85, 40, 6), 4, 'dock lands a dragged app as many s
 assertEqual(dock.dropIndex(2, -500, 40, 6), 0, 'dock lands an app dragged past the start in the first slot')
 assertEqual(dock.dropIndex(2, 500, 40, 6), 5, 'dock lands an app dragged past the end in the last slot')
 
-const allPins = ['google-chrome', 'foot', 'obsidian-not-installed', 'signal']
-const pinned = { 'google-chrome': true, foot: true, signal: true }
+const allPins = ['google-chrome', 'foot', 'obsidian-not-installed', 'nautilus']
+const pinned = { 'google-chrome': true, foot: true, nautilus: true }
 assertDeepEqual(
-  dock.pinsInOrder(['signal', 'google-chrome', 'foot', 'imv'], pinned, allPins),
-  ['signal', 'google-chrome', 'foot', 'obsidian-not-installed'],
+  dock.pinsInOrder(['nautilus', 'google-chrome', 'foot', 'imv'], pinned, allPins),
+  ['nautilus', 'google-chrome', 'foot', 'obsidian-not-installed'],
   'dock saves pins in its order, keeping pins it does not show'
 )
 assertDeepEqual(
-  dock.pinsInOrder(['google-chrome', 'imv', 'foot', 'signal'], Object.assign({ imv: true }, pinned), allPins),
-  ['google-chrome', 'imv', 'foot', 'signal', 'obsidian-not-installed'],
+  dock.pinsInOrder(['google-chrome', 'imv', 'foot', 'nautilus'], Object.assign({ imv: true }, pinned), allPins),
+  ['google-chrome', 'imv', 'foot', 'nautilus', 'obsidian-not-installed'],
   'dock pins a running app dragged in among the pins'
 )
 
 assertDeepEqual(
-  dock.orderWithKeyAt(['google-chrome', 'foot', 'signal'], 'obsidian', 1),
-  ['google-chrome', 'obsidian', 'foot', 'signal'],
+  dock.orderWithKeyAt(['google-chrome', 'foot', 'nautilus'], 'obsidian', 1),
+  ['google-chrome', 'obsidian', 'foot', 'nautilus'],
   'dock puts an app dropped from the app grid where it lands'
 )
 assertDeepEqual(
-  dock.orderWithKeyAt(['google-chrome', 'foot', 'signal'], 'google-chrome', 2),
-  ['foot', 'signal', 'google-chrome'],
+  dock.orderWithKeyAt(['google-chrome', 'foot', 'nautilus'], 'google-chrome', 2),
+  ['foot', 'nautilus', 'google-chrome'],
   'dock moves an app it already shows to where it is dropped'
 )
 assertDeepEqual(
-  dock.orderWithKeyAt(['google-chrome', 'imv', 'signal'], 'imv', 3),
-  ['google-chrome', 'signal', 'imv'],
+  dock.orderWithKeyAt(['google-chrome', 'imv', 'nautilus'], 'imv', 3),
+  ['google-chrome', 'nautilus', 'imv'],
   'dock puts an app kept in the dock at the end'
 )
 
@@ -95,8 +95,8 @@ assertEqual(dock.claimingEntryId('org.omarchy.agent', terminalEntries), '', 'doc
 assertEqual(dock.claimingEntryId('foot', terminalEntries), '', 'dock leaves a terminal of its own to its own entry')
 
 assertDeepEqual(
-  dock.orderItems([{ key: 'google-chrome' }, { key: 'signal' }, { key: 'imv' }, { key: 'foot' }], ['imv', 'gone', 'google-chrome']).map(item => item.key),
-  ['imv', 'google-chrome', 'signal', 'foot'],
+  dock.orderItems([{ key: 'google-chrome' }, { key: 'nautilus' }, { key: 'imv' }, { key: 'foot' }], ['imv', 'gone', 'google-chrome']).map(item => item.key),
+  ['imv', 'google-chrome', 'nautilus', 'foot'],
   'dock keeps its own order, with apps that join going at the end'
 )
 const foot = [
@@ -142,8 +142,8 @@ jq -e '
   fail "dock pins and unpins apps once each" "$(cat "$home/.config/omarchy/shell.json")"
 pass "dock pins and unpins apps through omarchy-dock"
 
-omarchy_dock pinned signal google-chrome.desktop signal >/dev/null
-[[ $(omarchy_dock pinned | paste -sd ' ') == "signal google-chrome" ]] ||
+omarchy_dock pinned nautilus google-chrome.desktop nautilus >/dev/null
+[[ $(omarchy_dock pinned | paste -sd ' ') == "nautilus google-chrome" ]] ||
   fail "dock pin order is set in one go" "$(cat "$home/.config/omarchy/shell.json")"
 pass "dock pin order is set through omarchy-dock pinned"
 

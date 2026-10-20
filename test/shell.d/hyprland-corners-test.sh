@@ -52,10 +52,11 @@ HOME="$home_dir" XDG_STATE_HOME="$state_home" OMARCHY_PATH="$ROOT" PATH="$stub_d
 [[ $(HOME="$home_dir" XDG_STATE_HOME="$state_home" PATH="$ROOT/bin:$PATH" omarchy-hyprland-corners) == "sharp" ]] || fail "corners are read from XDG_STATE_HOME"
 pass "corners follow XDG_STATE_HOME"
 
-# Rounded corners are Solitude's, so the two must not drift apart.
-[[ $(grep -E '^\s*rounding(_power)? =' "$ROOT/default/hypr/toggles/corners-rounded.lua") == "$(grep -E '^\s*rounding(_power)? =' "$ROOT/themes/solitude/hyprland.lua")" ]] ||
-  fail "rounded corners match Solitude's"
-pass "rounded corners match Solitude's"
+# Rounded corners configure rounding and rounding_power.
+grep -E '^\s*rounding = 6' "$ROOT/default/hypr/toggles/corners-rounded.lua" >/dev/null && \
+grep -E '^\s*rounding_power = 3' "$ROOT/default/hypr/toggles/corners-rounded.lua" >/dev/null || \
+  fail "rounded corners configure rounding and rounding_power"
+pass "rounded corners configure rounding and rounding_power"
 
 # A failed save keeps the corners already chosen.
 run omarchy-hyprland-corners rounded

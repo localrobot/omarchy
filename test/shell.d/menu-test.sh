@@ -154,12 +154,12 @@ const defaultById = Object.fromEntries(defaultItems.map(item => [item.id, item])
 const rankBase = menu.mergeMenuSources(defaultItems, [])
 const ranked = menu.mergeAppRows(rankBase.items, rankBase.itemOrder, [
   { id: 'apps.fontforge', parent: 'apps', kind: 'app', label: 'FontForge', description: '', aliases: [] },
-  { id: 'apps.zed', parent: 'apps', kind: 'app', label: 'Zed', description: '', aliases: [] }
+  { id: 'apps.vscode', parent: 'apps', kind: 'app', label: 'VSCode', description: '', aliases: [] }
 ])
 const rankScore = (id, query) => menu.searchScore(ranked.items, ranked.items[id], query)
 assert(
-  ['install.editor.zed'].every(
-    id => rankScore('apps.zed', 'zed') < rankScore(id, 'zed')
+  ['install.editor.vscode'].every(
+    id => rankScore('apps.vscode', 'vscode') < rankScore(id, 'vscode')
   ),
   'menu ranks an app matching the query as a whole word above exact-labeled menu entries'
 )
