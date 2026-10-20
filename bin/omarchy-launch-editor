@@ -18,20 +18,14 @@ else
   editor="nvim"
 fi
 
-# sublime-text-4 ships `subl` on PATH, not `sublime_text`.
-[[ $editor == sublime_text ]] && editor=subl
-
 omarchy-cmd-present "$editor" || editor="nvim"
 
-case "${editor##*/}" in
-nvim | vim | nano | micro | fresh)
+if [[ ${editor##*/} == "nvim" ]]; then
   if [[ $inline == "true" ]]; then
     exec "$editor" -- "$@"
   else
     exec omarchy-launch-tui "$editor" -- "$@"
   fi
-  ;;
-*)
+else
   exec setsid uwsm-app -- "$editor" -- "$@"
-  ;;
-esac
+fi

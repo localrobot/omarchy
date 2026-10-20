@@ -479,18 +479,6 @@
   "setup.default.editor.vscode": {
     "label": "VSCode"
   },
-  "setup.default.editor.zed": {
-    "label": "Zed"
-  },
-  "setup.default.editor.sublime": {
-    "label": "Sublime Text"
-  },
-  "setup.default.editor.vim": {
-    "label": "Vim"
-  },
-  "setup.default.editor.emacs": {
-    "label": "Emacs"
-  },
   "setup.plugin": {
     "label": "Plugins"
   },
@@ -604,18 +592,6 @@
   },
   "install.editor.vscode": {
     "label": "VSCode"
-  },
-  "install.editor.zed": {
-    "label": "Zed"
-  },
-  "install.editor.sublime": {
-    "label": "Sublime Text"
-  },
-  "install.editor.vim": {
-    "label": "Vim"
-  },
-  "install.editor.emacs": {
-    "label": "Emacs"
   },
   "install.terminal.foot": {
     "label": "Foot"

@@ -87,8 +87,6 @@ omarchy-install-editor-*)
   printf 'editor:%s\n' "$editor" >>"$OMARCHY_TEST_INSTALL_LOG"
   case $editor in
   vscode) command=code ;;
-  zed) command=zeditor ;;
-  emacs) command=emacs ;;
   esac
   ;;
 esac
@@ -102,9 +100,7 @@ for installer in \
   omarchy-pkg-aur-add \
   omarchy-install-browser \
   omarchy-install-terminal \
-  omarchy-install-editor-vscode \
-  omarchy-install-editor-zed \
-  omarchy-install-editor-emacs; do
+  omarchy-install-editor-vscode; do
   ln -s omarchy-test-installer "$mock_bin/$installer"
 done
 for setup_command in \
@@ -151,10 +147,6 @@ terminal_cases=(
 
 editor_cases=(
   'code code editor:vscode'
-  'zed zeditor editor:zed'
-  'sublime_text subl pkg:sublime-text-4'
-  'vim vim pkg:vim'
-  'emacs emacs editor:emacs'
   'nvim nvim pkg:neovim'
 )
 
@@ -242,9 +234,14 @@ fi
 pass "omarchy-default-terminal rejects unsupported terminals"
 
 previous_editor=$(omarchy-default-editor)
-rm -f "$installed_dir/vim"
-if OMARCHY_TEST_INSTALL_FAIL=true omarchy-default-editor --install vim >"$test_tmp/install-failure" 2>&1; then
+rm -f "$installed_dir/code"
+if OMARCHY_TEST_INSTALL_FAIL=true omarchy-default-editor --install code >"$test_tmp/install-failure" 2>&1; then
   fail "failed default installation returns an error"
 fi
 [[ $(omarchy-default-editor) == "$previous_editor" ]] || fail "failed installation preserves the default"
 pass "failed installation preserves the current default"
+
+if omarchy-default-editor zed 2>/dev/null; then
+  fail "omarchy-default-editor rejects unsupported editors"
+fi
+pass "omarchy-default-editor rejects unsupported editors"

@@ -262,7 +262,7 @@ assertDeepEqual(
 )
 const expectedDefaults = {
   terminal: ['Foot'],
-  editor: ['Neovim', 'VSCode', 'Zed', 'Sublime Text', 'Vim', 'Emacs'],
+  editor: ['Neovim', 'VSCode'],
   dictation: ['Voxtype']
 }
 assert(

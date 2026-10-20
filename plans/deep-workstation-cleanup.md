@@ -74,28 +74,40 @@ flowchart TD
 
 ---
 
-### Track 2: Editor Consolidation (Sole Editors: `vscode` & `nvim`)
+### Track 2: Editor Consolidation (Sole Editors: `vscode` & `nvim`) [COMPLETED & VERIFIED]
 
+- **Status**: Completed & 100% Verified
 - **Objective**: Establish `visual-studio-code-bin` (`code`) as the exclusive graphical editor and `neovim` (`nvim`) as the exclusive terminal editor. Prune all files, menus, and scripts for `zed`, `emacs`, `sublime_text`, and legacy `vim`.
-- **Files to Physically Delete**:
+- **Files Deleted**:
   - `bin/omarchy-install-editor-zed`
   - `bin/omarchy-install-editor-emacs`
 - **Script Simplifications & Loop Flattening**:
   - `bin/omarchy-default-editor`:
-    - Prune `zed`, `sublime_text`, `vim`, `emacs` branches from case statements, usage strings, and install invocations.
+    - Pruned `zed`, `sublime_text`, `vim`, and `emacs` branches from case statements, usage strings, and install invocations.
     - Arguments restricted to `[code|nvim]`.
     - Query mode returns active editor or defaults to `nvim`.
   - `bin/omarchy-launch-editor`:
-    - Remove `sublime_text` / `subl` resolution branch.
-    - Streamline launcher case statement to `nvim` (terminal inline/tui launch) and `*` (`uwsm-app -- "$editor"` for GUI editors like VS Code).
+    - Removed `sublime_text` / `subl` resolution branch.
+    - Streamlined launcher to `nvim` (inline or via `omarchy-launch-tui`) and `*` (`setsid uwsm-app -- "$editor"` for GUI editors like VS Code).
   - `default/hypr/apps/system.lua`:
-    - Remove `sublime_text` from file dialog floating rule (`class = "(DesktopEditors|org.gnome.Nautilus)"`).
+    - Removed `sublime_text` from file dialog floating rule (`class = "(DesktopEditors|org.gnome.Nautilus)"`).
 - **Menu & i18n Definitions**:
   - `default/omarchy/omarchy-menu.jsonc`:
-    - Remove `setup.default.editor.zed`, `setup.default.editor.sublime`, `setup.default.editor.vim`, `setup.default.editor.emacs`.
-    - Remove `install.editor.zed`, `install.editor.sublime`, `install.editor.vim`, `install.editor.emacs`.
+    - Removed `setup.default.editor.zed`, `setup.default.editor.sublime`, `setup.default.editor.vim`, `setup.default.editor.emacs`.
+    - Removed `install.editor.zed`, `install.editor.sublime`, `install.editor.vim`, `install.editor.emacs`.
   - `default/i18n/en/menu.json`:
-    - Remove matching translations for zed, sublime, vim, and emacs editor entries.
+    - Removed matching translations for zed, sublime, vim, and emacs editor entries.
+- **Test Suite Alignment**:
+  - `test/shell.d/default-apps-test.sh`:
+    - Updated `editor_cases` to test `code` and `nvim` only.
+    - Added test that `omarchy-default-editor` rejects unsupported editors.
+  - `test/shell.d/menu-test.sh`:
+    - Updated `expectedDefaults.editor` to `['Neovim', 'VSCode']`.
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (381 commands).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Shell tests (`default-apps-test.sh`, `command-operand-boundaries-test.sh`): Passed 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 
