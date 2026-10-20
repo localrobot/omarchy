@@ -19,8 +19,8 @@ omarchy-pkg-aur-add google-chrome || exit 1
 browser_policy_setup_dir /etc/opt/chrome/policies/managed
 mkdir -p ~/.config
 cp -f "$OMARCHY_PATH/config/chrome-flags.conf" ~/.config/chrome-flags.conf
-omarchy-install-chromium-copy-url
-omarchy-install-chromium-ytdlp
+omarchy-install-chrome-copy-url
+omarchy-install-chrome-ytdlp
 omarchy-theme-set-browser
 omarchy-lifecycle-dispatch post-install chrome
 echo "Chrome browser installed."

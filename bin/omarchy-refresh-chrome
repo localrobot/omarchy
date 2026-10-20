@@ -8,6 +8,6 @@ CONFIG_FILE="$HOME/.config/chrome-flags.conf"
 omarchy-refresh-config chrome-flags.conf
 
 # Install/refresh the native messaging hosts used by the bundled extensions
-omarchy-install-chromium-copy-url
-omarchy-install-chromium-ytdlp
+omarchy-install-chrome-copy-url
+omarchy-install-chrome-ytdlp
 

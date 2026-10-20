@@ -22,15 +22,6 @@ menu_log="$test_tmp/menu"
 muse_login_log="$test_tmp/muse-login"
 mkdir -p "$mock_bin" "$test_home"
 
-cat >"$mock_bin/omarchy-install-chromium-claude" <<'SH'
-#!/bin/bash
-echo claude-extension >>"$OMARCHY_TEST_STUB_LOG"
-if [[ ${OMARCHY_TEST_EXTENSION_FAIL:-false} == "true" ]]; then
-  echo "Extension installation failed" >&2
-  exit 1
-fi
-SH
-
 cat >"$mock_bin/omarchy-notification-send" <<'SH'
 #!/bin/bash
 printf '%s\0' "$@" >>"$OMARCHY_TEST_NOTIFICATION_HISTORY"
@@ -255,8 +246,6 @@ for selection in "${!expected_agents[@]}"; do
   : >"$stub_log"
   OMARCHY_TEST_AGENT_INSTALLED=true omarchy-default-agent "$selection"
   [[ $(omarchy-default-agent) == $expected ]] || fail "default agent canonicalizes $selection"
-
-  [[ ! -s $stub_log ]] || fail "other agents do not install the Claude extension"
 
   mapfile -d '' -t mise_args <"$mise_log"
   [[ ${mise_args[0]} == "use" && ${mise_args[1]} == "-g" ]] ||

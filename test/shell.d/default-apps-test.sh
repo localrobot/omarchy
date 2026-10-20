@@ -108,8 +108,8 @@ for installer in \
   ln -s omarchy-test-installer "$mock_bin/$installer"
 done
 for setup_command in \
-  omarchy-install-chromium-copy-url \
-  omarchy-install-chromium-ytdlp \
+  omarchy-install-chrome-copy-url \
+  omarchy-install-chrome-ytdlp \
   omarchy-theme-set-browser; do
   ln -s omarchy-test-setup-call "$mock_bin/$setup_command"
 done
@@ -197,9 +197,9 @@ grep -Fxq 'sudo:install -d -m 0755 -o root -g root /etc/opt/chrome/policies/mana
   fail "Chrome browser installer creates a root-owned managed policy directory"
 grep -Fxq 'sudo:find /etc/opt/chrome/policies/managed -mindepth 1 -maxdepth 1 ! -user root -exec rm -rf -- {} +' "$setup_log" ||
   fail "Chrome browser installer drops non-root files from its policy directory"
-grep -Fxq 'omarchy-install-chromium-copy-url:' "$setup_log" ||
+grep -Fxq 'omarchy-install-chrome-copy-url:' "$setup_log" ||
   fail "Chrome browser installer registers the Copy URL host"
-grep -Fxq 'omarchy-install-chromium-ytdlp:' "$setup_log" ||
+grep -Fxq 'omarchy-install-chrome-ytdlp:' "$setup_log" ||
   fail "Chrome browser installer registers the yt-dlp host"
 grep -Fxq 'omarchy-theme-set-browser:' "$setup_log" ||
   fail "Chrome browser installer applies the current theme"

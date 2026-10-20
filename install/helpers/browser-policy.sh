@@ -84,7 +84,7 @@ browser_policy_setup_parents_for() {
 # would rewrite mimeapps.list behind Omarchy's back.
 browser_policy_install_defaults() {
   local policy_dir=$1
-  local policies=${2:-$OMARCHY_PATH/default/chromium/policies/omarchy.json}
+  local policies=${2:-$OMARCHY_PATH/default/chrome/policies/omarchy.json}
 
   as_root install -m 644 -o root -g root -T "$policies" "$policy_dir/omarchy.json"
 }

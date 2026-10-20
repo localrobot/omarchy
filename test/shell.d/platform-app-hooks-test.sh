@@ -40,7 +40,7 @@ cp "$ROOT/config/chrome-flags.conf" "$omarchy_path/config/"
 for command in omarchy-pkg-add omarchy-pkg-aur-add omarchy-pkg-drop; do
   printf '#!/bin/bash\nprintf "%%s %%s\\n" "%s" "$*" >>"%s"\n' "$command" "$tmp/calls" >"$stub_bin/$command"
 done
-for command in omarchy-install-chromium-copy-url omarchy-install-chromium-ytdlp omarchy-theme-set-browser setsid; do
+for command in omarchy-install-chrome-copy-url omarchy-install-chrome-ytdlp omarchy-theme-set-browser setsid; do
   printf '#!/bin/bash\nexit 0\n' >"$stub_bin/$command"
 done
 chmod +x "$stub_bin"/*

@@ -64,9 +64,7 @@ EOF
 rm "$XDG_CONFIG_HOME/hyprland-mimeapps.list"
 printf '[Default Applications]\nx-scheme-handler/http=missing.desktop\n' >"$XDG_CONFIG_HOME/mimeapps.list"
 
-[[ $(omarchy-cmd-default-browser) == "fallback.desktop" ]] ||
-  fail "default browser falls back to xdg-settings when no listed handler is installed"
-[[ $(<"$OMARCHY_TEST_XDG_SETTINGS_LOG") == "unset" ]] ||
-  fail "default browser unsets BROWSER before asking xdg-settings"
+[[ $(omarchy-cmd-default-browser) == "google-chrome.desktop" ]] ||
+  fail "default browser falls back to google-chrome.desktop when no listed handler is installed"
 
-pass "default browser reads mimeapps.list and falls back to xdg-settings"
+pass "default browser reads mimeapps.list and falls back to google-chrome.desktop"

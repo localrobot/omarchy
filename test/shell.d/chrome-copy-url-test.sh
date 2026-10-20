@@ -16,7 +16,7 @@ trap cleanup EXIT
 require_command jq
 require_command node
 
-copy_url_id=$(node - <<'JS' "$ROOT/default/chromium/extensions/copy-url/manifest.json"
+copy_url_id=$(node - <<'JS' "$ROOT/default/chrome/extensions/copy-url/manifest.json"
 const crypto = require('crypto')
 const fs = require('fs')
 
@@ -45,47 +45,46 @@ jq -e '
   (.permissions | index("clipboardWrite") | not) and
   (.permissions | index("offscreen") | not) and
   .background.service_worker == "background-4.js"
-' "$ROOT/default/chromium/extensions/copy-url/manifest.json" >/dev/null ||
+' "$ROOT/default/chrome/extensions/copy-url/manifest.json" >/dev/null ||
   fail "copy-url extension uses its native messaging host"
 grep -q "sendNativeMessage('com.omarchy.copy_url'" \
-  "$ROOT/default/chromium/extensions/copy-url/background-4.js" ||
+  "$ROOT/default/chrome/extensions/copy-url/background-4.js" ||
   fail "copy-url extension sends URLs to its native messaging host"
 pass "copy-url extension uses its native messaging host"
 
-jq -e '.action != null' "$ROOT/default/chromium/extensions/copy-url/manifest.json" >/dev/null &&
-  grep -q 'action.onClicked' "$ROOT/default/chromium/extensions/copy-url/"background-*.js ||
+jq -e '.action != null' "$ROOT/default/chrome/extensions/copy-url/manifest.json" >/dev/null &&
+  grep -q 'action.onClicked' "$ROOT/default/chrome/extensions/copy-url/"background-*.js ||
   fail "copy-url extension is clickable from the toolbar"
 pass "copy-url extension is clickable from the toolbar"
 
 TMPDIR=$(mktemp -d)
 test_home="$TMPDIR/home"
-native_manifest="$test_home/.config/chromium/NativeMessagingHosts/com.omarchy.copy_url.json"
+native_manifest="$test_home/.config/google-chrome/NativeMessagingHosts/com.omarchy.copy_url.json"
 
-HOME="$test_home" OMARCHY_PATH="$ROOT" omarchy-install-chromium-copy-url
+HOME="$test_home" OMARCHY_PATH="$ROOT" omarchy-install-chrome-copy-url
 
-[[ -f $native_manifest ]] || fail "copy-url native host installer creates fresh Chromium profile root"
-jq -e --arg path "$ROOT/bin/omarchy-chromium-copy-url-host" '
+[[ -f $native_manifest ]] || fail "copy-url native host installer creates fresh Chrome profile root"
+jq -e --arg path "$ROOT/bin/omarchy-chrome-copy-url-host" '
   .name == "com.omarchy.copy_url" and
   .path == $path and
   (.allowed_origins | index("chrome-extension://bgpiichlckmfanooecilcjemknkcpngb/"))
 ' "$native_manifest" >/dev/null || fail "copy-url native host manifest uses Omarchy host path and extension id"
 pass "copy-url native host installer registers the stable extension id"
 
-[[ -f $test_home/.config/BraveSoftware/Brave-Origin/NativeMessagingHosts/com.omarchy.copy_url.json ]] ||
-  fail "copy-url native host installer covers Brave Origin"
-pass "copy-url native host installer covers Brave Origin"
+[[ -f $test_home/.config/google-chrome-beta/NativeMessagingHosts/com.omarchy.copy_url.json ]] ||
+  fail "copy-url native host installer covers Chrome Beta"
+pass "copy-url native host installer covers Chrome Beta"
 
-# Chromium ships in the base packages, so fresh installs do not go through
-# omarchy-install-browser, and they mark every migration as already applied.
+# Google Chrome is configured in the user install.
 # The user install still has to register the host itself.
-grep -q 'user/chromium.sh' "$ROOT/install/user/all.sh" ||
-  fail "user install runs the Chromium native messaging host setup"
+grep -q 'user/chrome.sh' "$ROOT/install/user/all.sh" ||
+  fail "user install runs the Chrome native messaging host setup"
 
 fresh_home="$TMPDIR/fresh-install"
 HOME="$fresh_home" OMARCHY_PATH="$ROOT" PATH="$ROOT/bin:$PATH" \
-  bash -euo pipefail -c 'source "$ROOT/install/user/chromium.sh"'
+  bash -euo pipefail -c 'source "$ROOT/install/user/chrome.sh"'
 
-[[ -f $fresh_home/.config/chromium/NativeMessagingHosts/com.omarchy.copy_url.json ]] ||
+[[ -f $fresh_home/.config/google-chrome/NativeMessagingHosts/com.omarchy.copy_url.json ]] ||
   fail "fresh install registers the copy-url native messaging host"
 pass "fresh install registers the copy-url native messaging host"
 
@@ -94,7 +93,7 @@ copied_url=$(bash -c '
   wl-copy() { cat; }
   omarchy-notification-send() { :; }
   copy_url "$2"
-' bash "$ROOT/bin/omarchy-chromium-copy-url-host" 'https://example.test/path?q=one&name=two')
+' bash "$ROOT/bin/omarchy-chrome-copy-url-host" 'https://example.test/path?q=one&name=two')
 
 [[ $copied_url == "https://example.test/path?q=one&name=two" ]] ||
   fail "copy-url native host writes the complete URL" "$copied_url"
@@ -103,7 +102,7 @@ pass "copy-url native host writes the complete URL"
 native_reply=$(bash -c '
   source "$1"
   reply_copied true
-' bash "$ROOT/bin/omarchy-chromium-copy-url-host" | od -An -v -tx1 | tr -d ' \n')
+' bash "$ROOT/bin/omarchy-chrome-copy-url-host" | od -An -v -tx1 | tr -d ' \n')
 
 [[ $native_reply == "0f0000007b22636f70696564223a747275657d" ]] ||
   fail "copy-url native host returns a framed success response" "$native_reply"

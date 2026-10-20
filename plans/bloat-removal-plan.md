@@ -313,23 +313,47 @@ flowchart TD
 
 ---
 
-### Block 8: Chromium-to-Chrome Cleanup & File Renaming
+### Block 8: Chromium-to-Chrome Cleanup & File Renaming [COMPLETED]
 
-- **Objective**: Complete the transition from Chromium to Google Chrome across filesystem assets, native messaging hosts, and scripts.
-- **Renames & Refactoring**:
-  - Rename `default/chromium/` -> `default/chrome/`
-  - Rename `bin/omarchy-install-chromium-copy-url` -> `bin/omarchy-install-chrome-copy-url`
-  - Rename `bin/omarchy-install-chromium-ytdlp` -> `bin/omarchy-install-chrome-ytdlp`
-  - Rename `bin/omarchy-chromium-copy-url-host` -> `bin/omarchy-chrome-copy-url-host`
-  - Rename `bin/omarchy-chromium-ytdlp-host` -> `bin/omarchy-chrome-ytdlp-host`
-  - Delete `bin/omarchy-install-chromium-claude`
-  - Update `config/chrome-flags.conf` to load extensions from `/usr/share/omarchy/default/chrome/extensions/...`
-  - Update `bin/omarchy-install-browser` and `bin/omarchy-refresh-chrome`
-  - Update native messaging host JSON definitions.
-- **Tests to Prune / Align**:
-  - Update `test/shell.d/chromium-*.sh` tests -> `chrome-*.sh`
-  - Update browser launch tests in `test/shell.d/launch-browser-test.sh`.
-- **Verification**: `./test/cli`.
+- **Status**: Completed in working tree; ready for commit.
+- **Objective**: Complete the transition from Chromium to Google Chrome across filesystem assets, native messaging hosts, scripts, and tests.
+- **Files Removed & Renamed**:
+  - Deleted proprietary Claude extension installer & test:
+    - `bin/omarchy-install-chromium-claude`
+    - `test/shell.d/chromium-claude-test.sh`
+  - Renamed asset directory:
+    - `default/chromium/` -> `default/chrome/`
+  - Renamed native messaging binaries:
+    - `bin/omarchy-install-chromium-copy-url` -> `bin/omarchy-install-chrome-copy-url`
+    - `bin/omarchy-install-chromium-ytdlp` -> `bin/omarchy-install-chrome-ytdlp`
+    - `bin/omarchy-chromium-copy-url-host` -> `bin/omarchy-chrome-copy-url-host`
+    - `bin/omarchy-chromium-ytdlp-host` -> `bin/omarchy-chrome-ytdlp-host`
+  - Renamed test files:
+    - `test/shell.d/chromium-copy-url-test.sh` -> `test/shell.d/chrome-copy-url-test.sh`
+    - `test/shell.d/chromium-ytdlp-test.sh` -> `test/shell.d/chrome-ytdlp-test.sh`
+    - `test/shell.d/chromium-whatsapp-slim-test.sh` -> `test/shell.d/chrome-whatsapp-slim-test.sh`
+- **Code Paths & Helpers Updated**:
+  - `config/chrome-flags.conf`: pointed extension loads to `/usr/share/omarchy/default/chrome/extensions/...`.
+  - `install/helpers/browser-policy.sh`: pointed fallback policies path to `$OMARCHY_PATH/default/chrome/policies/omarchy.json`.
+  - `bin/omarchy-install-chrome-copy-url`: updated host binary and template paths.
+  - `bin/omarchy-install-chrome-ytdlp`: updated host binary and template paths.
+  - `bin/omarchy-install-browser`: updated installer invocations to `omarchy-install-chrome-*`.
+  - `bin/omarchy-refresh-chrome`: updated installer invocations to `omarchy-install-chrome-*`.
+  - `install/user/chrome.sh`: updated installer invocations to `omarchy-install-chrome-*`.
+  - `default/agents/skills/omarchy/hyprland.md`: updated example binding to `{ omarchy = "browser" }`.
+- **Tests Aligned**:
+  - `test/shell.d/default-apps-test.sh`: updated mock setup and assertions to `omarchy-install-chrome-*`.
+  - `test/shell.d/platform-app-hooks-test.sh`: updated mock setup to `omarchy-install-chrome-*`.
+  - `test/shell.d/default-agent-test.sh`: purged `omarchy-install-chromium-claude` mock and claude extension assertion.
+  - `test/shell.d/chrome-copy-url-test.sh`: updated paths, binary names, and Chrome profile paths.
+  - `test/shell.d/chrome-ytdlp-test.sh`: updated paths, binary names, and Chrome profile paths (27/27 assertions pass).
+  - `test/shell.d/chrome-whatsapp-slim-test.sh` & `test/shell.d/whatsapp-slim-test.sh`: updated paths to `default/chrome/extensions/whatsapp-slim`.
+  - `test/shell.d/launch-browser-test.sh`: aligned mocks and assertions with Google Chrome launcher and handoff.
+  - `test/shell.d/default-browser-lookup-test.sh`: aligned fallback assertion with `google-chrome.desktop`.
+- **Verification**:
+  - `bin/omarchy commands --check`: passed (384 commands clean).
+  - `./test/cli`: 120/120 passed.
+  - `find . -xtype l`: 0 broken symlinks.
 
 ---
 

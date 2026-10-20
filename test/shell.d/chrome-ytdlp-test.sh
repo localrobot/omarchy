@@ -19,29 +19,29 @@ require_command jq
 
 TMPDIR=$(mktemp -d)
 test_home="$TMPDIR/home"
-manifest_path="$test_home/.config/chromium/NativeMessagingHosts/com.omarchy.ytdlp.json"
+manifest_path="$test_home/.config/google-chrome/NativeMessagingHosts/com.omarchy.ytdlp.json"
 
-HOME="$test_home" OMARCHY_PATH="$ROOT" omarchy-install-chromium-ytdlp
+HOME="$test_home" OMARCHY_PATH="$ROOT" omarchy-install-chrome-ytdlp
 
-[[ -f $manifest_path ]] || fail "yt-dlp native host installer creates fresh Chromium profile root"
-pass "yt-dlp native host installer creates fresh Chromium profile root"
+[[ -f $manifest_path ]] || fail "yt-dlp native host installer creates fresh Chrome profile root"
+pass "yt-dlp native host installer creates fresh Chrome profile root"
 
-jq -e --arg path "$ROOT/bin/omarchy-chromium-ytdlp-host" '
+jq -e --arg path "$ROOT/bin/omarchy-chrome-ytdlp-host" '
   .name == "com.omarchy.ytdlp" and
   .path == $path and
   (.allowed_origins | index("chrome-extension://dedjgknigfeelejglamclffonmophnfl/"))
 ' "$manifest_path" >/dev/null
 pass "yt-dlp native host manifest uses Omarchy host path and extension id"
 
-[[ -f $test_home/.config/BraveSoftware/Brave-Origin/NativeMessagingHosts/com.omarchy.ytdlp.json ]] ||
-  fail "yt-dlp native host installer covers Brave Origin"
-pass "yt-dlp native host installer covers Brave Origin"
+[[ -f $test_home/.config/google-chrome-beta/NativeMessagingHosts/com.omarchy.ytdlp.json ]] ||
+  fail "yt-dlp native host installer covers Chrome Beta"
+pass "yt-dlp native host installer covers Chrome Beta"
 
 parse_result=$(bash -c '
   OMARCHY_PATH="$3"
   source "$1"
   parse_url "$2"
-' bash "$ROOT/bin/omarchy-chromium-ytdlp-host" '{"url":"https://example.test/watch?v=\"quoted\"&name=a\\b"}' "$ROOT")
+' bash "$ROOT/bin/omarchy-chrome-ytdlp-host" '{"url":"https://example.test/watch?v=\"quoted\"&name=a\\b"}' "$ROOT")
 
 [[ $parse_result == "https://example.test/watch?v=\"quoted\"&name=a\\b" ]] ||
   fail "yt-dlp native host parses escaped JSON URLs" "$parse_result"
@@ -51,7 +51,7 @@ bash -c '
   OMARCHY_PATH="$3"
   source "$1"
   valid_url "$2"
-' bash "$ROOT/bin/omarchy-chromium-ytdlp-host" "javascript:alert(1)" "$ROOT" &&
+' bash "$ROOT/bin/omarchy-chrome-ytdlp-host" "javascript:alert(1)" "$ROOT" &&
   fail "yt-dlp native host rejects non-web URLs"
 pass "yt-dlp native host rejects non-web URLs"
 
@@ -60,7 +60,7 @@ host_fn() {
     source "$1"
     shift
     "$@"
-  ' bash "$ROOT/bin/omarchy-chromium-ytdlp-host" "$@"
+  ' bash "$ROOT/bin/omarchy-chrome-ytdlp-host" "$@"
 }
 
 download_dir="$TMPDIR/videos"
@@ -161,7 +161,7 @@ poisoned=$(
     $'OMARCHY_FILE\t'"$good_file" \
     $'OMARCHY_FILE\tPlay me\t--include=not-a-file' \
     $'\t'"$good_file" |
-    OMARCHY_PATH="$ROOT" OMARCHY_YTDLP_DIR="$download_dir" bash "$parse_script" "$ROOT/bin/omarchy-chromium-ytdlp-host"
+    OMARCHY_PATH="$ROOT" OMARCHY_YTDLP_DIR="$download_dir" bash "$parse_script" "$ROOT/bin/omarchy-chrome-ytdlp-host"
 )
 
 [[ $poisoned == "$expected" ]] ||
@@ -210,7 +210,7 @@ YTDLP_ARGV_LOG="$ytdlp_argv" NOTIFY_ARGV_LOG="$notify_argv" YTDLP_FAKE_FILE="$fa
   bash -c '
     source "$1"
     download_url "$2"
-  ' bash "$ROOT/bin/omarchy-chromium-ytdlp-host" "https://example.test/watch" >/dev/null 2>&1
+  ' bash "$ROOT/bin/omarchy-chrome-ytdlp-host" "https://example.test/watch" >/dev/null 2>&1
 
 (($(grep -c -- '--no-exec-before-download' "$ytdlp_argv") == 2)) ||
   fail "yt-dlp native host disarms configured exec hooks on both yt-dlp runs" "$(cat "$ytdlp_argv")"
@@ -250,7 +250,7 @@ YTDLP_ARGV_LOG="$ytdlp_argv" NOTIFY_ARGV_LOG="$notify_argv" YTDLP_FAKE_FILE="$fa
   bash -c '
     source "$1"
     download_url "$2"
-  ' bash "$ROOT/bin/omarchy-chromium-ytdlp-host" "https://example.test/watch" >/dev/null 2>&1
+  ' bash "$ROOT/bin/omarchy-chrome-ytdlp-host" "https://example.test/watch" >/dev/null 2>&1
 
 grep -qF -- "Download complete Real_Clip [id]" "$notify_argv" ||
   fail "yt-dlp native host falls back to the filename when no title record arrives" "$(cat "$notify_argv")"

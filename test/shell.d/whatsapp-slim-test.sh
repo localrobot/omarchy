@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/base-test.sh"
 require_command jq
 require_command node
 
-EXT_DIR="$ROOT/default/chromium/extensions/whatsapp-slim"
+EXT_DIR="$ROOT/default/chrome/extensions/whatsapp-slim"
 
 jq -e '
   .content_scripts[0].js == ["system-theme.js"] and
