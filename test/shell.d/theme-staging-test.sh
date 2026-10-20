@@ -71,10 +71,7 @@ write_colors "$hostile/colors.toml"
 touch "$hostile/light.mode"
 printf 'os.execute("%s")\n' "$marker" >"$hostile/hyprland.lua"
 printf 'vim.cmd("%s")\n' "$marker" >"$hostile/neovim.lua"
-printf 'shell %s\n' "$marker" >"$hostile/kitty.conf"
-printf '[terminal.shell]\nprogram = "%s"\n' "$marker" >"$hostile/alacritty.toml"
 printf 'shell = "%s"\n' "$marker" >"$hostile/foot.ini"
-printf 'command = "%s"\n' "$marker" >"$hostile/ghostty.conf"
 printf 'hl.env("GUM_INPUT_PROMPT", "%s")\n' "$marker" >"$hostile/gum_env.lua"
 printf '[bar]\nbackground = "#%s"\n' "000000" >"$hostile/shell.toml"
 printf '{}\n' >"$hostile/vscode.json"
@@ -105,7 +102,7 @@ assert_not_staged .git "the clone's own git directory is never staged"
 
 # These run code, so the theme's versions must lose to Omarchy's generated ones
 # rather than merely be absent.
-for generated in hyprland.lua neovim.lua gum_env.lua kitty.conf alacritty.toml foot.ini ghostty.conf; do
+for generated in hyprland.lua neovim.lua gum_env.lua foot.ini; do
   assert_staged "$generated" "$generated is generated from Omarchy's template"
   assert_no_marker "$generated" "an installed theme cannot supply $generated"
 done
@@ -130,36 +127,6 @@ set_theme linked || fail "omarchy-theme-set applies a theme whose icons.theme is
 assert_not_staged icons.theme "a symlinked icons.theme is not followed"
 
 pass "a symlinked icon set name is refused like any other symlink"
-
-# A theme predating colors.toml still gets a palette, without its alacritty.toml
-# reaching the staged theme.
-legacy="$themes/legacy"
-mkdir -p "$legacy/.git"
-cat >"$legacy/alacritty.toml" <<TOML
-[terminal.shell]
-program = "$marker"
-
-[colors.primary]
-background = "#102030"
-foreground = "#a0b0c0"
-
-[colors.normal]
-black = "#102030"
-red = "#ff0000"
-green = "#00ff00"
-yellow = "#ffff00"
-blue = "#0000ff"
-magenta = "#ff00ff"
-cyan = "#00ffff"
-white = "#a0b0c0"
-TOML
-
-set_theme legacy || fail "omarchy-theme-set applies a theme that only ships alacritty.toml"
-assert_staged colors.toml "a legacy theme's palette is recovered from its alacritty.toml"
-grep -q '#102030' "$(staged colors.toml)" || fail "the recovered palette is the theme's"
-assert_no_marker alacritty.toml "a legacy theme's alacritty.toml is not staged"
-
-pass "a theme older than colors.toml keeps its palette and loses its terminal config"
 
 # An overlay on a stock theme still repaints it, and still cannot add code.
 mkdir -p "$themes/tokyo-night/.git"
@@ -206,7 +173,7 @@ pass "a theme name cannot climb out of the theme directories"
 # A denylist is only correct while someone adding a template classifies what it
 # generates. Every generated theme file is either denied to an installed theme or
 # recorded here as carrying colour, so a new template fails until it is placed.
-denied=(alacritty.toml foot.ini ghostty.conf kitty.conf gum_env.lua hyprland.lua neovim.lua vscode.json)
+denied=(foot.ini gum_env.lua hyprland.lua neovim.lua vscode.json)
 colour_only=(btop.theme chromium.theme claude.json fcitx5-theme.conf hyprland-preview-share-picker.css keyboard.rgb obsidian.css pi.json shell.toml vscode-theme.json)
 
 for tpl in "$ROOT"/default/themed/*.tpl; do

@@ -34,7 +34,7 @@ EOF
 
 # A user template shadows the built-in of the same name, a file the theme ships
 # is never overwritten, and an empty template still leaves its file behind.
-printf 'user {{ accent }}\n' >"$themed/kitty.conf.tpl"
+printf 'user {{ accent }}\n' >"$themed/btop.theme.tpl"
 printf 'shipped\n' >"$next/foot.ini"
 : >"$themed/empty.txt.tpl"
 printf 'no newline {{ accent }}' >"$themed/tail.txt.tpl"
@@ -64,7 +64,7 @@ pass "theme templates render values, mixes and gradients as before"
 [[ $(<"$next/tabs.txt") == "#4d0000 128,0,128 #a8b0c0" ]] || fail "theme templates resolve function tokens separated by tabs"
 pass "theme templates resolve function tokens separated by tabs"
 
-[[ $(<"$next/kitty.conf") == "user #ff0000" ]] || fail "a user template shadows the built-in of the same name"
+[[ $(<"$next/btop.theme") == "user #ff0000" ]] || fail "a user template shadows the built-in of the same name"
 [[ $(<"$next/foot.ini") == "shipped" ]] || fail "a file the theme ships is not overwritten"
 [[ -f $next/empty.txt && ! -s $next/empty.txt ]] || fail "an empty template still produces its file"
 [[ $(od -An -c "$next/tail.txt" | tr -d ' \n') == *"#ff0000" ]] || fail "a template without a final newline renders without one"

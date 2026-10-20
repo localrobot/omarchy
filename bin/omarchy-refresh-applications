@@ -6,8 +6,4 @@
 mkdir -p ~/.local/share/applications
 cp "$OMARCHY_PATH"/applications/*.desktop ~/.local/share/applications/
 
-if omarchy-cmd-present alacritty; then
-  cp "$OMARCHY_PATH/default/alacritty/Alacritty.desktop" ~/.local/share/applications/
-fi
-
 update-desktop-database ~/.local/share/applications

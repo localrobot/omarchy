@@ -1,0 +1,55 @@
+# Omarchy User Template Example: Foot
+#
+# This is a sample template file demonstrating how to create custom themed
+# configurations. Templates use placeholder variables that get replaced with
+# your current theme's colors when you switch themes.
+#
+# HOW TO USE:
+#   1. Rename this file to: foot.ini.tpl (remove the .sample extension)
+#   2. Customize it as needed
+#   3. Change your theme to apply the template
+#
+# User templates in ~/.config/omarchy/themed/ take priority over the built-in
+# templates in the Omarchy default/themed/ directory. This lets you override
+# any built-in template or create templates for applications not included
+# by default.
+#
+# AVAILABLE VARIABLES:
+#   {{ background }}            - Main background color (e.g., "#1a1b26")
+#   {{ foreground }}            - Main foreground/text color
+#   {{ bright_foreground }}     - Bright foreground / cursor color
+#   {{ accent }}                - Theme accent color
+#   {{ selection }}             - Selection highlight background
+#   {{ selection_background }}  - Selection highlight background alias
+#   {{ selection_foreground }}  - Selection highlight foreground (derived from bright_foreground)
+#
+#   {{ color0 }} through {{ color15 }} - Standard 16-color terminal palette
+#   Stripped variants (without leading '#') are available via {{ variable_strip }}:
+#   {{ background_strip }}, {{ foreground_strip }}, {{ red_strip }}, etc.
+
+[colors-dark]
+foreground={{ foreground_strip }}
+background={{ background_strip }}
+blur=yes
+selection-foreground={{ selection_foreground_strip }}
+selection-background={{ selection_background_strip }}
+
+cursor={{ background_strip }} {{ bright_foreground_strip }}
+
+regular0={{ background_strip }}
+regular1={{ red_strip }}
+regular2={{ green_strip }}
+regular3={{ yellow_strip }}
+regular4={{ blue_strip }}
+regular5={{ purple_strip }}
+regular6={{ cyan_strip }}
+regular7={{ foreground_strip }}
+
+bright0={{ muted_strip }}
+bright1={{ bright_red_strip }}
+bright2={{ bright_green_strip }}
+bright3={{ bright_yellow_strip }}
+bright4={{ bright_blue_strip }}
+bright5={{ bright_magenta_strip }}
+bright6={{ bright_cyan_strip }}
+bright7={{ bright_foreground_strip }}

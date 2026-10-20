@@ -261,7 +261,7 @@ assertDeepEqual(
   'menu sorts coding agents alphabetically'
 )
 const expectedDefaults = {
-  terminal: ['Alacritty', 'Foot', 'Ghostty', 'Kitty'],
+  terminal: ['Foot'],
   editor: ['Neovim', 'VSCode', 'Zed', 'Sublime Text', 'Vim', 'Emacs'],
   dictation: ['Voxtype']
 }

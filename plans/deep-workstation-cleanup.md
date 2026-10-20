@@ -1,6 +1,8 @@
 # Deep Workstation Cleanup & Zero-Dead-Code Plan
+
 **Target Workstation**: ASUS ProArt X870E + AMD Ryzen 9 9900X + Headless NVIDIA RTX 5060 Ti AI Accelerator
 **Core Toolset**:
+
 - **Exclusive Terminal**: `foot`
 - **Exclusive Editors**: `vscode` (`code`) & `neovim` (`nvim`)
 - **Exclusive Browser**: `google-chrome`
@@ -33,10 +35,11 @@ flowchart TD
 
 ---
 
-### Track 1: Terminal Consolidation (Sole Terminal: `foot`)
+### Track 1: Terminal Consolidation (Sole Terminal: `foot`) [COMPLETED & VERIFIED]
 
+- **Status**: Completed & 100% Verified
 - **Objective**: Establish `foot` as the exclusive terminal emulator across the entire operating system. Obliterate all configuration directories, templates, control loops, process signals, and menu entries for `alacritty`, `ghostty`, and `kitty`.
-- **Files to Physically Delete**:
+- **Files Deleted**:
   - `config/alacritty/` (entire directory)
   - `config/ghostty/` (entire directory)
   - `config/kitty/` (entire directory)
@@ -45,46 +48,29 @@ flowchart TD
   - `default/themed/alacritty.toml.tpl`
   - `default/themed/ghostty.conf.tpl`
   - `default/themed/kitty.conf.tpl`
+  - `config/omarchy/themed/alacritty.toml.tpl.sample` (replaced with `foot.ini.tpl.sample`)
   - `test/shell.d/kitty-config-test.sh`
+  - `test/shell.d/fixtures/kitty/` (entire directory)
 - **Script Simplifications & Loop Flattening**:
-  - `bin/omarchy-default-terminal`:
-    - Hardcode/lock default to `foot`.
-    - Prune `alacritty`, `ghostty`, and `kitty` branches from case statements and usage strings.
-    - Argument handling restricted to `[foot]` or query mode.
-  - `bin/omarchy-install-terminal`:
-    - Prune `alacritty`, `ghostty`, and `kitty` handlers; retain exclusively `foot`.
-  - `bin/omarchy-cmd-terminal-cwd`:
-    - Remove `kitty_socket` branch (`$XDG_RUNTIME_DIR/omarchy-kitty-$terminal_pid`) and `kitten @` invocation.
-    - Directly resolve terminal working directory via `/proc/$terminal_pid/task/*/children` proc inspection.
-  - `bin/omarchy-font-set`:
-    - Remove `~/.config/alacritty/alacritty.toml` sed block.
-    - Remove `~/.config/kitty/kitty.conf` sed block and `pkill -USR1 kitty`.
-    - Remove `~/.config/ghostty/config` sed block and `pkill -SIGUSR2 ghostty`.
-    - Remove `pgrep -x ghostty` notification dispatch.
-    - Retain exclusively `foot.ini` font configuration and `fonts.conf` update.
-  - `bin/omarchy-display-text-size`:
-    - Remove `set_terminal_size()` branches for `alacritty`, `kitty`, and `ghostty`.
-    - Remove `term_current_pt()` branches for `ghostty`, `alacritty`, and `kitty`.
-    - Retain exclusively `foot.ini` point-size scaling.
-  - `bin/omarchy-theme-set`:
-    - Update `INSTALLED_THEME_DENIED` to `(foot.ini vscode.json)`.
-    - Remove `stage_installed_colors_from_alacritty` function and invocation.
-  - `bin/omarchy-theme-set-glass`:
-    - Remove `glass alacritty.toml ...`, `glass kitty.conf ...`, and `glass ghostty.conf ...`.
-    - Retain exclusively foot glassy styling.
-  - `default/bash/aliases`:
-    - Remove `if [[ "$TERM" == "xterm-kitty" ]]` conditional and `kitty icat` alias.
-    - Unify `alias ff="fzf --preview 'bat --style=numbers --color=always {}'"`.
-  - `default/hypr/apps/terminals.lua`:
-    - Simplify window tagging to `o.window("(foot|org\\.codeberg\\.dnkl\\.foot|org\\.omarchy\\..*|TUI\\..*)", { tag = "+terminal" })`.
-  - `default/i18n/en/cli.json`:
-    - Update `"screensaver.terminalOnly"` to `"Screensaver only runs in Foot"`.
-- **Menu & i18n Definitions**:
-  - `default/omarchy/omarchy-menu.jsonc`:
-    - Remove `setup.default.terminal.alacritty`, `setup.default.terminal.ghostty`, `setup.default.terminal.kitty`.
-    - Remove `install.terminal.alacritty`, `install.terminal.ghostty`, `install.terminal.kitty`.
-  - `default/i18n/en/menu.json`:
-    - Remove matching translations for alacritty, ghostty, and kitty terminal entries.
+  - `bin/omarchy-default-terminal`: Locked to `foot`, removed other terminal branches.
+  - `bin/omarchy-install-terminal`: Restricted to `foot`.
+  - `bin/omarchy-cmd-terminal-cwd`: Removed `kitty_socket` branch and `kitten @`, using proc children.
+  - `bin/omarchy-font-set`: Removed Alacritty, Kitty, Ghostty sed patching and signals, kept Foot.
+  - `bin/omarchy-display-text-size`: Removed Alacritty, Kitty, Ghostty sizing and queries, kept Foot.
+  - `bin/omarchy-launch-screensaver`: Stripped case loop down to `foot` only.
+  - `bin/omarchy-refresh-applications`: Removed Alacritty `.desktop` copy block.
+  - `bin/omarchy-theme-set`: Set `INSTALLED_THEME_DENIED=(foot.ini vscode.json)`, removed `stage_installed_colors_from_alacritty`.
+  - `bin/omarchy-theme-set-glass`: Removed Alacritty, Kitty, Ghostty glass rules, kept Foot.
+  - `default/bash/aliases`: Simplified `ff` alias directly to `bat` preview.
+  - `default/hypr/apps/terminals.lua`: Streamlined regex to `(foot|org\\.codeberg\\.dnkl\\.foot|org\\.omarchy\\..*|TUI\\..*)`.
+  - `default/i18n/en/cli.json`: Updated `"screensaver.terminalOnly"` to `"Screensaver only runs in Foot"`.
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`: Pruned alacritty, ghostty, and kitty entries.
+  - `default/agents/skills/omarchy/`: Aligned `SKILL.md`, `hyprland.md`, `theming.md` to Foot.
+- **Verification**:
+  - `bin/omarchy commands --check` passed (383 commands).
+  - `./test/cli` passed (108/108 tests green).
+  - Shell tests `theme-templates-test.sh`, `theme-staging-test.sh`, `hyprland-window-transparency-test.sh`, `default-apps-test.sh`, `hyprland-focus-app-test.sh`, `command-operand-boundaries-test.sh` passed 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 

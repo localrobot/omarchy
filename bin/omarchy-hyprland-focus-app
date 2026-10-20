@@ -12,7 +12,7 @@ usage() {
 app=${1:-}
 [[ -n $app ]] || usage
 
-# Agent terminals notify as kitty/foot/etc. while their shared window class is
+# Agent terminals notify as foot/etc. while their shared window class is
 # org.omarchy.agent, leaving the terminal name only in initialTitle. So match
 # by class first, then fall back to the launch-time title of agent windows.
 # Among several matches take the one focused last, which is also the window a

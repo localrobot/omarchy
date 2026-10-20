@@ -146,10 +146,7 @@ browser_cases=(
 )
 
 terminal_cases=(
-  'alacritty Alacritty.desktop'
   'foot foot.desktop'
-  'ghostty com.mitchellh.ghostty.desktop'
-  'kitty kitty.desktop'
 )
 
 editor_cases=(
@@ -234,10 +231,15 @@ pass "editor defaults install every missing editor before selection"
 : >"$install_log"
 : >"$terminal_log"
 omarchy-default-browser chrome
-omarchy-default-terminal kitty
+omarchy-default-terminal foot
 omarchy-default-editor nvim
 [[ ! -s $install_log && ! -s $terminal_log ]] || fail "installed defaults skip installation"
 pass "installed defaults are selected immediately"
+
+if omarchy-default-terminal kitty 2>/dev/null; then
+  fail "omarchy-default-terminal rejects unsupported terminals"
+fi
+pass "omarchy-default-terminal rejects unsupported terminals"
 
 previous_editor=$(omarchy-default-editor)
 rm -f "$installed_dir/vim"

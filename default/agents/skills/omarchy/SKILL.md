@@ -3,7 +3,7 @@ name: omarchy
 description: >
   REQUIRED for end-user customization of Linux desktop, window manager, or system config.
   Use when editing ANY file in ~/.config/, ~/.config/hypr/, ~/.config/omarchy/,
-  ~/.config/alacritty/, ~/.config/foot/, ~/.config/kitty/, or ~/.config/ghostty/.
+  or ~/.config/foot/.
   Triggers: Hyprland, window rules, window behavior, animations, keybindings, monitors, gaps, borders,
   blur, opacity, omarchy-shell, bar, widgets, terminal config, themes, fonts, background,
   night light, idle, lock screen, screenshots, screen recording, reminders, layer rules, workspace
@@ -85,7 +85,7 @@ Omarchy is built on:
 | **Hyprland** | Wayland compositor/WM | `~/.config/hypr/` |
 | **Omarchy shell** | Status bar + notifications (Quickshell) | `~/.config/omarchy/shell.json` |
 | **Launcher/menus** | Quickshell menu | `~/.config/omarchy/extensions/omarchy-menu.jsonc` |
-| **Alacritty/Foot/Kitty/Ghostty** | Terminals | `~/.config/<terminal>/` |
+| **Foot** | Terminal | `~/.config/foot/` |
 | **Omarchy OSD** | On-screen display | Quickshell plugin |
 
 ## Command Discovery
@@ -141,10 +141,7 @@ The Omarchy shell (bar, notifications, plugins, idle) is configured in
 ### Terminals
 
 ```
-~/.config/alacritty/alacritty.toml
 ~/.config/foot/foot.ini
-~/.config/kitty/kitty.conf
-~/.config/ghostty/config
 ```
 
 **Command:** `omarchy restart terminal`

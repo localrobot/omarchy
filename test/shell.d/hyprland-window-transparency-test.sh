@@ -101,27 +101,18 @@ pass "opaque windows apply to the windows Omarchy makes transparent"
 # glassy gives each theme terminal file a see-through, blurred background.
 theme_dir="$tmpdir/theme"
 mkdir -p "$theme_dir"
-printf '[colors.primary]\nbackground = "#000000"\n' >"$theme_dir/alacritty.toml"
 printf '[colors-dark]\nbackground=000000\n' >"$theme_dir/foot.ini"
-printf 'background #000000\n' >"$theme_dir/kitty.conf"
-printf 'background = #000000\nbackground-opacity = 0.9\n' >"$theme_dir/ghostty.conf"
 printf 'theme[main_bg]="#102030"\ntheme[main_fg]="#ffffff"\n' >"$theme_dir/btop.theme"
 cp -r "$theme_dir" "$tmpdir/theme-before"
 
 run omarchy-hyprland-window-transparency glassy
 run omarchy-theme-set-glass "$theme_dir"
 run omarchy-theme-set-glass "$theme_dir"
-grep -qx 'opacity = 0.65' "$theme_dir/alacritty.toml" || fail "glassy alacritty is see-through"
 grep -qx 'alpha=0.65' "$theme_dir/foot.ini" && grep -qx 'blur=yes' "$theme_dir/foot.ini" || fail "glassy foot is see-through and asks for blur"
-grep -qx 'background_opacity 0.65' "$theme_dir/kitty.conf" || fail "glassy kitty is see-through"
 (( $(grep -c 'omarchy-glass begin' "$theme_dir/foot.ini") == 1 )) || fail "glassy terminals get the glass once"
 [[ $(grep '^theme\[main_bg\]=' "$theme_dir/btop.theme" | tail -1) == 'theme[main_bg]=""' ]] || fail "glassy btop uses the terminal background"
 (( $(grep -c 'omarchy-glass begin' "$theme_dir/btop.theme") == 1 )) || fail "glassy btop gets the glass once"
 pass "btop follows the glassy terminal background"
-(( $(grep -c 'background-opacity' "$theme_dir/ghostty.conf") == 1 )) &&
-  grep -qx 'background-opacity = 0.9' "$theme_dir/ghostty.conf" || fail "a theme's own terminal opacity is kept"
-grep -qx "gtk-custom-css = $ROOT/default/gtk/glass.css" "$theme_dir/ghostty.conf" ||
-  fail "a ghostty theme with its own opacity still gets the backdrop blur"
 # A foot theme with its own alpha keeps it but still asks for blur, as
 # Hyprland skips blur for foot unless it does.
 own_alpha_dir="$tmpdir/own-alpha-theme"
@@ -137,34 +128,31 @@ pass "a theme's own terminal opacity is kept, and its blur is still added"
 if command -v foot >/dev/null; then
   foot --check-config -c "$theme_dir/foot.ini" || fail "glassy foot config is valid"
 fi
-# A window table of the theme's own takes the glass in, as TOML refuses a
-# table declared twice.
-window_dir="$tmpdir/window-theme"
-mkdir -p "$window_dir"
-printf '[window] # mine\npadding = { x = 4, y = 4 }\nblur = false\n\n[colors.primary]\nbackground = "#000000"\n' >"$window_dir/alacritty.toml"
-cp "$window_dir/alacritty.toml" "$tmpdir/window-before.toml"
-run omarchy-theme-set-glass "$window_dir"
-run omarchy-theme-set-glass "$window_dir"
-(( $(grep -c '^\[window\]' "$window_dir/alacritty.toml") == 1 )) || fail "glassy alacritty keeps a single window table"
-if command -v python3 >/dev/null; then
-  python3 -c 'import sys, tomllib; c = tomllib.load(open(sys.argv[1], "rb")); assert c["window"]["opacity"] == 0.65 and c["window"]["padding"]["x"] == 4' "$window_dir/alacritty.toml" ||
-    fail "glassy alacritty with a window table of its own stays valid TOML"
-fi
-HOME="$home_dir" XDG_STATE_HOME="$tmpdir/no-glass" OMARCHY_PATH="$ROOT" PATH="$stub_dir:$ROOT/bin:$PATH" omarchy-theme-set-glass "$window_dir"
-cmp -s "$tmpdir/window-before.toml" "$window_dir/alacritty.toml" || fail "leaving glassy restores an alacritty window table"
-pass "glassy alacritty joins a window table the theme already has"
+# A section of the theme's own takes the glass in, as INI avoids
+# declaring a section twice.
+colors_dir="$tmpdir/colors-theme"
+mkdir -p "$colors_dir"
+printf '[colors-dark] # mine\nbackground=000000\nforeground=ffffff\n' >"$colors_dir/foot.ini"
+cp "$colors_dir/foot.ini" "$tmpdir/colors-before.ini"
+run omarchy-theme-set-glass "$colors_dir"
+run omarchy-theme-set-glass "$colors_dir"
+(( $(grep -c '^\[colors-dark\]' "$colors_dir/foot.ini") == 1 )) || fail "glassy foot keeps a single colors-dark section"
+grep -qx 'alpha=0.65' "$colors_dir/foot.ini" || fail "glassy foot with a colors-dark section of its own gets alpha"
+HOME="$home_dir" XDG_STATE_HOME="$tmpdir/no-glass" OMARCHY_PATH="$ROOT" PATH="$stub_dir:$ROOT/bin:$PATH" omarchy-theme-set-glass "$colors_dir"
+cmp -s "$tmpdir/colors-before.ini" "$colors_dir/foot.ini" || fail "leaving glassy restores a foot colors-dark section"
+pass "glassy foot joins a colors-dark section the theme already has"
 
 # A file without a final newline gets one with the glass, and loses it again
 # when the glass comes out, so leaving glassy restores it byte for byte.
 bare_dir="$tmpdir/bare-theme"
 mkdir -p "$bare_dir"
-printf 'background #000000' >"$bare_dir/kitty.conf"
-cp "$bare_dir/kitty.conf" "$tmpdir/bare-before.conf"
+printf 'theme[main_bg]="#000000"' >"$bare_dir/btop.theme"
+cp "$bare_dir/btop.theme" "$tmpdir/bare-before.theme"
 run omarchy-theme-set-glass "$bare_dir"
-grep -qx 'background_opacity 0.65' "$bare_dir/kitty.conf" || fail "glassy reaches a file without a final newline"
-grep -qx 'background #000000' "$bare_dir/kitty.conf" || fail "glassy ends the line before its block"
+grep -qx 'theme\[main_bg\]=""' "$bare_dir/btop.theme" || fail "glassy reaches a file without a final newline"
+grep -qx 'theme\[main_bg\]="#000000"' "$bare_dir/btop.theme" || fail "glassy ends the line before its block"
 HOME="$home_dir" XDG_STATE_HOME="$tmpdir/no-glass" OMARCHY_PATH="$ROOT" PATH="$stub_dir:$ROOT/bin:$PATH" omarchy-theme-set-glass "$bare_dir"
-cmp -s "$tmpdir/bare-before.conf" "$bare_dir/kitty.conf" || fail "leaving glassy restores a file without a final newline"
+cmp -s "$tmpdir/bare-before.theme" "$bare_dir/btop.theme" || fail "leaving glassy restores a file without a final newline"
 pass "leaving glassy restores a file without a final newline byte for byte"
 
 btop_dir="$tmpdir/transparent-btop-theme"
@@ -174,15 +162,6 @@ cp "$btop_dir/btop.theme" "$tmpdir/btop-before.theme"
 run omarchy-theme-set-glass "$btop_dir"
 cmp -s "$tmpdir/btop-before.theme" "$btop_dir/btop.theme" || fail "btop themes already using the terminal background are kept"
 pass "btop themes already using the terminal background are kept"
-
-ghostty_dir="$tmpdir/ghostty-theme"
-mkdir -p "$ghostty_dir"
-printf 'background = #000000\n' >"$ghostty_dir/ghostty.conf"
-run omarchy-theme-set-glass "$ghostty_dir"
-grep -qx 'background-opacity = 0.65' "$ghostty_dir/ghostty.conf" &&
-  grep -qx "gtk-custom-css = $ROOT/default/gtk/glass.css" "$ghostty_dir/ghostty.conf" ||
-  fail "glassy ghostty is see-through and loads the GTK backdrop blur"
-pass "glassy terminals get a see-through, blurred background"
 
 run omarchy-hyprland-window-transparency transparent
 run omarchy-theme-set-glass "$theme_dir"
@@ -250,5 +229,4 @@ else
 fi
 
 grep -qx 'blur=yes' "$ROOT/default/themed/foot.ini.tpl" || fail "foot starts ready to blur"
-grep -qx 'dynamic_background_opacity yes' "$ROOT/default/themed/kitty.conf.tpl" || fail "kitty starts ready to change opacity"
-pass "foot and kitty start ready for glass, since they read that only at launch"
+pass "foot starts ready for glass, since it reads that only at launch"

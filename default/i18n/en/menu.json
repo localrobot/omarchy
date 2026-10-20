@@ -466,17 +466,8 @@
     "label": "Terminal",
     "title": "Default Terminal"
   },
-  "setup.default.terminal.alacritty": {
-    "label": "Alacritty"
-  },
   "setup.default.terminal.foot": {
     "label": "Foot"
-  },
-  "setup.default.terminal.ghostty": {
-    "label": "Ghostty"
-  },
-  "setup.default.terminal.kitty": {
-    "label": "Kitty"
   },
   "setup.default.editor": {
     "label": "Editor",
@@ -626,17 +617,8 @@
   "install.editor.emacs": {
     "label": "Emacs"
   },
-  "install.terminal.alacritty": {
-    "label": "Alacritty"
-  },
   "install.terminal.foot": {
     "label": "Foot"
-  },
-  "install.terminal.ghostty": {
-    "label": "Ghostty"
-  },
-  "install.terminal.kitty": {
-    "label": "Kitty"
   },
   "install.development.rails": {
     "label": "Ruby on Rails"

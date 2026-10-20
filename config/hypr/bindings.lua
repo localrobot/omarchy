@@ -13,7 +13,7 @@
 --   omarchy_preinstalled_bindings = false
 
 -- Add a new binding.
--- o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
+-- o.bind("SUPER + SHIFT + R", "SSH", "foot -e ssh your-server")
 
 -- Change an existing binding. o.rebind takes the same arguments as o.bind.
 -- This example replaces the default file manager with Flea.
