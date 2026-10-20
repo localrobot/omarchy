@@ -270,9 +270,9 @@ It only does the things `/etc/skel` can't:
   and `~/.config/gtk-3.0/bookmarks` (needs `$HOME` expansion).
 - Hyprland's package-owned default input reads `XKBLAYOUT` / `XKBVARIANT`
   from `/etc/vconsole.conf`; no per-user Hyprland config rewrite is needed.
-- `xdg-settings set default-web-browser chromium.desktop` (XDG-aware paths).
+- `xdg-settings set default-web-browser google-chrome.desktop` (XDG-aware paths).
 - `omarchy-refresh-applications` (composes generated `.desktop` launchers).
-- Sources `install/user/all.sh` — theme, chromium, git, xcompose, mise,
+- Sources `install/user/all.sh` — theme, chrome, git, xcompose, mise,
   keyring, per-user hardware quirks (asus mic/mixer, framework f13 audio, …).
 - On `--first-install`, marks every shipped user migration as already applied
   for the freshly-created user.

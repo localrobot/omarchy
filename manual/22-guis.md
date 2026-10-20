@@ -22,18 +22,6 @@ Obsidian also offers a [commercial add-on for syncing](https://obsidian.md/sync)
 
 You start Obsidian with `Super + Shift + O`. To use theme syncing, you must select the `Omarchy` theme under settings.
 
-## Omawrite
-
-[Omawrite](https://github.com/omacom-io/omawrite) is Omarchy's own dead-simple Markdown writing app. No vaults, no plugins, just you and the words.
-
-You start Omawrite with `Super + Shift + W`.
-
-## Pinta
-
-[Pinta](https://www.pinta-project.com/) is a basic image editing tool that's great for cropping, resizing, and other basic manipulations. Just don't expect a Photoshop alternative. But it's still got a Magic Wand and layers!
-
-You start Pinta via the application launcher (`Super + Space`).
-
 ## Aether
 
 [Aether](https://github.com/bjarneo/aether) is a theming application that can extract colors from a background image and turn them into a complete, cohesive theme. It's the easiest way to [make your own theme](43-making-your-own-theme.md).
@@ -92,17 +80,3 @@ You start Signal with `Super + Shift + G`. It's not part of the base install, so
 [mpv](https://mpv.io/) is a simple, fast media player that'll play almost anything from any source. Great for watching videos.
 
 You start mpv via the application launcher (`Super + Space`) or just double-click on a video in the file manager.
-
-## Omacut
-
-[Omacut](https://github.com/omacom-io/omacut) is Omarchy's own dead-simple video trimmer. When all you need is to cut the start and end off a clip, it beats firing up a full video editor.
-
-You start Omacut via the application launcher (`Super + Space`).
-
-## Monologue
-
-[Monologue](https://github.com/omacom/monologue) is Omarchy's own dead-simple webcam recorder. Choose your camera and microphone once, then press `Space` to record, and again to pause and resume the same take. It always records at your camera's highest resolution, with a live microphone meter so you can check your levels before you start.
-
-Stop the take and it opens right away in a built-in editor. Double-click a clip to split it, drag the handles to trim each piece, and remove the parts you don't want. Then save it as an MP4. Your original recording is kept until you discard it, so you can always come back and cut it differently.
-
-You start Monologue via the application launcher (`Super + Space`).

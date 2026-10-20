@@ -6,7 +6,7 @@ They'll then be accessible through the app launcher (`Super + Space`), and use t
 
 If you wish to remove a web app, just go to _Remove > Web App_ in the Omarchy menu.
 
-It's best if you log into all your accounts using a regular browser before using the web app shortcuts. The thin wrapper frame doesn't work well with 1password, so just easier to be logged in directly first.
+It's best if you log into all your accounts using a regular browser before using the web app shortcuts. The thin wrapper frame doesn't work well with password manager extensions, so it's easier to be logged in directly first.
 
 All the keyboard hotkeys for these web apps can be changed in `~/.config/hypr/bindings.lua`.
 
@@ -46,4 +46,4 @@ To keep work sign-ins separate, append a browser data directory to each launcher
 Exec=omarchy-launch-webapp "https://teams.cloud.microsoft/" --user-data-dir=/absolute/path/to/work-browser-profile
 ```
 
-Replace the example directory with an absolute path of your choice and use the same path for all six launchers to share work sign-ins between them. The web apps use Omarchy's selected supported browser, falling back to Chromium when the default browser is unsupported.
+Replace the example directory with an absolute path of your choice and use the same path for all launchers to share work sign-ins between them. The web apps run inside Google Chrome.

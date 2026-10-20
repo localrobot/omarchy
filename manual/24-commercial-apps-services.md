@@ -2,12 +2,6 @@
 
 Omarchy is mostly focused on providing free, open source software, but it's not religious about it. Sometimes the best solution is a commercial offering, and that's just fine. Here are some of the options we provide an easy installation for.
 
-## 1Password
-
-Keeping your passwords in a password manager is a best practice. Doubly so if you're working with a team. And [1password](https://1password.com/) is a great solution, which also comes with a command line tool for integrating key lookups in scripts.
-
-You start 1Password with `Super + Shift + /`. If it isn't installed yet, that hotkey kicks off the installation first (you can also use _Install > Service > 1Password_ from the Omarchy menu). The installer sets up the 1Password extension for Chromium as well.
-
 ## Bitwarden
 
 [Bitwarden](https://bitwarden.com/) is the open source alternative in the password manager space, with a free tier that covers most personal use. Install it with _Install > Service > Bitwarden_ from the Omarchy menu, which brings along the Bitwarden command line tool as well.
@@ -16,7 +10,7 @@ You start 1Password with `Super + Shift + /`. If it isn't installed yet, that ho
 
 [Spotify](https://spotify.com/) is the world's most popular streaming music service. And the Linux application provides everything you'd expect, including offline playing.
 
-You start Spotify using `Super + Shift + M`. Like 1Password, the hotkey kicks off the installation first if Spotify isn't installed yet (or use _Install > Service > Spotify_ from the Omarchy menu).
+You start Spotify using `Super + Shift + M`. The hotkey kicks off the installation first if Spotify isn't installed yet (or use _Install > Service > Spotify_ from the Omarchy menu).
 
 ## Slack
 

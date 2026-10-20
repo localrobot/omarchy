@@ -109,14 +109,12 @@ You can see all the main keyboard bindings with `Super + K` (Tmux bindings with 
 | `Super + Shift + Alt + F`           | File manager in cwd of terminal    |
 | `Super + Shift + M`           | Music (Spotify)    |
 | `Super + Shift + Alt + M`           | Music (cliamp)    |
-| `Super + Shift + /`           | Password manager (1password)    |
 | `Super + Shift + N`           | Editor (Neovim)  |
 | `Super + Shift + A`           | AI (ChatGPT)  |
 | `Super + Shift + Alt + A`           | AI (Grok)  |
 | `Super + Shift + G`           | Messenger (Signal)  |
 | `Super + Shift + Alt + G`           | Messenger (WhatsApp)  |
 | `Super + Shift + O`           | Obsidian  |
-| `Super + Shift + W`           | Writing (Omawrite)  |
 
 Change/add bindings in `~/.config/hypr/bindings.lua`.
 

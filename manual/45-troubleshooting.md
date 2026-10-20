@@ -25,13 +25,3 @@ On some laptops, Omarchy automatically applies a speaker tuning that corrects th
 ### Why can't I login or sudo with my password?
 
 You probably typed it wrong too many times and got locked out. If this is happening on the lock screen, you can hit `CTRL + ALT + F2` to start a new TTY where you can login as root, then run `faillock --reset --user [your-username]`. That'll reset the lockout, and you're good to go.
-
-### Why isn't my 1Password authorization prompts for 1Password SSH Agent / CLI appearing?
-
-This can happen for 2 reasons:
-
-In order for the rich approval prompt to appear, Settings > Advanced > Use Hardware Acceleration must be turned on. _Note: This requires a reboot to begin working._
-
- ![troubleshooting-1password](images/troubleshooting-1password.webp)
-
-Or if you haven't launched 1Password since booting up, the prompt will not appear.
