@@ -91,21 +91,31 @@ flowchart TD
 
 ---
 
-### Block 3: Touchpads, Touchscreens & Mobile Input
+### Block 3: Touchpads, Touchscreens & Mobile Input (COMPLETED)
 
 - **Objective**: Remove trackpad and touchscreen toggle scripts, gestures, and hotkeys.
-- **Files to Remove**:
+- **Files Removed**:
   - `bin/omarchy-hw-touchpad`
   - `bin/omarchy-hw-touchscreen`
   - `bin/omarchy-toggle-touchpad`
   - `bin/omarchy-toggle-touchscreen`
-- **Code Paths & Helpers to Update**:
-  - `default/omarchy/omarchy-menu.jsonc`: prune toggle touchpad/touchscreen rows.
-  - `default/hypr/bindings/`: remove touchpad toggle hotkeys.
-- **Tests to Prune / Align**:
-  - `test/shell.d/hw-touchpad-test.sh`
-  - `test/shell.d/toggle-input-device-test.sh`
-- **Verification**: `./test/cli`.
+  - `bin/omarchy-toggle-input-device`
+  - `bin/omarchy-hw-recover-internal-monitor`
+  - `default/systemd/user/omarchy-recover-internal-monitor.service`
+  - `default/hypr/disabled-input-device.lua`
+- **Code Paths & Helpers Updated**:
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`: pruned toggle touchpad/touchscreen rows.
+  - `default/hypr/bindings/media.lua`: removed touchpad toggle hotkeys.
+  - `default/i18n/en/keybindings.json`: removed touchpad toggle/enable/disable strings.
+  - `default/i18n/en/cli.json`: removed touchpad and touchscreen notification strings.
+  - `default/hypr/toggles.lua`: dropped disabled-input-device loader.
+  - `default/hypr/input.lua`: removed touchpad settings and scroll_touchpad window rules.
+  - `install/user/first-run/enable-user-units.sh`: removed recover-internal-monitor service invocation.
+  - `shell/plugins/osd/OsdModel.js`: removed touchpad/touchscreen OSD icon entries.
+- **Tests Pruned & Aligned**:
+  - Pruned: `test/shell.d/hw-touchpad-test.sh`, `test/shell.d/toggle-input-device-test.sh`.
+  - Aligned: `test/shell.d/config-test.sh`, `test/cli`.
+- **Verification**: `./test/cli` (120/120 pass), `bin/omarchy commands --check` (435 commands clean).
 
 ---
 

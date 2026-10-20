@@ -309,9 +309,6 @@
   "trigger.tests": {
     "label": "Speed Test"
   },
-  "trigger.hardware.touchscreen": {
-    "label": "Touchscreen"
-  },
   "trigger.reminder.set": {
     "label": "Set one"
   },

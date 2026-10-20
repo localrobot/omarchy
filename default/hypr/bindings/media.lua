@@ -1,4 +1,4 @@
--- Volume, brightness, keyboard backlight, and touchpad controls.
+-- Volume, brightness, and keyboard backlight controls.
 o.bind("XF86AudioRaiseVolume", "Volume up", { audio = "raise" }, { locked = true, repeating = true })
 o.bind("XF86AudioLowerVolume", "Volume down", { audio = "lower" }, { locked = true, repeating = true })
 o.bind("XF86AudioMute", "Mute", { audio = "mute-toggle" }, { locked = true })
@@ -10,9 +10,6 @@ o.bind("SHIFT + XF86MonBrightnessDown", "Brightness minimum", "omarchy-brightnes
 o.bind("XF86KbdBrightnessUp", "Keyboard brightness up", "omarchy-brightness-keyboard up", { locked = true, repeating = true })
 o.bind("XF86KbdBrightnessDown", "Keyboard brightness down", "omarchy-brightness-keyboard down", { locked = true, repeating = true })
 o.bind("XF86KbdLightOnOff", "Keyboard backlight cycle", "omarchy-brightness-keyboard cycle", { locked = true })
-o.bind_toggle("XF86TouchpadToggle", "Toggle touchpad", "touchpad", { locked = true })
-o.bind("XF86TouchpadOn", "Enable touchpad", "omarchy-toggle-touchpad on", { locked = true })
-o.bind("XF86TouchpadOff", "Disable touchpad", "omarchy-toggle-touchpad off", { locked = true })
 
 -- Precise volume and brightness controls.
 o.bind("ALT + XF86AudioRaiseVolume", "Volume up precise", "omarchy-audio-output-volume +1", { locked = true, repeating = true })

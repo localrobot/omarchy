@@ -16,8 +16,6 @@ function iconFor(name, percent) {
   if (n === "microphone" || n === "mic") return "󰍬"
   if (n === "keyboard") return "󰌌"
   if (n === "brightness" || n === "display") return "󰍹"
-  if (n === "touchpad") return "󰟸"
-  if (n === "touch" || n === "touchscreen") return "󰝁"
   if (n === "reboot" || n === "restart") return "󰜉"
   if (n === "shutdown" || n === "power" || n === "poweroff") return "󰐥"
   if (n === "logout" || n === "sign-out" || n === "leave") return "󰍃"

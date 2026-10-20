@@ -129,8 +129,6 @@
   "trigger.share": {"icon":"","label":"Share","aliases":["share"]},
   "trigger.hardware": {"icon":"","label":"Hardware","aliases":["hardware","hw"]},
   "trigger.tests": {"icon":"󰓅","label":"Speed Test"},
-  "trigger.hardware.touchpad": {"icon":"󰟸","label":"Touchpad","when":"omarchy-hw-touchpad","action":"omarchy-toggle-touchpad"},
-  "trigger.hardware.touchscreen": {"icon":"󰆽","label":"Touchscreen","when":"omarchy-hw-touchscreen","action":"omarchy-toggle-touchscreen"},
   "trigger.reminder.set": {"icon":"󰢌","label":"Set one","aliases":["reminder-set","remind"],"action":"omarchy-reminder -i"},
   "trigger.reminder.show": {"icon":"󰢌","label":"Show all","action":"omarchy-reminder show"},
   "trigger.reminder.clear": {"icon":"󰢌","label":"Clear all","action":"omarchy-reminder clear"},

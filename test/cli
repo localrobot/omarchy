@@ -120,7 +120,7 @@ assert_output_contains "restart group includes all restart commands" "$output" "
 
 output=$("$CLI" hw --help)
 assert_output_contains "hardware group help renders" "$output" "omarchy hw asus rog"
-assert_output_contains "hardware group includes touchpad" "$output" "omarchy hw touchpad"
+assert_output_contains "hardware group includes nvidia" "$output" "omarchy hw nvidia"
 
 output=$("$CLI" hw asus)
 assert_output_contains "partial hardware prefix renders matching commands" "$output" "omarchy hw asus rog"
