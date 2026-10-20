@@ -69,13 +69,13 @@ libsecret
 libvips
 libyaml
 libreoffice-fresh
+llama.cpp
 localsend
 lua51
 luarocks
 man-db
 mariadb-libs
 mise-bin
-monologue
 mpv
 mpv-mpris
 nautilus
@@ -119,7 +119,6 @@ signed
 slurp
 socat
 starship
-superwhisper-bin
 sushi
 system-config-printer
 tesseract
@@ -138,6 +137,8 @@ unzip
 usage
 uwsm
 vi
+voxtype-bin
+whisper.cpp
 whois
 wireless-regdb
 wireplumber

@@ -4,6 +4,7 @@ run_logged "$OMARCHY_INSTALL/user/git.sh"
 run_logged "$OMARCHY_INSTALL/user/xcompose.sh"
 run_logged "$OMARCHY_INSTALL/user/input-method.sh"
 run_logged "$OMARCHY_INSTALL/user/mise-work.sh"
+run_logged "$OMARCHY_INSTALL/user/llama-server.sh"
 
 run_logged "$OMARCHY_INSTALL/user/hardware/vm-no-animations.sh"
 

@@ -1,0 +1,13 @@
+[Unit]
+Description=llama.cpp OpenAI-Compatible Inference Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/llama-server --host 127.0.0.1 --port 8080 -ngl 99 -fa -c 32768 --prompt-cache /var/cache/llama/prompt.bin
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=default.target
+

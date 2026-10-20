@@ -77,7 +77,7 @@ type_delay_ms = 1
 # On any failure (timeout, error), falls back to original transcription.
 #
 # [output.post_process]
-# command = "ollama run llama3.2:1b 'Clean up this dictation. Fix grammar, remove filler words. Output only the cleaned text:'"
+# command = "llama-cli -m llama3.2:1b.gguf -p 'Clean up this dictation. Fix grammar, remove filler words. Output only the cleaned text:'"
 # timeout_ms = 30000  # 30 second timeout (generous for LLM)
 
 [output.notification]

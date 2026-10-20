@@ -5,6 +5,8 @@ autoconf-archive
 base
 base-devel
 btrfs-progs
+cuda
+cudnn
 dkms
 gst-plugin-pipewire
 gtk4-layer-shell
@@ -15,6 +17,7 @@ limine-snapper-sync
 linux-firmware
 linux-omarchy
 linux-omarchy-headers
+nvidia-container-toolkit
 nvidia-open-dkms
 nvidia-utils
 pipewire

@@ -185,7 +185,8 @@ esac
 SH
 chmod +x "$real_bin/mise"
 select_account grok side
-declarations="$ROOT/etc/mise/conf.d/omarchy-tools.toml"
+declarations="$test_tmp/declared-tools.toml"
+printf '[tools]\ngrok = { version = "latest" }\n' >"$declarations"
 output=$(run_isolated env OMARCHY_MISE_CONFIG_PATH="$declarations" OMARCHY_TEST_EXPECTED_INSTALL="install --quiet grok" grok)
 [[ $output == "$test_tmp/accounts/grok side" ]] || fail "a dispatcher without a CLI installs Omarchy's declared agent and uses the selected account" "$output"
 pass "a dispatcher without a CLI installs Omarchy's declared agent and uses the selected account"

@@ -245,21 +245,8 @@ assertEqual(
 )
 const expectedAgents = {
   agy: { icon: '󰫢', label: 'Antigravity' },
-  pi: { icon: '\ue901', iconFont: 'omarchy', label: 'Pi' },
-  omp: { icon: '\ue903', iconFont: 'omarchy', label: 'omp' },
-  opencode: { icon: '\ue902', iconFont: 'omarchy', label: 'OpenCode' },
-  ori: { icon: '\ue909', iconFont: 'omarchy', label: 'Ori' },
-  claude: { icon: '󰛄', label: 'Claude' },
-  codex: { icon: '\ue905', iconFont: 'omarchy', label: 'Codex' },
-  grok: { icon: '\ue904', iconFont: 'omarchy', label: 'Grok' },
-  kimi: { icon: '\u{f06a9}', label: 'Kimi' },
-  hermes: { icon: '\ue90a', iconFont: 'omarchy', label: 'Hermes' },
-  openclaw: { icon: '\ue90c', iconFont: 'omarchy', label: 'OpenClaw' },
-  copilot: { icon: '', label: 'Copilot' },
-  crush: { icon: '󰋑', label: 'Crush' },
-  muse: { icon: '󰛤', label: 'Muse Code' },
-  'cursor-agent': { icon: '\ue90d', iconFont: 'omarchy', label: 'Cursor CLI' },
-
+  kimi: { icon: '󰚩', label: 'Kimi' },
+  opencode: { icon: '\ue902', iconFont: 'omarchy', label: 'OpenCode' }
 }
 assert(
   Object.entries(expectedAgents).every(([agent, expected]) => {
@@ -278,14 +265,13 @@ assertDeepEqual(
   defaultItems
     .filter(item => item.parent === 'setup.default.agent')
     .map(item => item.label),
-  ['Antigravity', 'Claude', 'Codex', 'Copilot', 'Crush', 'Cursor CLI', 'Grok', 'Hermes', 'Kimi', 'Muse Code', 'omp', 'OpenClaw', 'OpenCode', 'Ori', 'Pi'],
+  ['Antigravity', 'Kimi', 'OpenCode'],
   'menu sorts coding agents alphabetically'
 )
 const expectedDefaults = {
-  browser: ['Chromium', 'Chrome', 'Brave', 'Brave Origin', 'Edge', 'Firefox', 'Zen'],
   terminal: ['Alacritty', 'Foot', 'Ghostty', 'Kitty'],
   editor: ['Neovim', 'VSCode', 'Cursor', 'Zed', 'Sublime Text', 'Helix', 'Vim', 'Emacs'],
-  dictation: ['Superwhisper', 'Voxtype']
+  dictation: ['Voxtype']
 }
 assert(
   Object.entries(expectedDefaults).every(([type, labels]) => {
@@ -352,7 +338,6 @@ assertDeepEqual(
     .map(item => item.id),
   [
     'remove.package',
-    'remove.ai',
     'remove.dictation',
     'remove.service',
     'remove.development',

@@ -21,7 +21,6 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
     cliamp \
     libreoffice-fresh \
     obsidian \
-    monologue \
     omacalc \
     hype \
     signed; then

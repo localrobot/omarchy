@@ -2,7 +2,7 @@
 
 # omarchy:summary=Get or set the default dictation backend
 # omarchy:args=[backend]
-# omarchy:examples=omarchy default dictation | omarchy default dictation superwhisper
+# omarchy:examples=omarchy default dictation | omarchy default dictation voxtype
 
 if (($# > 1)); then
   echo "Usage: omarchy default dictation [backend]" >&2
@@ -16,22 +16,20 @@ if (($# == 0)); then
     exit 1
   fi
   read -r backend < "$config"
-else
-  backend=$1
+  echo "$backend"
+  exit 0
 fi
+
+backend=$1
 
 if [[ ! $backend =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
   echo "Invalid dictation backend: $backend" >&2
   exit 1
 fi
 
-if (($# == 0)); then
-  echo "$backend"
-else
-  installer="omarchy-install-dictation-$backend"
-  if omarchy-cmd-missing "$installer"; then
-    echo "No installer available for dictation backend: $backend" >&2
-    exit 1
-  fi
-  omarchy-launch-floating-terminal-with-presentation "$installer"
+installer="omarchy-install-dictation-$backend"
+if omarchy-cmd-missing "$installer"; then
+  echo "No installer available for dictation backend: $backend" >&2
+  exit 1
 fi
+omarchy-launch-floating-terminal-with-presentation "$installer"

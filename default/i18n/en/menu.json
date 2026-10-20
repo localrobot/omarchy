@@ -461,54 +461,15 @@
   "setup.default.agent.agy": {
     "label": "Antigravity"
   },
-  "setup.default.agent.claude": {
-    "label": "Claude"
-  },
-  "setup.default.agent.codex": {
-    "label": "Codex"
-  },
-  "setup.default.agent.copilot": {
-    "label": "Copilot"
-  },
-  "setup.default.agent.crush": {
-    "label": "Crush"
-  },
-  "setup.default.agent.cursor-agent": {
-    "label": "Cursor CLI"
-  },
-  "setup.default.agent.grok": {
-    "label": "Grok"
-  },
-  "setup.default.agent.hermes": {
-    "label": "Hermes"
+  "setup.default.agent.opencode": {
+    "label": "OpenCode"
   },
   "setup.default.agent.kimi": {
     "label": "Kimi"
   },
-  "setup.default.agent.muse": {
-    "label": "Muse Code"
-  },
-  "setup.default.agent.omp": {
-    "label": "omp"
-  },
-  "setup.default.agent.openclaw": {
-    "label": "OpenClaw"
-  },
-  "setup.default.agent.opencode": {
-    "label": "OpenCode"
-  },
-  "setup.default.agent.ori": {
-    "label": "Ori"
-  },
-  "setup.default.agent.pi": {
-    "label": "Pi"
-  },
   "setup.default.dictation": {
     "label": "Dictation",
     "title": "Default Dictation"
-  },
-  "setup.default.dictation.superwhisper": {
-    "label": "Superwhisper"
   },
   "setup.default.dictation.voxtype": {
     "label": "Voxtype"
@@ -616,9 +577,6 @@
   },
   "install.package": {
     "label": "Package"
-  },
-  "install.ai": {
-    "label": "AI"
   },
   "install.service": {
     "label": "Service"
@@ -731,33 +689,6 @@
   "install.terminal.kitty": {
     "label": "Kitty"
   },
-  "install.ai.chatgpt": {
-    "label": "ChatGPT Desktop"
-  },
-  "install.ai.claude": {
-    "label": "Claude Desktop"
-  },
-  "install.ai.grok-bot": {
-    "label": "Grok Bot"
-  },
-  "install.ai.hermes": {
-    "label": "Hermes Desktop"
-  },
-  "install.ai.lm-studio": {
-    "label": "LM Studio"
-  },
-  "install.ai.ollama": {
-    "label": "Ollama"
-  },
-  "install.ai.openclaw": {
-    "label": "OpenClaw"
-  },
-  "install.ai.perplexity": {
-    "label": "Perplexity"
-  },
-  "install.ai.t3-code": {
-    "label": "T3 Code"
-  },
   "install.development.rails": {
     "label": "Ruby on Rails"
   },
@@ -827,10 +758,6 @@
   "remove.package": {
     "label": "Package"
   },
-  "remove.ai": {
-    "label": "AI",
-    "title": "Remove"
-  },
   "remove.dictation": {
     "label": "Dictation"
   },
@@ -870,9 +797,6 @@
   "remove.security.sudoless-docker": {
     "label": "Sudoless Docker"
   },
-  "remove.ai.hermes": {
-    "label": "Hermes Desktop"
-  },
   "remove.service.dropbox": {
     "label": "Dropbox"
   },
@@ -882,35 +806,8 @@
   "remove.service.ssh-agent": {
     "label": "SSH Agent"
   },
-  "remove.ai.chatgpt": {
-    "label": "ChatGPT Desktop"
-  },
-  "remove.ai.claude": {
-    "label": "Claude Desktop"
-  },
-  "remove.dictation.superwhisper": {
-    "label": "Superwhisper"
-  },
   "remove.dictation.voxtype": {
     "label": "Voxtype"
-  },
-  "remove.ai.grok-bot": {
-    "label": "Grok Bot"
-  },
-  "remove.ai.lm-studio": {
-    "label": "LM Studio"
-  },
-  "remove.ai.ollama": {
-    "label": "Ollama"
-  },
-  "remove.ai.openclaw": {
-    "label": "OpenClaw"
-  },
-  "remove.ai.perplexity": {
-    "label": "Perplexity"
-  },
-  "remove.ai.t3-code": {
-    "label": "T3 Code"
   },
   "remove.development.rails": {
     "label": "Ruby on Rails"
