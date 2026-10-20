@@ -33,7 +33,6 @@
   "Docker": "Docker",
   "Editor": "Editor",
   "Eject media": "Eject media",
-  "Email": "Email",
   "Emojis": "Emojis",
   "Enable touchpad": "Enable touchpad",
   "Expand window down": "Expand window down",
@@ -56,9 +55,6 @@
   "Former workspace": "Former workspace",
   "Full screen": "Full screen",
   "Full width": "Full width",
-  "Google Maps": "Google Maps",
-  "Google Messages": "Google Messages",
-  "Google Photos": "Google Photos",
   "Grok": "Grok",
   "Hardware menu": "Hardware menu",
   "Herdr": "Herdr",
@@ -98,7 +94,6 @@
   "Mute": "Mute",
   "Mute microphone": "Mute microphone",
   "Network": "Network",
-  "New email": "New email",
   "Next track": "Next track",
   "Next window in group": "Next window in group",
   "Next workspace": "Next workspace",
@@ -184,9 +179,5 @@
   "Volume up precise": "Volume up precise",
   "WhatsApp": "WhatsApp",
   "World clock": "World clock",
-  "X": "X",
-  "X Post": "X Post",
-  "YouTube": "YouTube",
-  "Zoom in": "Zoom in",
-  "Zoom in (JIS + key)": "Zoom in (JIS + key)"
+  "Zoom in": "Zoom in"
 }

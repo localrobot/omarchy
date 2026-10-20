@@ -54,25 +54,23 @@ echo "$@" >>"$LOCALE_GEN_LOG"
 STUB
 chmod +x "$work/bin/locale-gen"
 export LOCALE_GEN_LOG=$work/locale-gen.log OMARCHY_LOCALE_GEN=$work/locale.gen OMARCHY_LOCALE_REGISTRY=$registry
-printf '#sv_SE.UTF-8 UTF-8\n#hi_IN UTF-8\n' >"$OMARCHY_LOCALE_GEN"
+printf '#en_US.UTF-8 UTF-8\n' >"$OMARCHY_LOCALE_GEN"
 run() { PATH="$work/bin:$PATH" bash "$generator" "$@"; }
 
 : >"$LOCALE_GEN_LOG"
-run sv || fail "omarchy-locale-generate generates a registry language"
-grep -qx 'sv_SE.UTF-8 UTF-8' "$OMARCHY_LOCALE_GEN" || fail "the language's locale is enabled in locale.gen" "$(cat "$OMARCHY_LOCALE_GEN")"
-[[ $(cat "$LOCALE_GEN_LOG") == "sv_SE.UTF-8" ]] || fail "locale-gen generates the language's locale" "$(cat "$LOCALE_GEN_LOG")"
-run fil || fail "omarchy-locale-generate adds a locale locale.gen doesn't list"
-grep -qx 'fil_PH.UTF-8 UTF-8' "$OMARCHY_LOCALE_GEN" || fail "a missing locale is appended to locale.gen" "$(cat "$OMARCHY_LOCALE_GEN")"
+run en || fail "omarchy-locale-generate generates a registry language"
+grep -qE '^en_US(\.UTF-8)? UTF-8' "$OMARCHY_LOCALE_GEN" || fail "the language's locale is enabled in locale.gen" "$(cat "$OMARCHY_LOCALE_GEN")"
+[[ $(cat "$LOCALE_GEN_LOG") == "en_US.UTF-8" ]] || fail "locale-gen generates the language's locale" "$(cat "$LOCALE_GEN_LOG")"
 pass "omarchy-locale-generate enables and generates a registry language's locale"
 
-for bad in "" "xx" "../da" "da;id" "da sv" "DA"; do
+for bad in "" "xx" "../en" "en;id" "en en" "EN"; do
   : >"$LOCALE_GEN_LOG"
   if run "$bad" 2>/dev/null; then
     fail "omarchy-locale-generate rejects '$bad'"
   fi
   [[ ! -s $LOCALE_GEN_LOG ]] || fail "a rejected code generates nothing" "'$bad'"
 done
-if run da sv 2>/dev/null; then
+if run en en 2>/dev/null; then
   fail "omarchy-locale-generate takes exactly one code"
 fi
 pass "omarchy-locale-generate rejects anything but one registry code"

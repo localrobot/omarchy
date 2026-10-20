@@ -53,11 +53,4 @@ function keyboard.installed()
   return values
 end
 
--- Japanese (JIS) keyboards put +, ^, and the Henkan/Muhenkan keys where US
--- keyboards don't, so a few defaults only apply when that layout leads.
-function keyboard.jis()
-  local layout = keyboard.selected().XKBLAYOUT or "us"
-  return layout:match("^[^,]*") == "jp"
-end
-
 return keyboard

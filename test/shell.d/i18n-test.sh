@@ -15,7 +15,7 @@ const readJson = (rel) => JSON.parse(fs.readFileSync(path.join(i18nDir, rel), 'u
 
 const registry = readJson('locales.json')
 const codes = Object.keys(registry)
-assertEqual(codes.length, 50, 'i18n registry holds 50 languages')
+assertEqual(codes.length, 1, 'i18n registry holds 1 language')
 assert(codes[0] === 'en', 'i18n registry lists English first (the default)')
 const badRegistry = codes.filter((code) => !/^[a-z]{2,3}(-[A-Za-z]{2})?$/.test(code)
   || ['name', 'englishName', 'formatLocale', 'locale'].some((f) => typeof registry[code][f] !== 'string' || registry[code][f].length === 0)
@@ -146,22 +146,22 @@ assertDeepEqual(MenuModel.applyTranslations(defaults, null), defaults, 'a missin
 // Routing must not depend on the display language: English labels live in
 // searchTerms, which resolveRoute never reads, so a word that is inert in
 // English cannot become a command in another language.
-const daMenu = readJson('da/menu.json')
+const sampleMenu = { ...enMenu, setup: { label: 'Indstillinger' } }
 const enMerged = MenuModel.mergeMenuSources(menuItems, [])
-const daMerged = MenuModel.mergeMenuSources(MenuModel.applyTranslations(menuItems, daMenu), [])
-for (const route of ['reboot', 'shutdown', 'logout', 'hibernate', 'lock', 'clock', 'danish', 'setup', 'settings', 'power-menu', 'language'])
-  assertEqual(MenuModel.resolveRoute(daMerged.items, daMerged.itemOrder, route), MenuModel.resolveRoute(enMerged.items, enMerged.itemOrder, route), `route "${route}" resolves the same in Danish as in English`)
-assert(MenuModel.nameSearchText(daMerged.items.setup).includes('setup'), 'English labels remain searchable in Danish')
+const sampleMerged = MenuModel.mergeMenuSources(MenuModel.applyTranslations(menuItems, sampleMenu), [])
+for (const route of ['reboot', 'shutdown', 'logout', 'hibernate', 'lock', 'clock', 'setup', 'settings', 'power-menu', 'language'])
+  assertEqual(MenuModel.resolveRoute(sampleMerged.items, sampleMerged.itemOrder, route), MenuModel.resolveRoute(enMerged.items, enMerged.itemOrder, route), `route "${route}" resolves the same when translated as in English`)
+assert(MenuModel.nameSearchText(sampleMerged.items.setup).includes('setup'), 'English labels remain searchable when translated')
 
 // JS models translate through the optional tr argument and stay English
 // without one (the audio/monitor/clipboard tests assert the same English).
-const daShell = readJson('da/shell.json')
-const tr = (key, english) => daShell[key] || english
+const sampleShell = { ...enShell, 'audio.level.muted': 'Muted (Test)', 'clipboard.screenshotFrom': 'Screenshot from %1 (Test)' }
+const tr = (key, english) => sampleShell[key] || english
 const audio = requireFromRoot('shell/plugins/panels/audio/Model.js')
-assertEqual(audio.outputVolumeName(0.5, true, tr), daShell['audio.level.muted'], 'audio levels translate through tr')
+assertEqual(audio.outputVolumeName(0.5, true, tr), sampleShell['audio.level.muted'], 'audio levels translate through tr')
 const clipboard = requireFromRoot('shell/plugins/clipboard/ClipboardHistory.js')
-const daRow = clipboard.displayRows([{ type: 'image', path: '/tmp/a.png', mime: 'image/png', capturedAt: 'Friday 14:42' }], '', 50, tr)[0]
-assertEqual(daRow.previewText, daShell['clipboard.screenshotFrom'].replace('%1', 'Friday 14:42'), 'clipboard previews translate through tr')
+const sampleRow = clipboard.displayRows([{ type: 'image', path: '/tmp/a.png', mime: 'image/png', capturedAt: 'Friday 14:42' }], '', 50, tr)[0]
+assertEqual(sampleRow.previewText, sampleShell['clipboard.screenshotFrom'].replace('%1', 'Friday 14:42'), 'clipboard previews translate through tr')
 
 // The manual ships whole per language: same files as English, none empty,
 // and the machine-significant parts of every chapter preserved — code block
@@ -275,7 +275,7 @@ export OMARCHY_LOCALE_GEN=$work/locale.gen
 export OMARCHY_LOCALE_REGISTRY=$ROOT/default/i18n/locales.json
 export XDG_CONFIG_HOME=$work/config
 session_env=$XDG_CONFIG_HOME/uwsm/env.d/50-omarchy-language
-printf '#da_DK.UTF-8 UTF-8\n' >"$OMARCHY_LOCALE_GEN"
+printf '#en_US.UTF-8 UTF-8\n' >"$OMARCHY_LOCALE_GEN"
 
 # Stub the outside world: locale-gen records its argument, notifications
 # record their text, and omarchy-language itself is the real one via PATH.
@@ -290,7 +290,7 @@ echo "$@" >>"$NOTIFY_LOG"
 STUB
 cat >"$work/stubs/locale" <<'STUB'
 #!/bin/bash
-if [[ $1 == "-a" ]]; then echo "en_US.utf8"; else echo "LANG=en_US.UTF-8"; fi
+if [[ $1 == "-a" ]]; then echo "en_GB.utf8"; else echo "LANG=en_GB.UTF-8"; fi
 STUB
 # A fake Hyprland session: the compositor and the shell restart record what
 # they were asked, so the test never touches a desktop it runs inside.
@@ -341,20 +341,20 @@ assert_bash_equal "$(omarchy-language)" "en" "omarchy-language falls back to Eng
 rm -f "$OMARCHY_LANGUAGE_FILE"
 
 list=$(omarchy-language list)
-assert_bash_equal "$(printf '%s\n' "$list" | wc -l)" "50" "omarchy-language list prints 50 rows"
+assert_bash_equal "$(printf '%s\n' "$list" | wc -l)" "1" "omarchy-language list prints 1 row"
 assert_bash_equal "$(printf '%s\n' "$list" | head -n 1 | cut -f2)" "en" "omarchy-language list puts English first"
-assert_bash_equal "$(omarchy-language locale da)" "da_DK.UTF-8" "omarchy-language locale maps da to its glibc locale"
+assert_bash_equal "$(omarchy-language locale en)" "en_US.UTF-8" "omarchy-language locale maps en to its glibc locale"
 
 # stdin is not a tty here, as when picked from the menu, and this machine has
 # no passwordless grant, so generating the locale asks through polkit.
-omarchy-language da </dev/null
-assert_bash_equal "$(cat "$ELEVATE_LOG")" "pkexec omarchy-locale-generate da" "without the grant, the menu generates the locale through pkexec"
-assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "da" "omarchy-language persists the choice"
-assert_bash_equal "$(omarchy-language)" "da" "omarchy-language reads the persisted choice"
-assert_bash_equal "$(grep '^export LANG=' "$session_env")" "export LANG=da_DK.UTF-8" "omarchy-language sets the session LANG through uwsm for the next login"
-assert_bash_equal "$(cat "$SESSION_ENV_LOG")" $'eval hl.env("LANG", "da_DK.UTF-8", true)\nrestart' "omarchy-language hands the new LANG to Hyprland and services, then respawns the shell from it"
-assert_bash_equal "$(grep '^da_DK.UTF-8' "$OMARCHY_LOCALE_GEN")" "da_DK.UTF-8 UTF-8" "omarchy-language enables the locale in locale.gen"
-assert_bash_equal "$(cat "$LOCALE_GEN_LOG")" "da_DK.UTF-8" "omarchy-language generates the locale"
+omarchy-language en </dev/null
+assert_bash_equal "$(cat "$ELEVATE_LOG")" "pkexec omarchy-locale-generate en" "without the grant, the menu generates the locale through pkexec"
+assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "en" "omarchy-language persists the choice"
+assert_bash_equal "$(omarchy-language)" "en" "omarchy-language reads the persisted choice"
+assert_bash_equal "$(grep '^export LANG=' "$session_env")" "export LANG=en_US.UTF-8" "omarchy-language sets the session LANG through uwsm for the next login"
+assert_bash_equal "$(cat "$SESSION_ENV_LOG")" $'eval hl.env("LANG", "en_US.UTF-8", true)\nrestart' "omarchy-language hands the new LANG to Hyprland and services, then respawns the shell from it"
+assert_bash_equal "$(grep '^en_US' "$OMARCHY_LOCALE_GEN")" "en_US.UTF-8 UTF-8" "omarchy-language enables the locale in locale.gen"
+assert_bash_equal "$(cat "$LOCALE_GEN_LOG")" "en_US.UTF-8" "omarchy-language generates the locale"
 
 if omarchy-language xx </dev/null 2>/dev/null; then
   fail "omarchy-language rejects unknown codes"
@@ -362,20 +362,27 @@ else
   pass "omarchy-language rejects unknown codes"
 fi
 
-da_changed=$(jq -r '."language.changed"' "$ROOT/default/i18n/da/cli.json" | sed 's/%1/Dansk/')
-assert_bash_equal "$(omarchy-i18n language.changed Dansk)" "$da_changed" "omarchy-i18n prints the current language with substitution"
+en_changed=$(jq -r '."language.changed"' "$ROOT/default/i18n/en/cli.json" | sed 's/%1/English/')
+assert_bash_equal "$(omarchy-i18n language.changed 'English')" "$en_changed" "omarchy-i18n prints the current language with substitution"
 assert_bash_equal "$(omarchy-i18n missing.key)" "missing.key" "omarchy-i18n passes unknown keys through"
 
-grep -q "$da_changed" "$NOTIFY_LOG" && pass "the language-change notification arrives in the new language" || fail "the language-change notification arrives in the new language" "notify log: $(cat "$NOTIFY_LOG")"
+grep -q "$en_changed" "$NOTIFY_LOG" && pass "the language-change notification arrives in the new language" || fail "the language-change notification arrives in the new language" "notify log: $(cat "$NOTIFY_LOG")"
 
-da_battery=$(jq -r '."battery.lowBody"' "$ROOT/default/i18n/da/cli.json" | sed 's/%1/12/')
-assert_bash_equal "$(omarchy-i18n battery.lowBody 12)" "$da_battery" "omarchy-i18n substitutes %1 and keeps a literal percent sign"
+en_battery=$(jq -r '."battery.lowBody"' "$ROOT/default/i18n/en/cli.json" | sed 's/%1/12/')
+assert_bash_equal "$(omarchy-i18n battery.lowBody 12)" "$en_battery" "omarchy-i18n substitutes %1 and keeps a literal percent sign"
 
 # Plural entries pick their form by count, and plain-number arguments take
 # the language's decimal separator and digits.
 plural_root=$work/plural-root
 mkdir -p "$plural_root/default/i18n/en" "$plural_root/default/i18n/ru" "$plural_root/default/i18n/fa"
-cp "$ROOT/default/i18n/plural.jq" "$ROOT/default/i18n/locales.json" "$plural_root/default/i18n/"
+cp "$ROOT/default/i18n/plural.jq" "$plural_root/default/i18n/"
+cat >"$plural_root/default/i18n/locales.json" <<'EOF'
+{
+  "en": {"name": "English", "locale": "en_US.UTF-8", "decimal": ".", "zeroDigit": "0"},
+  "ru": {"name": "Russian", "locale": "ru_RU.UTF-8", "decimal": ",", "zeroDigit": "0"},
+  "fa": {"name": "Persian", "locale": "fa_IR.UTF-8", "decimal": "٫", "zeroDigit": "۰"}
+}
+EOF
 printf '{"files.count": {"one": "%%1 file", "other": "%%1 files"}, "power.rate": "%%1 W"}\n' >"$plural_root/default/i18n/en/cli.json"
 printf '{"files.count": {"one": "%%1 файл", "few": "%%1 файла", "many": "%%1 файлов", "other": "%%1 файла"}, "power.rate": "%%1 Вт"}\n' >"$plural_root/default/i18n/ru/cli.json"
 printf '{}\n' >"$plural_root/default/i18n/fa/cli.json"
@@ -395,59 +402,40 @@ else
   pass "omarchy-i18n rejects a non-numeric count"
 fi
 
-da_changed_raw=$(jq -r '."language.changed"' "$ROOT/default/i18n/da/cli.json")
-assert_bash_equal "$(omarchy-i18n language.changed 'Research & Development')" "${da_changed_raw//%1/"Research & Development"}" "omarchy-i18n keeps ampersands in arguments literal"
+en_changed_raw=$(jq -r '."language.changed"' "$ROOT/default/i18n/en/cli.json")
+assert_bash_equal "$(omarchy-i18n language.changed 'Research & Development')" "${en_changed_raw//%1/"Research & Development"}" "omarchy-i18n keeps ampersands in arguments literal"
 
 # With the locale already generated, picking the language needs no
 # privilege at all: no password prompt, no locale-gen.
 cat >"$work/stubs/locale" <<'STUB'
 #!/bin/bash
-if [[ $1 == "-a" ]]; then printf 'en_US.utf8\nda_DK.utf8\n'; else echo "LANG=da_DK.UTF-8"; fi
+if [[ $1 == "-a" ]]; then printf 'en_US.utf8\n'; else echo "LANG=en_US.UTF-8"; fi
 STUB
 chmod +x "$work/stubs/locale"
 : >"$LOCALE_GEN_LOG"; : >"$ELEVATE_LOG"; : >"$SESSION_ENV_LOG"
 rm -f "$OMARCHY_LANGUAGE_FILE"
-omarchy-language da </dev/null
-assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "da" "already-applied locale switches without elevating"
+omarchy-language en </dev/null
+assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "en" "already-applied locale switches without elevating"
 assert_bash_equal "$(cat "$LOCALE_GEN_LOG")" "" "already-generated locale is not regenerated"
 assert_bash_equal "$(cat "$ELEVATE_LOG")" "" "no password prompt when nothing privileged is needed"
-assert_bash_equal "$(head -n 1 "$SESSION_ENV_LOG")" 'eval hl.env("LANG", "da_DK.UTF-8", true)' "an already-generated locale still reaches the session"
-
-# Switching back writes the new LANG over the old one rather than adding to it.
-omarchy-language en </dev/null
-assert_bash_equal "$(grep -c '^export LANG=' "$session_env") $(grep '^export LANG=' "$session_env")" "1 export LANG=en_US.UTF-8" "switching language replaces the session LANG"
+assert_bash_equal "$(head -n 1 "$SESSION_ENV_LOG")" 'eval hl.env("LANG", "en_US.UTF-8", true)' "an already-generated locale still reaches the session"
 
 # With etc/sudoers.d/omarchy-locale-generate installed, a language whose locale
 # isn't generated yet still switches from the menu without any password
 # prompt: the helper runs through sudo -n, never polkit.
 cat >"$work/stubs/locale" <<'STUB'
 #!/bin/bash
-if [[ $1 == "-a" ]]; then echo "en_US.utf8"; else echo "LANG=en_US.UTF-8"; fi
+if [[ $1 == "-a" ]]; then echo "en_GB.utf8"; else echo "LANG=en_GB.UTF-8"; fi
 STUB
 : >"$LOCALE_GEN_LOG"; : >"$ELEVATE_LOG"
-TEST_SUDO_GRANT=1 omarchy-language sv </dev/null
-assert_bash_equal "$(cat "$ELEVATE_LOG")" "sudo -n omarchy-locale-generate sv" "with the grant, a new language generates its locale without a password prompt"
-assert_bash_equal "$(cat "$LOCALE_GEN_LOG")" "sv_SE.UTF-8" "the passwordless helper generates the language's locale"
-assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "sv" "the passwordless switch persists the choice"
+TEST_SUDO_GRANT=1 omarchy-language en </dev/null
+assert_bash_equal "$(cat "$ELEVATE_LOG")" "sudo -n omarchy-locale-generate en" "with the grant, a new language generates its locale without a password prompt"
+assert_bash_equal "$(cat "$LOCALE_GEN_LOG")" "en_US.UTF-8" "the passwordless helper generates the language's locale"
+assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "en" "the passwordless switch persists the choice"
 
-# A CJK language brings its glyph forms, and its input method where Fcitx
-# answers; without a session bus the switch still succeeds and says how.
+# A non-CJK language leaves the CJK glyph forms alone.
 cjk_font=$XDG_CONFIG_HOME/fontconfig/conf.d/50-omarchy-input-method.conf
 [[ ! -e $cjk_font ]] && pass "a non-CJK language leaves the CJK glyph forms alone" || fail "a non-CJK language leaves the CJK glyph forms alone"
-cat >"$work/stubs/busctl" <<'STUB'
-#!/bin/bash
-echo "no session bus" >&2
-exit 1
-STUB
-cp "$work/stubs/busctl" "$work/stubs/fcitx5-remote"
-chmod +x "$work/stubs/busctl" "$work/stubs/fcitx5-remote"
-cjk_output=$(TEST_SUDO_GRANT=1 omarchy-language ja </dev/null 2>&1) || fail "a CJK language switches without a reachable Fcitx" "$cjk_output"
-assert_bash_equal "$(cat "$OMARCHY_LANGUAGE_FILE")" "ja" "a CJK language switches without a reachable Fcitx"
-[[ $cjk_output == *"Setup > Typing > Input Methods"* ]] && pass "an input method that could not be added is named with where to add it" || fail "an input method that could not be added is named with where to add it" "$cjk_output"
-grep -q 'Noto Sans CJK JP' "$cjk_font" && pass "Japanese seeds Japanese glyph forms" || fail "Japanese seeds Japanese glyph forms"
-TEST_SUDO_GRANT=1 omarchy-language ko </dev/null 2>/dev/null
-grep -q 'Noto Sans CJK JP' "$cjk_font" && pass "a second CJK language keeps the glyph forms already chosen" || fail "a second CJK language keeps the glyph forms already chosen"
-rm -f "$work/stubs/busctl" "$work/stubs/fcitx5-remote" "$cjk_font"
 
 # A cancelled polkit prompt must not persist the choice, or the interface
 # would switch with LANG left behind.
@@ -457,10 +445,10 @@ exit 126
 STUB
 cat >"$work/stubs/locale" <<'STUB'
 #!/bin/bash
-if [[ $1 == "-a" ]]; then echo "en_US.utf8"; else echo "LANG=en_US.UTF-8"; fi
+if [[ $1 == "-a" ]]; then echo "en_GB.utf8"; else echo "LANG=en_GB.UTF-8"; fi
 STUB
 rm -f "$OMARCHY_LANGUAGE_FILE" "$session_env"
-if omarchy-language da </dev/null 2>/dev/null; then
+if omarchy-language en </dev/null 2>/dev/null; then
   fail "a cancelled password prompt fails the switch"
 else
   pass "a cancelled password prompt fails the switch"

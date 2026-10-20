@@ -9,9 +9,6 @@ require_command lua
 test_dir=$(mktemp -d)
 trap 'rm -rf "$test_dir"' EXIT
 
-# Load the JIS bindings on a jp layout and fire one of them in a fake window,
-# printing what it hands to Hyprland. TEST_FCITX5_CONFIG is the fcitx5 config,
-# or unset for none.
 fire() {
   local keys="$1" class="$2" tags="${3-}"
   local home="$test_dir/home"
@@ -29,7 +26,7 @@ fire() {
   fi
 
   HOME="$home" XDG_CONFIG_HOME="$home/.config" OMARCHY_PATH="$ROOT" \
-    TEST_KEYS="$keys" TEST_CLASS="$class" TEST_TAGS="$tags" TEST_LAYOUT="${TEST_LAYOUT:-jp}" lua <<'LUA'
+    TEST_KEYS="$keys" TEST_CLASS="$class" TEST_TAGS="$tags" TEST_LAYOUT="${TEST_LAYOUT:-us}" lua <<'LUA'
 package.path = os.getenv("OMARCHY_PATH") .. "/?.lua;" .. package.path
 
 local real_open = io.open
@@ -71,7 +68,6 @@ hl = {
 o.shell_succeeds = function(command) print("exec " .. command) end
 
 require("default.hypr.bindings.input-method")
-require("default.hypr.bindings.jis")
 
 local bind = binds[os.getenv("TEST_KEYS")]
 if bind.options.non_consuming then
@@ -96,16 +92,6 @@ assert_fires() {
   pass "$description"
 }
 
-zoom="CTRL + SHIFT + semicolon"
-assert_fires "the JIS + key zooms in with Ctrl + keypad plus" \
-  $'send CTRL KP_Add down\nsend CTRL KP_Add up' "$zoom" "chromium"
-assert_fires "the JIS + key zooms in windows without a class" \
-  $'send CTRL KP_Add down\nsend CTRL KP_Add up' "$zoom" ""
-assert_fires "the JIS + key zooms Obsidian in with Ctrl + ^" \
-  $'send CTRL asciicircum down\nsend CTRL asciicircum up' "$zoom" "obsidian"
-assert_fires "the JIS + key zooms the Obsidian Flatpak in with Ctrl + ^" \
-  $'send CTRL asciicircum down\nsend CTRL asciicircum up' "$zoom" "md.obsidian.Obsidian"
-
 # The prefix bind has to pass Ctrl + Space on, or tmux and Herdr never see it.
 # Fcitx never toggles on it (configure --defaults removes it from its keys), so
 # a terminal can always return to direct input first.
@@ -124,3 +110,4 @@ assert_fires "Super + Shift + I cycles configured input back" \
   "exec omarchy-input-method cycle back" "SUPER + SHIFT + I" "chromium"
 TEST_KEYBOARD_ONLY=true assert_fires "Super + I cycles keyboard layouts without an input engine" \
   "exec omarchy-input-method cycle" "SUPER + I" "foot" "terminal"
+
