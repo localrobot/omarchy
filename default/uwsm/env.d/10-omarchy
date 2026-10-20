@@ -3,6 +3,38 @@
 # UWSM doesn't source /etc/profile.d, so pull the env bootstrap in directly.
 [ -r /usr/share/omarchy/default/bash/env-bootstrap ] && . /usr/share/omarchy/default/bash/env-bootstrap
 
+# Standard XDG Base Directories
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Tool-Specific XDG Redirections
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export GOPATH="$XDG_DATA_HOME/go"
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
+export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
+export HISTFILE="$XDG_STATE_HOME/bash/history"
+
+case ":$PATH:" in
+  *":$XDG_DATA_HOME/cargo/bin:"*) ;;
+  *) export PATH="$PATH:$XDG_DATA_HOME/cargo/bin" ;;
+esac
+
+case ":$PATH:" in
+  *":$XDG_DATA_HOME/go/bin:"*) ;;
+  *) export PATH="$PATH:$XDG_DATA_HOME/go/bin" ;;
+esac
+
 # Omarchy session defaults. Users can override these in ~/.config/uwsm/default
 # or, preferably, ~/.config/uwsm/env.d/*.
 if [ -f "${OMARCHY_PATH%/}/default/uwsm/default" ]; then
