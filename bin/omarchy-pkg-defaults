@@ -8,7 +8,7 @@ set -eo pipefail
 
 platform=${1:-}
 if [[ -z $platform ]]; then
-  platform=$(omarchy-hw-platform)
+  platform=$("$OMARCHY_PATH/bin/omarchy-hw-platform" 2>/dev/null || echo x86)
 fi
 
 # Image builders written before the platform names settled pass the old ones.

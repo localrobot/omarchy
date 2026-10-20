@@ -329,15 +329,35 @@ All hardware configurations, applications, and features that do not directly ser
   - Indian Language Script Fonts: Comprehensive Noto Indic packages covering Devanagari (Hindi, Marathi, Sanskrit), Tamil, Telugu, Kannada, Malayalam, Bengali, Gujarati, Gurmukhi, and Odia
   - System Fonts: `ttf-ia-writer`, `ttf-jetbrains-mono-nerd-basic`, `woff2-font-awesome`
 
+### 6.6 Theme Consolidation
+
+The theme collection is streamlined to strictly 5 curated workstation themes, eliminating 18 themes and ~100MB of background images and video intros:
+- **Retained Themes (5)**: `everforest`, `last-horizon`, `matte-black`, `miasma`, and `osaka-jade`.
+- **Default Workstation Theme**: `matte-black` configured as the seeded default in `install/user/theme.sh`.
+- **Purged Themes (18)**: `catppuccin`, `catppuccin-latte`, `ethereal`, `flexoki-light`, `gruvbox`, `hackerman`, `kanagawa`, `lumon`, `lupine`, `nord`, `retro-82`, `ristretto`, `rose-pine`, `solitude`, `starship`, `tokyo-night`, `vantablack`, `white`.
+
 ---
 
-## 7. Refined Applications Inventory
+## 7. Refined Applications & Toolset Inventory
 
 | Application                      | Category     | Role                               | Action                                                 |
 | -------------------------------- | ------------ | ---------------------------------- | ------------------------------------------------------ |
 | `google-chrome`                  | Browser      | Primary Web Browser                | **RETAIN** (Exclusive browser)                         |
 | `chromium`                       | Browser      | Open-source browser                | **REMOVE**                                             |
-| `foot`                           | Terminal     | Wayland terminal emulator          | **RETAIN**                                             |
+| `firefox`                        | Browser      | Mozilla browser                    | **REMOVE**                                             |
+| `brave`                          | Browser      | Brave browser                      | **REMOVE**                                             |
+| `microsoft-edge`                 | Browser      | Edge browser                       | **REMOVE**                                             |
+| `zen-browser`                    | Browser      | Zen browser                        | **REMOVE**                                             |
+| `foot`                           | Terminal     | Wayland terminal emulator          | **RETAIN** (Exclusive terminal)                        |
+| `alacritty`                      | Terminal     | Terminal emulator                  | **REMOVE**                                             |
+| `ghostty`                        | Terminal     | Terminal emulator                  | **REMOVE**                                             |
+| `kitty`                          | Terminal     | Terminal emulator                  | **REMOVE**                                             |
+| `visual-studio-code-bin`         | Dev          | Primary GUI code editor            | **RETAIN** (Exclusive GUI editor)                      |
+| `omarchy-nvim` / `neovim`        | Dev          | Terminal code editor               | **RETAIN** (Exclusive terminal editor)                 |
+| `zed`                            | Dev          | Code editor                        | **REMOVE**                                             |
+| `emacs`                          | Dev          | Extensible editor                  | **REMOVE**                                             |
+| `sublime-text-4`                 | Dev          | Text editor                        | **REMOVE**                                             |
+| `vim`                            | Dev          | Legacy terminal editor             | **REMOVE** (Replaced by `neovim`)                      |
 | `nautilus`                       | File Manager | GNOME Files                        | **RETAIN**                                             |
 | `obsidian`                       | Notes        | Markdown knowledge base            | **RETAIN**                                             |
 | `libreoffice-fresh`              | Office       | Document suite                     | **RETAIN**                                             |
@@ -350,12 +370,16 @@ All hardware configurations, applications, and features that do not directly ser
 | `moonlight-qt`                   | Streaming    | Game streaming client              | **REMOVE**                                             |
 | `omawrite`                       | Omarchy App  | Text editor                        | **REMOVE**                                             |
 | `1Password`                      | Utility      | Password manager launcher          | **REMOVE**                                             |
+| `bitwarden`                      | Utility      | Password manager                   | **REMOVE**                                             |
+| `slack`                          | Chat         | Communication app                  | **REMOVE**                                             |
+| `signal`                         | Chat         | Encrypted messaging                | **REMOVE**                                             |
+| `tailscale`                      | Network      | Mesh VPN                           | **REMOVE**                                             |
+| `nordvpn`                        | Network      | Commercial VPN                     | **REMOVE**                                             |
+| `spotify`                        | Media        | Streaming music player             | **REMOVE**                                             |
 | `kdenlive`                       | Media        | Video editor                       | **REMOVE**                                             |
 | `obs-studio`                     | Media        | Streaming / recording suite        | **REMOVE**                                             |
 | `omacut`                         | Omarchy App  | Audio/video trimmer                | **REMOVE**                                             |
 | `gpu-screen-recorder`            | Capture      | Screen recording backend           | **RETAIN** (Used by `omarchy-capture-screenrecording`) |
-| `visual-studio-code-bin`         | Dev          | Code editor                        | **RETAIN**                                             |
-| `omarchy-nvim` / `neovim`        | Dev          | Terminal code editor               | **RETAIN**                                             |
 | `lazygit`                        | Dev          | Git TUI                            | **RETAIN**                                             |
 | `lazydocker`                     | Dev          | Docker TUI                         | **RETAIN**                                             |
 | `btop`                           | System       | Hardware & process monitor         | **RETAIN**                                             |
@@ -364,9 +388,19 @@ All hardware configurations, applications, and features that do not directly ser
 | `aether`                         | Omarchy App  | Application launcher               | **RETAIN**                                             |
 | `hype`                           | Omarchy App  | Presentation viewer                | **RETAIN**                                             |
 | `signed`                         | Omarchy App  | PDF document signer                | **RETAIN**                                             |
+| `antigravity-cli` (`agy`)        | AI Agent     | Primary Google Gemini agent        | **RETAIN** (System default)                            |
+| `opencode`                       | AI Agent     | Universal coding agent harness     | **RETAIN** (DeepSeek, Kimi, local llama)               |
+| `kimi`                           | AI Agent     | Moonshot Kimi CLI                  | **RETAIN**                                             |
+| `pi`                             | AI Agent     | Minimalist coding CLI              | **RETAIN**                                             |
+| `claude` / `claude-code`         | AI Agent     | Anthropic coding agent             | **REMOVE**                                             |
+| `codex`                          | AI Agent     | OpenAI coding agent                | **REMOVE**                                             |
+| `chatgpt`                        | AI Agent     | OpenAI chat wrapper                | **REMOVE**                                             |
+| `grok`                           | AI Agent     | xAI coding agent                   | **REMOVE**                                             |
+| `hermes`                         | AI Agent     | Nous Research agent                | **REMOVE**                                             |
+| `openclaw`                       | AI Agent     | OpenClaw harness                   | **REMOVE**                                             |
 | `voxtype-bin`                    | AI Dictation | Real-time push-to-talk dictation   | **RETAIN**                                             |
 | `whisper.cpp`                    | AI Audio     | Fast local GPU audio transcription | **ADD**                                                |
-| `llama.cpp`                      | AI Compute   | Local inference engine & server    | **ADD**                                                |
+| `llama.cpp` / `llama-server`     | AI Compute   | Local inference engine & server    | **ADD**                                                |
 | `cuda` & `cudnn`                 | AI Compute   | NVIDIA GPU compute runtime         | **ADD**                                                |
 | `nvidia-container-toolkit`       | AI Compute   | Docker container GPU access        | **ADD**                                                |
 | `cups` & `system-config-printer` | System       | Printing support                   | **RETAIN**                                             |

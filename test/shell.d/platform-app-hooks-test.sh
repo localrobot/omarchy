@@ -58,32 +58,8 @@ run() {
 
 # ── browsers ─────────────────────────────────────────────────────────────────
 
-declare -A flags=(
-  [chrome]=chrome-flags.conf
-)
-for browser in chrome; do
-  run apple "$ROOT/bin/omarchy-install-browser" "$browser" || fail "apple: $browser installs" "$(cat "$tmp/output")"
-  [[ $(grep -c '^post-install ' "$tmp/calls") == 1 ]] && grep -qx "post-install $browser" "$tmp/calls" ||
-    fail "apple: a $browser install runs post-install $browser once" "$(cat "$tmp/calls")"
-  [[ $(cat "$tmp/flags-at-hook") == "${flags[$browser]}" ]] ||
-    fail "apple: the $browser hook runs once its flags file is written" "$(cat "$tmp/flags-at-hook")"
-  [[ $(grep -n . "$tmp/calls" | grep -m1 'post-install' | cut -d: -f1) -gt 1 ]] ||
-    fail "apple: the $browser hook runs after its package step" "$(cat "$tmp/calls")"
-done
-pass "apple: chrome browser install runs post-install chrome after its package and flags"
-
-touch "$tmp/fail"
-for browser in chrome; do
-  if run apple "$ROOT/bin/omarchy-install-browser" "$browser"; then
-    fail "apple: a failed $browser hook fails the install"
-  fi
-  ! grep -q 'browser installed' "$tmp/output" || fail "apple: a failed $browser hook is not announced as installed" "$(cat "$tmp/output")"
-done
-pass "apple: a failed browser hook fails the install"
-
 for browser in chrome; do
   run x86 "$ROOT/bin/omarchy-install-browser" "$browser" || fail "x86: $browser installs" "$(cat "$tmp/output")"
   ! grep -q '^post-install' "$tmp/calls" || fail "x86: a $browser install runs no hook" "$(cat "$tmp/calls")"
 done
-rm -f "$tmp/fail"
 pass "x86: browser installs run no hook, even with Mac entrypoints on disk"

@@ -121,53 +121,15 @@ assert_hooks() {
   pass "$description"
 }
 
-# Each platform starts from its own baseline, whatever mkinitcpio.conf says.
+# The x86 platform starts from its baseline, whatever mkinitcpio.conf says.
 new_etc
-assert_hooks "Apple Silicon starts from the systemd baseline" aarch64-apple "$apple_hooks"
-assert_hooks "plain aarch64 starts from the Omarchy baseline" aarch64 "$omarchy_hooks"
 assert_hooks "x86 starts from the Omarchy baseline" x86 "$omarchy_hooks"
-assert_hooks "without the detector the Omarchy baseline stays" no-detector "$omarchy_hooks"
 
-if composed=$(compose contradiction 2>"$test_tmp/contradiction.err"); then
-  fail "a platform the detector cannot place stops the build" "composed: $composed"
-fi
-grep -q "contradictory platform identity" "$test_tmp/contradiction.err" ||
-  fail "a platform the detector cannot place stops the build" "stderr: $(<"$test_tmp/contradiction.err")"
-pass "a platform the detector cannot place stops the build"
-
-# A Mac that set up its own initramfs before the Apple boot package keeps it:
-# busybox encrypt unlocks through cryptdevice=, which sd-encrypt cannot parse,
-# and the asahi hook carries the firmware. The asahi hook marks such a root off
-# a Mac too. Busybox encrypt alone means nothing off Apple Silicon.
-legacy_encrypted="base udev plymouth autodetect microcode modconf kms keyboard keymap consolefont block encrypt asahi filesystems fsck"
-legacy_plain="base udev autodetect microcode modconf kms keyboard keymap consolefont block asahi filesystems fsck"
-for legacy in "$legacy_encrypted" "$legacy_plain" "${legacy_encrypted/ asahi / }"; do
-  new_etc
-  sed -i "s/^HOOKS=.*/HOOKS=($legacy)/" "$etc/mkinitcpio.conf"
-  assert_hooks "a Mac keeps its own HOOKS=($legacy)" aarch64-apple "$legacy"
-done
-new_etc
-sed -i "s/^HOOKS=.*/HOOKS=($legacy_plain)/" "$etc/mkinitcpio.conf"
-assert_hooks "an asahi root keeps its HOOKS off a Mac" aarch64 "$legacy_plain"
-# A legacy GRUB Mac has the asahi hook right after base, where Asahi's images
-# put it, and may run a runtime older than the detector.
-legacy_grub="base asahi udev plymouth autodetect microcode modconf kms keyboard keymap consolefont block encrypt filesystems fsck"
-for platform in aarch64-apple no-detector; do
-  for legacy in "$legacy_grub" "${legacy_grub/ encrypt / }"; do
-    new_etc
-    sed -i "s/^HOOKS=.*/HOOKS=($legacy)/" "$etc/mkinitcpio.conf"
-    assert_hooks "a legacy GRUB Mac keeps HOOKS=($legacy) ($platform)" "$platform" "$legacy"
-  done
-done
 new_etc
 sed -i "s/^HOOKS=.*/HOOKS=(base udev autodetect modconf block encrypt filesystems fsck)/" "$etc/mkinitcpio.conf"
-assert_hooks "busybox encrypt off Apple Silicon still gets the Omarchy baseline" x86 "$omarchy_hooks"
-new_etc
-sed -i "s/^HOOKS=.*/HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)/" "$etc/mkinitcpio.conf"
-assert_hooks "a Mac with a stock busybox line and no asahi hook gets the systemd baseline" aarch64-apple "$apple_hooks"
+assert_hooks "custom mkinitcpio.conf still gets the Omarchy baseline" x86 "$omarchy_hooks"
 
-# A platform fragment sorts after the baseline and before omarchy_hooks.conf,
-# as omarchy-mac-boot's 90- drop-ins do. Its hooks must reach the image.
+# A platform fragment sorts after the baseline and before omarchy_hooks.conf.
 new_etc
 drop_in 90-platform-fragment.conf <<'CONF'
 _fragment_hooks=()
@@ -178,10 +140,6 @@ done
 HOOKS=("${_fragment_hooks[@]}" platform-late)
 unset _fragment_hooks _fragment_hook
 CONF
-assert_hooks "a platform fragment's hooks survive on Apple Silicon" aarch64-apple \
-  "base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block platform-firmware filesystems fsck platform-late"
-assert_hooks "a platform fragment's hooks survive on plain aarch64" aarch64 \
-  "base udev plymouth keyboard autodetect microcode modconf kms keymap consolefont block encrypt platform-firmware filesystems fsck btrfs-overlayfs platform-late"
 assert_hooks "a platform fragment's hooks survive on x86" x86 \
   "base udev plymouth keyboard autodetect microcode modconf kms keymap consolefont block encrypt platform-firmware filesystems fsck btrfs-overlayfs platform-late"
 
@@ -240,25 +198,6 @@ assert_composed "a Surface is unchanged" x86 \
   "$omarchy_hooks" "pinctrl_tigerlake surface_aggregator surface_aggregator_registry surface_aggregator_hub surface_hid_core surface_hid surface_kbd intel_lpss_pci 8250_dw thunderbolt" ""
 
 
-# Snapdragon and other aarch64 machines build the same image as x86, whatever
-# systemd line their mkinitcpio.conf starts from.
-for platform in aarch64; do
-  new_etc
-  drop_in omarchy_resume.conf <<<"HOOKS+=(resume)"
-  drop_in 99-omarchy-provisioning-key.conf <<<"FILES+=(/etc/omarchy/provisioning.key)"
-  assert_composed "$platform with hibernation and a provisioning key is unchanged" "$platform" \
-    "$omarchy_hooks resume" "thunderbolt" "/etc/omarchy/provisioning.key"
-done
-
-# thunderbolt is early-loaded only where the kernel builds it as a module. A
-# systemd initramfs writes MODULES into modules-load.d as they are, so neither
-# an optional thunderbolt? nor a module the kernel lacks may reach it.
-new_etc
-assert_composed "Apple Silicon early-loads the Aurora kernel's thunderbolt module" aarch64-apple \
-  "$apple_hooks" "thunderbolt" ""
-new_etc
-KERNEL_MODULES="" assert_composed "a plain aarch64 kernel without thunderbolt leaves it out" aarch64 \
-  "$omarchy_hooks" "" ""
 new_etc
 KERNEL_MODULES="" KERNEL_BUILTINS=thunderbolt assert_composed "a kernel with thunderbolt built in leaves it out" x86 \
   "$omarchy_hooks" "" ""

@@ -357,11 +357,40 @@ flowchart TD
 
 ---
 
-### Block 9: Final Pass & Comprehensive Verification
+### Block 9: Deep Bloat Removal, Dead Code Elimination, & Terminal/Editor Consolidation [IN PROGRESS]
 
-- **Objective**: Perform an end-to-end audit to ensure the repository is completely green and dead-code free.
-- **Actions**:
-  - Run `omarchy commands --check` to ensure every remaining CLI command has valid metadata and routing.
-  - Run `./test/cli` (120 test suites).
-  - Verify 0 broken symlinks (`find . -xtype l`).
-  - Verify clean `git status`.
+- **Objective**: Execute deep cleanup across the entire repository to consolidate the workstation environment:
+  1. **Terminal Consolidation**: `foot` as the sole terminal emulator. Purge all configurations, templates, menus, and scripts for `alacritty`, `ghostty`, and `kitty`.
+  2. **Editor Consolidation**: `vscode` (`code`) and `neovim` (`nvim`) as the sole editors. Purge all configurations, menus, and scripts for `zed`, `emacs`, `sublime_text`, and `vim`.
+  3. **Chromium-to-Chrome Full Transition & Other Browsers Purge**: Transition remaining themes, window rules, notification classifiers, and policies from Chromium to `google-chrome`; eliminate all references to `firefox`, `brave`, `microsoft-edge`, and `zen-browser`.
+  4. **Non-Retained AI Models & Commercial Software**: Purge remaining artifacts for `claude`, `codex`, `chatgpt`, `grok`, `hermes`, `openclaw`, and commercial apps (`tailscale`, `spotify`, `slack`, `bitwarden`).
+  5. **Dead Code in `bin/`**: Eliminate unreachable Apple display branches in `omarchy-brightness-display`, Touch Bar/gmux in `omarchy-hw-display`, and ARM keyring routines in `omarchy-update-keyring`.
+  6. **Comprehensive Verification**: Align all test suites and ensure `./test/cli`, `bin/omarchy commands --check`, and shell suites pass cleanly with 0 broken symlinks.
+
+- **Phase Breakdown**:
+  - **Phase 1: Terminal Consolidation (`foot` only)**:
+    - Delete: `config/alacritty/`, `config/ghostty/`, `config/kitty/`, `default/alacritty/`, `default/ghostty/`, `default/themed/alacritty.toml.tpl`, `default/themed/ghostty.conf.tpl`, `default/themed/kitty.conf.tpl`, `test/shell.d/kitty-config-test.sh`.
+    - Update: `bin/omarchy-default-terminal`, `bin/omarchy-install-terminal`, `bin/omarchy-cmd-terminal-cwd`, `bin/omarchy-font-set`, `bin/omarchy-display-text-size`, `bin/omarchy-theme-set`, `bin/omarchy-theme-set-glass`, `default/bash/aliases`, `default/hypr/apps/terminals.lua`, `default/i18n/en/cli.json`.
+    - Menu: Prune terminal setup/install entries in `default/omarchy/omarchy-menu.jsonc` and `default/i18n/en/menu.json`.
+  - **Phase 2: Editor Consolidation (`vscode` & `nvim` only)**:
+    - Delete: `bin/omarchy-install-editor-zed`, `bin/omarchy-install-editor-emacs`.
+    - Update: `bin/omarchy-default-editor`, `bin/omarchy-launch-editor`, `default/hypr/apps/system.lua`.
+    - Menu: Prune `zed`, `sublime`, `vim`, `emacs` entries in `default/omarchy/omarchy-menu.jsonc` and `default/i18n/en/menu.json`.
+  - **Phase 3: Chromium -> Chrome Full Transition & Non-Chrome Browser Elimination**:
+    - Rename: `themes/*/chromium.theme` -> `chrome.theme`, `default/themed/chromium.theme.tpl` -> `chrome.theme.tpl`.
+    - Delete: `default/firefox/`, `config/chromium/`.
+    - Update: `bin/omarchy-theme-set-browser`, `bin/omarchy-theme-set-browser-policy`, `install/helpers/browser-policy.sh`, `install/config/theme-system.sh`, `default/hypr/apps/browser.lua`, `default/hypr/apps/pip.lua`, `shell/plugins/notifications/NotificationLogic.js`, `shell/plugins/notifications/Service.qml`, `shell/plugins/panels/audio/Panel.qml`, `bin/omarchy-theme-set`.
+  - **Phase 4: Non-Retained AI & Commercial Software Elimination**:
+    - Delete: `bin/omarchy-theme-set-claude`, `default/themed/claude.json.tpl`, `default/hypr/apps/bitwarden.lua`, `default/hypr/apps/hermes.lua`, `default/hypr/apps/webcam-overlay.lua`, `applications/icons/ChatGPT.png`, `default/fonts/omarchy/hermes.svg`, and all 6 SVGs in `shell/plugins/agents/assets/`.
+    - Update: `bin/omarchy-theme-set`, `bin/omarchy-provision-user`, `default/bash/aliases`, `default/i18n/en/keybindings.json`, `bin/omarchy-agent`, `bin/omarchy-file-select`, `bin/omarchy-hyprland-focus-app`, `bin/omarchy-system-factory-reset*`, `shell/plugins/panels/audio/Model.js`, `shell/plugins/agents/manifest.json`.
+  - **Phase 5: Theme Consolidation (Retain 5, Delete 18)**:
+    - Retain: `everforest`, `last-horizon`, `matte-black`, `miasma`, `osaka-jade`.
+    - Delete: `catppuccin`, `catppuccin-latte`, `ethereal`, `flexoki-light`, `gruvbox`, `hackerman`, `kanagawa`, `lumon`, `lupine`, `nord`, `retro-82`, `ristretto`, `rose-pine`, `solitude`, `starship`, `tokyo-night`, `vantablack`, `white`.
+    - Update: `install/user/theme.sh` (seed `matte-black`), `bin/omarchy-dev-theme-preview`, `bin/omarchy-theme-dir`.
+  - **Phase 6: Dead Commands & Foreign Hardware Elimination in `bin/`**:
+    - Delete: `bin/omarchy-restart-terminal`, `bin/omarchy-theme-colors-from-alacritty`, `bin/omarchy-upgrade-to-quattro`.
+    - Update: `bin/omarchy-brightness-display`, `bin/omarchy-hw-display`, `bin/omarchy-update-keyring`, `bin/omarchy-webapp-install`.
+  - **Phase 7: Test Suite Alignment & Verification**:
+    - Delete: `test/shell.d/upgrade-to-quattro-test.sh`.
+    - Update: `test/cli`, `test/shell.d/theme-staging-test.sh`, `test/shell.d/theme-templates-test.sh`, `test/shell.d/default-apps-test.sh`, `test/shell.d/desktop-entry-launch-test.sh`, `test/shell.d/menu-test.sh`, `test/shell.d/menu-guards-test.sh`, `test/shell.d/dock-test.sh`, `test/shell.d/browser-policy-dir-test.sh`, `test/shell.d/browser-policy-sudoers-test.sh`, `test/shell.d/default-browser-lookup-test.sh`, `test/shell.d/browser-env-test.sh`, `test/shell.d/fontconfig-cjk-test.sh`, `test/shell.d/unowned-system-paths-test.sh`, `test/shell.d/notifications-test.sh`, `test/shell.d/audio-test.sh`, `test/shell.d/media-test.sh`, `test/shell.d/brightness-display-test.sh`, `test/shell.d/drive-password-test.sh`, `test/shell.d/factory-reset-dispatch-test.sh`, `test/shell.d/hyprland-binding-conflicts-test.sh`, `test/shell.d/hyprland-default-config-test.sh`, `test/shell.d/crash-capture-test.sh`, `test/shell.d/agent-invitation-test.sh`, `test/shell.d/default-agent-test.sh`.
+
