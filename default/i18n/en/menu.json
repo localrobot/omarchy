@@ -110,9 +110,6 @@
   "trigger.appearance.top-bar.indicators": {
     "label": "Bar Indicators"
   },
-  "trigger.appearance.top-bar.indicators.battery-percentage": {
-    "label": "Battery Percentage"
-  },
   "trigger.appearance.top-bar.indicators.clock": {
     "label": "Clock"
   },
@@ -311,12 +308,6 @@
   },
   "trigger.tests": {
     "label": "Speed Test"
-  },
-  "trigger.hardware.laptop-display": {
-    "label": "Laptop Display"
-  },
-  "trigger.hardware.mirror-display": {
-    "label": "Mirror Display"
   },
   "trigger.hardware.touchscreen": {
     "label": "Touchscreen"

@@ -55,31 +55,39 @@ flowchart TD
 
 ---
 
-### Block 2: Laptops, Battery & Lid Power Subsystems
+### Block 2: Laptops, Battery & Lid Power Subsystems (COMPLETED)
 
 - **Objective**: Purge mobile laptop battery telemetry, low-power alerts, and lid-switch event handlers.
-- **Files to Remove**:
+- **Files Removed**:
   - `bin/omarchy-hw-laptop`
   - `bin/omarchy-hw-laptop-closed`
+  - `bin/omarchy-hw-clamshell`
   - `bin/omarchy-battery-low`
   - `bin/omarchy-battery-present`
   - `bin/omarchy-battery-status`
   - `bin/omarchy-power-present`
+  - `bin/omarchy-notification-battery`
   - `bin/omarchy-system-lid-close`
   - `bin/omarchy-system-lid-inhibit`
-- **Code Paths & Helpers to Update**:
-  - `default/hypr/bindings/`: remove `switch:on:Lid Switch` binds.
-  - Shell / Top-bar battery modules: verify desktop bypass.
-- **Tests to Prune / Align**:
-  - `test/shell.d/battery-present-test.sh`
-  - `test/shell.d/battery-status-test.sh`
-  - `test/shell.d/battery-test.sh`
-  - `test/shell.d/power-present-test.sh`
-  - `test/shell.d/power-no-battery-test.sh`
-  - `test/shell.d/hw-laptop-test.sh`
-  - `test/shell.d/lid-close-test.sh`
-  - `test/shell.d/lid-inhibit-test.sh`
-- **Verification**: `./test/cli`.
+  - `bin/omarchy-hyprland-monitor-clamshell`
+  - `bin/omarchy-hyprland-monitor-laptop`
+  - `bin/omarchy-hyprland-monitor-internal`
+  - `bin/omarchy-hyprland-monitor-internal-mirror`
+- **Code Paths & Helpers Updated**:
+  - `bin/omarchy-system-wake`: dropped clamshell monitor calls.
+  - `bin/omarchy-system-sleep-lock`: dropped clamshell monitor calls.
+  - `bin/omarchy-hyprland-monitor-watch`: dropped clamshell sync/polling; retained modeless monitor recovery.
+  - `default/hypr/bindings/utilities.lua`: removed laptop display, lid switch, and battery hotkeys.
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`: removed battery percentage, laptop display, and mirror display entries.
+  - `default/i18n/en/keybindings.json`: removed laptop/battery keybinding descriptions.
+  - `shell/plugins/polkit/PolkitAgent.qml`: removed laptopClosed detection and clamshell check.
+  - `shell/plugins/panels/power/Panel.qml`: removed `batteryProc`.
+  - `shell/plugins/services/battery/Service.qml`: removed battery threshold polling and low-battery warning dispatch.
+  - `docs/notifications.md`: removed battery notification references.
+- **Tests Pruned & Aligned**:
+  - Pruned: `test/shell.d/battery-present-test.sh`, `battery-status-test.sh`, `battery-test.sh`, `power-present-test.sh`, `power-no-battery-test.sh`, `hw-laptop-test.sh`, `lid-close-test.sh`, `lid-inhibit-test.sh`, `monitor-clamshell-scale-test.sh`, `monitor-recovery-test.sh`, `test/shell.d/fixtures/power-no-battery/`.
+  - Aligned: `test/shell.d/menu-test.sh`, `monitor-modeless-test.sh`, `monitor-output-name-test.sh`, `sleep-lock-test.sh`, `panel-open-budgets-test.sh`.
+- **Verification**: `./test/cli` (120/120 pass), `bin/omarchy commands --check` (440 commands clean).
 
 ---
 

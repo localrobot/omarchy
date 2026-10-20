@@ -176,8 +176,8 @@ as a `busctl` option; the summary/body themselves are never parsed as options.)
   shell restart uses it, or the toast is sent into the void.
 - `omarchy-notification-dismiss <summary>` — dismiss by summary substring,
   used by the first-run toasts once their action has been clicked.
-- `omarchy-notification-time` / `-battery` — the hotkey notices: one-line
-  low-urgency glyph toasts wrapping `date` and `omarchy-battery-status`.
+- `omarchy-notification-time` — the hotkey notice: one-line
+  low-urgency glyph toast wrapping `date`.
 - `omarchy-notification-weather` — despite the name, not a sender: it toggles
   the `omarchy.weather` shell panel.
 
@@ -191,8 +191,6 @@ The `notifications` IPC target also answers `dismissStack`, `count`, `expand`, `
 
 Everything goes through the same sender contract, so the pieces are small:
 
-- **Low battery** — `omarchy-battery-low` sends a critical toast and runs the
-  `battery-low` hook.
 - **Crash capture** — `omarchy-crash-watch` follows the systemd-coredump
   journal stream and announces each crashed program (deduped per minute) as a
   critical toast whose click runs `omarchy-agent-crash` (via `--exec`, so a

@@ -83,13 +83,6 @@ lock_state() {
     <<<"$(lock_ipc "$status_timeout_ms" lock status 2>/dev/null)" 2>/dev/null
 }
 
-sync_clamshell() {
-  # Lid transitions can temporarily stall Hyprland IPC. This is best-effort:
-  # the lid binding and monitor watcher also reconcile clamshell state.
-  timeout --kill-after=0.1s 0.4s \
-    omarchy-hyprland-monitor-clamshell >/dev/null 2>&1 || true
-}
-
 # logind suspends whether or not this wait succeeded, so a failure here means
 # the machine slept with the session exposed. The notification is the only way
 # anyone finds out, and it lands on the screen they unlock into. The journal
@@ -105,10 +98,8 @@ report_unsecured() {
   exit 1
 }
 
-# Request the lock before touching monitor state, so a stuck Hyprland IPC call
-# cannot consume the window before Quickshell has begun securing the session.
+# Request the lock before entering the wait loop.
 request_lock
-sync_clamshell
 
 # The trailing sleep can overshoot the deadline by one interval, which is well
 # inside the reserve derive_budget_ms already held back for logind.

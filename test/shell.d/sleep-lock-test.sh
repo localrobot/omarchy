@@ -44,16 +44,6 @@ SH
   chmod +x "$mock_bin/busctl"
 }
 
-mock_clamshell() {
-  cat >"$mock_bin/omarchy-hyprland-monitor-clamshell" <<SH
-#!/bin/bash
-
-echo clamshell >>"\$CALL_LOG"
-sleep ${1:-0}
-SH
-  chmod +x "$mock_bin/omarchy-hyprland-monitor-clamshell"
-}
-
 # Called with no budget to exercise the value derived from logind's window.
 run_sleep_lock() {
   local args=()
@@ -70,7 +60,7 @@ run_sleep_lock() {
   mapfile -t calls <"$call_log"
 }
 
-# A responsive shell locks immediately, even when the clamshell sync stalls.
+# A responsive shell locks immediately.
 setup_scenario responsive
 cat >"$mock_bin/omarchy-shell" <<'SH'
 #!/bin/bash
@@ -83,7 +73,6 @@ elif [[ $* == "lock status" ]]; then
 fi
 SH
 chmod +x "$mock_bin/omarchy-shell"
-mock_clamshell 2
 
 run_sleep_lock 4000
 
@@ -95,13 +84,9 @@ pass "sleep lock succeeds once the session reports secure"
   fail "sleep lock requests the session lock first" "first call: ${calls[0]}"
 pass "sleep lock requests the session lock first"
 
-[[ ${calls[1]} == "clamshell" && ${calls[2]} == "shell lock status" ]] ||
-  fail "sleep lock checks security after clamshell reconciliation"
-pass "sleep lock checks security after clamshell reconciliation"
-
-(( elapsed_us < 1500000 )) ||
-  fail "sleep lock bounds a stalled clamshell sync" "elapsed: ${elapsed_us}us"
-pass "sleep lock bounds a stalled clamshell sync"
+[[ ${calls[1]} == "shell lock status" ]] ||
+  fail "sleep lock checks security after locking"
+pass "sleep lock checks security after locking"
 
 # A shell that never secures the session must give up inside the budget rather
 # than hold logind's delay inhibitor open.
@@ -117,7 +102,6 @@ elif [[ $* == "lock status" ]]; then
 fi
 SH
 chmod +x "$mock_bin/omarchy-shell"
-mock_clamshell
 
 run_sleep_lock 1500
 
@@ -172,7 +156,6 @@ if [[ $* == "lock status" ]]; then
 fi
 SH
 chmod +x "$mock_bin/omarchy-shell"
-mock_clamshell
 
 run_sleep_lock 4000
 
@@ -211,7 +194,6 @@ if [[ $* == "lock status" ]]; then
 fi
 SH
 chmod +x "$mock_bin/omarchy-shell"
-mock_clamshell
 
 run_sleep_lock 4000
 
@@ -240,7 +222,6 @@ fi
 exit 0
 SH
 chmod +x "$mock_bin/omarchy-shell"
-mock_clamshell
 
 run_sleep_lock 4000
 
@@ -281,7 +262,6 @@ elif [[ $* == "lock status" ]]; then
 fi
 SH
   chmod +x "$mock_bin/omarchy-shell"
-  mock_clamshell
 }
 
 # The drop-in only counts once logind has reloaded it, and a machine can carry

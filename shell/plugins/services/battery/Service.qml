@@ -11,7 +11,6 @@ Item {
   property var shell: null
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
 
-  readonly property int batteryThreshold: 10
   property string pendingPowerSource: ""
   // Follows power-profiles-daemon's change signals, so nothing polls it.
   // Quickshell never attaches that listener if the daemon failed when the
@@ -22,35 +21,6 @@ Item {
   property int powerProfileSignals: 0
   property int powerProfileReadSignals: 0
   readonly property bool powerSaverOnBattery: BatteryModel.isPowerSaverOnBattery(UPower.onBattery, activePowerProfile)
-
-  PersistentProperties {
-    id: persisted
-    reloadableId: "omarchy-battery"
-    property bool notifiedLowBattery: false
-  }
-
-  function batteryPercentage() {
-    return BatteryModel.batteryPercentage(UPower.displayDevice)
-  }
-
-  function isDischarging() {
-    return BatteryModel.isDischarging(UPower.displayDevice, UPower.onBattery, UPowerDeviceState.Discharging)
-  }
-
-  function checkBattery() {
-    var state = BatteryModel.shouldWarnLowBattery(UPower.displayDevice, UPower.onBattery, UPowerDeviceState.Discharging, batteryThreshold, persisted.notifiedLowBattery)
-    persisted.notifiedLowBattery = state.notifiedLowBattery
-    if (state.notify) sendLowBatteryWarning(state.level)
-  }
-
-  function sendLowBatteryWarning(level) {
-    if (warningProcess.running) return
-    warningProcess.command = [
-      "omarchy-battery-low",
-      String(level)
-    ]
-    warningProcess.running = true
-  }
 
   function applyPowerProfile() {
     pendingPowerSource = UPower.onBattery ? "battery" : "ac"
@@ -82,8 +52,6 @@ Item {
       default: return "balanced"
     }
   }
-
-  Process { id: warningProcess }
 
   Process {
     id: powerProfileProcess
@@ -125,18 +93,9 @@ Item {
     function refreshPowerProfile(): void { root.refreshPowerProfile() }
   }
 
-  Timer {
-    interval: 30000
-    running: true
-    repeat: true
-    triggeredOnStart: true
-    onTriggered: root.checkBattery()
-  }
-
   Connections {
     target: UPower
     function onOnBatteryChanged() {
-      root.checkBattery()
       root.applyPowerProfile()
       root.refreshPowerProfile()
     }

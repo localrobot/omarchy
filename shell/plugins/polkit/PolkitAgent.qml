@@ -35,17 +35,13 @@ Item {
   property bool errorFlash: false
   // pam_fprintd appears in the polkit PAM stack (a sensor is enrolled).
   property bool fingerprintConfigured: false
-  // Lid shut right now — the reader is physically unreachable, so we fall back
-  // to the password even when a sensor is enrolled. Refreshed per request.
-  property bool laptopClosed: false
   property int shakeOffset: 0
 
   readonly property bool dialogVisible: polkitAgent.isActive || closing
   // We show one method at a time. Fingerprint owns the dialog while PAM is
-  // waiting on the reader (lid open, sensor enrolled); the moment PAM asks for
-  // a password — including immediately when the lid is shut and the clamshell
-  // gate skips pam_fprintd — we switch to the password field instead.
-  readonly property bool fingerprintMode: fingerprintConfigured && !laptopClosed && dialogVisible && !responseRequired && !submitted && !errorFlash
+  // waiting on the reader (sensor enrolled); the moment PAM asks for a password,
+  // we switch to the password field instead.
+  readonly property bool fingerprintMode: fingerprintConfigured && dialogVisible && !responseRequired && !submitted && !errorFlash
   readonly property int cardHeight: panel.height > 0 ? Math.min(fieldHeight + contentMargin * 2, panel.height - Style.gapsOut * 2) : fieldHeight + contentMargin * 2
   // Password mode is a wide field; fingerprint mode collapses to a square that
   // just frames the centered sensor icon.
@@ -57,10 +53,6 @@ Item {
 
   function loadPamConfig(raw) {
     fingerprintConfigured = PolkitModel.fingerprintConfiguredFromPamConfig(raw)
-  }
-
-  function refreshLidState() {
-    if (!laptopClosedProc.running) laptopClosedProc.running = true
   }
 
   function resetSnapshot() {
@@ -94,7 +86,6 @@ Item {
     closing = false
     submitted = false
     passwordInput.text = ""
-    refreshLidState()
     syncFromFlow()
     Qt.callLater(refocus)
   }
@@ -165,13 +156,6 @@ Item {
     onLoaded: root.loadPamConfig(text())
     onLoadFailed: root.fingerprintConfigured = false
     onFileChanged: reload()
-  }
-
-  Process {
-    id: laptopClosedProc
-    command: ["bash", "-c", "omarchy-hw-laptop-closed && echo closed || echo open"]
-    stdout: StdioCollector { id: laptopClosedOut; waitForEnd: true }
-    onExited: root.laptopClosed = String(laptopClosedOut.text || "").trim() === "closed"
   }
 
   PolkitAgent {

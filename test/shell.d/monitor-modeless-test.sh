@@ -93,21 +93,6 @@ cat >"$fake_bin/socat" <<'SH'
 exec cat "$OMARCHY_TEST_EVENTS"
 SH
 
-# A desktop, so the clamshell half of the watcher stays idle.
-cat >"$fake_bin/omarchy-hw-laptop" <<'SH'
-#!/bin/bash
-
-exit 1
-SH
-
-cat >"$fake_bin/omarchy-hyprland-monitor-clamshell" <<'SH'
-#!/bin/bash
-
-exit 0
-SH
-
-cp "$fake_bin/omarchy-hyprland-monitor-clamshell" "$fake_bin/omarchy-system-lid-inhibit"
-
 chmod +x "$fake_bin"/*
 ln -s "$ROOT/bin/omarchy-hyprland-monitor-modeless" "$fake_bin/omarchy-hyprland-monitor-modeless"
 
