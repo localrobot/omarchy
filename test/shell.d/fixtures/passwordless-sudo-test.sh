@@ -15,6 +15,7 @@ cleanup_grant_fixture() {
   exit "$status"
 }
 trap cleanup_grant_fixture EXIT
+umask 022
 export TEST_GRANT_ROOT=$test_tmp
 mkdir -p "$test_tmp/bin" "$test_tmp/etc/sudoers.d" "$test_tmp/etc/tmpfiles.d" "$test_tmp/run/lock" "$test_tmp/var/lib" "$test_tmp/hooks"
 cat >"$test_tmp/bin/mock" <<'STUB'

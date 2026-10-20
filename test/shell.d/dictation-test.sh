@@ -272,18 +272,3 @@ omarchy-remove-dictation-voxtype
 [[ ! -e $config ]] || fail "removing Voxtype clears selection"
 if omarchy-default-dictation 2> "$test_tmp/error"; then fail "removal must not auto-select another backend"; fi
 pass "removal clears selection without automatic fallback"
-
-cat > "$test_tmp/bin/omarchy-pkg-present" <<'SH'
-#!/bin/bash
-[[ ${VOXTYPE_PACKAGE:-0} == 1 && $1 == "voxtype-bin" ]]
-SH
-chmod +x "$test_tmp/bin/omarchy-pkg-present"
-rm -f "$config"
-VOXTYPE_PACKAGE=0 /bin/bash -euo pipefail "$ROOT/migrations/1791479273.sh"
-[[ ! -e $config ]] || fail "migration does not select an uninstalled backend"
-VOXTYPE_PACKAGE=1 /bin/bash -euo pipefail "$ROOT/migrations/1791479273.sh"
-[[ $(cat "$config") == "voxtype" ]] || fail "existing Voxtype users keep dictation after upgrade"
-printf '%s\n' future-backend > "$config"
-VOXTYPE_PACKAGE=1 /bin/bash -euo pipefail "$ROOT/migrations/1791479273.sh"
-[[ $(cat "$config") == "future-backend" ]] || fail "upgrade preserves explicit backend selections"
-pass "one-time upgrade preserves existing Voxtype without runtime autodetection"

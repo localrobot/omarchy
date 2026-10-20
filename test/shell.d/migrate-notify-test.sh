@@ -66,6 +66,7 @@ mkdir -p "$runtime_dir"
 
 run_notify() {
   HOME="$test_home" \
+  OMARCHY_PATH="$ROOT" \
   PATH="$stub_bin:$ROOT/bin:$PATH" \
   XDG_RUNTIME_DIR="$runtime_dir" \
   OMARCHY_TEST_PENDING_MIGRATIONS="$1" \
