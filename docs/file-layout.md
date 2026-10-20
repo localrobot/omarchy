@@ -165,15 +165,15 @@ A platform's runtime package (omarchy-mac on Apple Silicon, say) adds its deskto
 
 See [lifecycle-dispatch.md](lifecycle-dispatch.md#platform-files).
 
-`omarchy-update-keyring` refreshes each installed package `keyrings` names (`#` comments and blank lines skipped, and a line that isn't a `*-keyring` package name skipped with a warning) along with Arch's, before the system upgrade, installing any newer version the repository has, so a key rotation in the platform's own repository never fails that upgrade's signature checks. On Apple Silicon, omarchy-mac names `asahi-alarm-keyring` there.
+`omarchy-update-keyring` refreshes each installed package `keyrings` names (`#` comments and blank lines skipped, and a line that isn't a `*-keyring` package name skipped with a warning) along with Arch's, before the system upgrade, installing any newer version the repository has, so a key rotation in the platform's own repository never fails that upgrade's signature checks.
 
 #### Display hints (`displays.conf`)
 
-`omarchy-hw-display` picks the built-in panel's backlight by name (`gmux_backlight`, then `amdgpu_bl*`, `intel_backlight`, `acpi_video*`, else the first one listed, never a T2 Touch Bar's `appletb_backlight`), and `omarchy-brightness-display` probes every external monitor over DDC. Where a platform's names or display driver differ, its platform package says so in `/usr/share/omarchy-platform/displays.conf`; Omarchy ships none, and without it both behave as above. One directive per line, whitespace-separated; blank lines, whole-line `#` comments, unknown directives, and lines with a wrong word count or a name that is `.`, `..` or has a `/` are ignored:
+`omarchy-hw-display` picks the built-in panel's backlight by name (`amdgpu_bl*`, `intel_backlight`, `acpi_video*`, else the first one listed), and `omarchy-brightness-display` probes every external monitor over DDC. Where a platform's names or display driver differ, its platform package says so in `/usr/share/omarchy-platform/displays.conf`; Omarchy ships none, and without it both behave as above. One directive per line, whitespace-separated; blank lines, whole-line `#` comments, unknown directives, and lines with a wrong word count or a name that is `.`, `..` or has a `/` are ignored:
 
-- `backlight-skip <glob>`: a `/sys/class/backlight` name (a shell glob) that never drives the built-in panel, such as a Touch Bar's. It is never picked, not even when a later directive or the built-in order names it.
-- `backlight-prefer <name>`: the built-in panel's backlight, a literal name, tried after `gmux_backlight` and before the GPU and ACPI ones, in file order.
-- `ddc-require-connector-ddc`: the display driver registers no DDC channel, so a probe would only walk unrelated I2C buses. An external monitor (other than an Apple Studio or XDR Display, which `omarchy-brightness-display-apple` drives with asdcontrol) is probed only when its DRM connector has a `ddc` node (`/sys/class/drm/card*-<connector>/ddc`); otherwise it gets no DDC or backlight control, and the built-in panel is never dimmed in its place.
+- `backlight-skip <glob>`: a `/sys/class/backlight` name (a shell glob) that never drives the built-in panel. It is never picked, not even when a later directive or the built-in order names it.
+- `backlight-prefer <name>`: the built-in panel's backlight, a literal name, tried before the GPU and ACPI ones, in file order.
+- `ddc-require-connector-ddc`: the display driver registers no DDC channel, so a probe would only walk unrelated I2C buses. An external monitor is probed only when its DRM connector has a `ddc` node (`/sys/class/drm/card*-<connector>/ddc`); otherwise it gets no DDC or backlight control, and the built-in panel is never dimmed in its place.
 
 No environment variable moves the file: these commands also run under `sudo` and from the brightness keys. Their tests (`test/shell.d/hw-display-test.sh`, `test/shell.d/brightness-display-test.sh`) run a copy rewritten to read a fixture in its place.
 

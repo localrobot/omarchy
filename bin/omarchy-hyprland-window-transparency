@@ -59,6 +59,5 @@ fi
 flock -u 9
 
 hyprctl reload >/dev/null || exit 1
-omarchy-restart-terminal
 omarchy-theme-set-foot
 omarchy-restart-btop

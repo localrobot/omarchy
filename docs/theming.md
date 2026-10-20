@@ -56,8 +56,6 @@ Symlinks are dropped with them, at any depth; in a cloned theme they point where
 
 A denylist is only right while it is maintained. Adding a template for another terminal, or for another editor that loads Lua, means adding it to `INSTALLED_THEME_DENIED` in `bin/omarchy-theme-set`; `test/shell.d/theme-staging-test.sh` fails on any `default/themed/*.tpl` whose output is recorded as neither code nor colour, so a new template cannot be added without that decision being made.
 
-A theme predating `colors.toml` is not left without a palette: its `alacritty.toml` is read through `omarchy-theme-colors-from-alacritty` into a scratch directory and only the resulting `colors.toml` is staged, so the colors survive and the terminal config does not.
-
 The restriction lives in `omarchy-theme-set` rather than in `omarchy-theme-install` on purpose. Filtering at staging also covers themes installed before the rule existed and files a theme gains later through `omarchy theme update`.
 
 What this does not cover: a theme distributed as an archive rather than a git repo, extracted into `~/.config/omarchy/themes/` by hand, is indistinguishable from one the user wrote and stages in full. `omarchy theme install` only takes git URLs, so the supported path is always filtered, but the check is a statement about where a theme came from and not a sandbox.

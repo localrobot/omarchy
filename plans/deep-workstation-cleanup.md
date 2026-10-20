@@ -263,23 +263,39 @@ flowchart TD
 
 ---
 
-### Track 6: Dead Commands, Hardware Conditionals & Legacy Code in `bin/`
+### Track 6: Dead Commands, Hardware Conditionals & Legacy Code in `bin/` [COMPLETED & VERIFIED]
 
+- **Status**: Completed & 100% Verified
 - **Objective**: Purge 100% dead binaries and eliminate foreign hardware conditionals and legacy upgrade code.
-- **Files to Physically Delete**:
-  - `bin/omarchy-restart-terminal`: 100% of lines are for alacritty, ghostty, and kitty; foot has `omarchy-theme-set-foot`.
+- **Files Physically Deleted**:
+  - `bin/omarchy-restart-terminal`: Alacritty/Kitty/Ghostty IPC restarter; Foot has `omarchy-theme-set-foot`.
   - `bin/omarchy-theme-colors-from-alacritty`: Dead legacy fallback; all shipped themes have `colors.toml`.
-  - `bin/omarchy-upgrade-to-quattro`: 400-line legacy migration script for upgrading Omarchy 3.8.x systems to quattro; completely dead on a fresh installation.
+  - `bin/omarchy-upgrade-to-quattro`: 2,432-line legacy migration script for upgrading Omarchy 3.8.x systems to quattro; completely dead on a fresh installation.
+  - `test/shell.d/upgrade-to-quattro-test.sh`: 406-line test suite for the deleted upgrade script.
 - **Script Simplifications & Loop Flattening**:
   - `bin/omarchy-brightness-display`:
-    - Remove `use_apple_display` function.
-    - Remove lines 70–72 and 104–109 calling deleted `omarchy-hyprland-monitor-focused-apple` and `omarchy-brightness-display-apple`.
+    - Removed `use_apple_display` function and Apple branch calls (`omarchy-brightness-display-apple`, `omarchy-hyprland-monitor-focused-apple`).
   - `bin/omarchy-hw-display`:
-    - Remove Apple Touch Bar check (`appletb_backlight`) and Apple gmux check (`gmux_backlight`).
+    - Removed Apple Touch Bar check (`appletb_backlight`) and Apple gmux check (`gmux_backlight`).
   - `bin/omarchy-update-keyring`:
-    - Completely remove Arch Linux ARM keyring routines: `alarm_key`, `alarm_keyring_missing`, `alarm_key_trusted()`, and `archlinuxarm-keyring` population.
-  - `bin/omarchy-webapp-install`:
-    - Remove historical `ChatGPT` argument parsing comment/block.
+    - Completely removed Arch Linux ARM keyring routines: `alarm_key`, `alarm_keyring_missing`, `alarm_key_trusted()`, and `archlinuxarm-keyring` population.
+  - `bin/omarchy-hyprland-window-transparency`:
+    - Removed `omarchy-restart-terminal` call.
+  - `bin/omarchy-theme-set`:
+    - Removed `omarchy-restart-terminal` from `visible_theme_commands`.
+- **Test Suite Alignment**:
+  - `test/shell.d/brightness-display-test.sh`: Removed Apple display tests and mocks (13/13 tests green).
+  - `test/shell.d/hw-display-test.sh`: Removed T2 Mac Touch Bar and gmux tests (12/12 tests green).
+  - `test/shell.d/update-keyring-test.sh`: Removed aarch64 tests (9/9 tests green).
+  - `test/shell.d/hyprland-window-transparency-test.sh` & `test/shell.d/theme-set-retint-order-test.sh`: Pruned `omarchy-restart-terminal`.
+  - `test/shell.d/bin-style-test.sh`, `browser-policy-dir-test.sh`, `cups-hardening-test.sh`, `hyprland-default-config-test.sh`, `snapshot-create-test.sh`, `sudoless-docker-posture-test.sh`, `systemd-test.sh`, `unowned-system-paths-test.sh`, `video-background-test.sh`: Pruned references and assertions for `omarchy-upgrade-to-quattro`.
+- **Documentation Updates**:
+  - `docs/file-layout.md`, `docs/update-process.md`, `docs/theming.md`, `docs/testing.md`, `agents/skills/migrations.md`.
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (377 commands; exact -3 net reduction).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Test suites (`brightness-display-test.sh`, `hw-display-test.sh`, `update-keyring-test.sh`, `bin-style-test.sh`, `browser-policy-dir-test.sh`, `cups-hardening-test.sh`, `hyprland-default-config-test.sh`, `snapshot-create-test.sh`, `sudoless-docker-posture-test.sh`, `systemd-test.sh`, `unowned-system-paths-test.sh`): 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 

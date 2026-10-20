@@ -12,11 +12,6 @@ call_log="$test_tmp/calls"
 runtime_dir="$test_tmp/runtime"
 mkdir -p "$mock_bin" "$runtime_dir"
 
-cat >"$mock_bin/omarchy-hyprland-monitor-focused-apple" <<'SH'
-#!/bin/bash
-exit 1
-SH
-
 cat >"$mock_bin/omarchy-hyprland-monitor-focused" <<'SH'
 #!/bin/bash
 printf '%s\n' "${FOCUSED_MONITOR:-eDP-1}"
@@ -138,22 +133,6 @@ DDC_CURRENT=4 DDC_MAXIMUM=100 run_brightness --no-osd --monitor DP-1 +5%
 grep -F 'ddcutil --bus 7 --skip-ddc-checks --noverify setvcp 10 5' "$call_log" >/dev/null || \
   fail "external low brightness writes the one-percent target"
 pass "external low brightness uses a one-percent step"
-
-cat >"$mock_bin/hyprctl" <<'SH'
-#!/bin/bash
-printf '%s\n' '[
-  {"name":"DP-1","focused":true,"make":"HPN","model":"OMEN X 25f"},
-  {"name":"DP-2","focused":false,"make":"Apple Computer Inc","model":"StudioDisplay"}
-]'
-SH
-chmod +x "$mock_bin/hyprctl"
-
-PATH="$mock_bin:$PATH" "$ROOT/bin/omarchy-hyprland-monitor-focused-apple" DP-2 || \
-  fail "named Apple display is detected independently of focus"
-if PATH="$mock_bin:$PATH" "$ROOT/bin/omarchy-hyprland-monitor-focused-apple"; then
-  fail "focused non-Apple display is not detected as Apple"
-fi
-pass "named Apple display is detected independently of focus"
 
 # A platform whose display driver has no DDC channel says so: an external
 # monitor whose connector has no ddc node is not probed and never dims the

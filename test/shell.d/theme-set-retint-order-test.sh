@@ -145,7 +145,7 @@ wait_for_detached_work() {
 }
 
 set_theme beta
-for command in omarchy-restart-terminal omarchy-theme-set-foot omarchy-theme-set-tmux omarchy-restart-btop; do
+for command in omarchy-theme-set-foot omarchy-theme-set-tmux omarchy-restart-btop; do
   grep -qx "$command" "$log" || fail "$command retints before the switch returns, while the intro plays" "$(cat "$log")"
 done
 ! grep -qx 'omarchy-theme-set-gnome' "$log" || fail "other apps wait for the intro to finish its reveal"

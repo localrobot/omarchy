@@ -13,7 +13,6 @@ const backgroundQml = fs.readFileSync(path.join(root, 'shell/plugins/background/
 const lockQml = fs.readFileSync(path.join(root, 'shell/plugins/lock/LockView.qml'), 'utf8')
 const lockFeedQml = fs.readFileSync(path.join(root, 'shell/plugins/lock/LockFeedSurface.qml'), 'utf8')
 const themeSwitcher = fs.readFileSync(path.join(root, 'bin/omarchy-theme-switcher'), 'utf8')
-const quattroUpgrade = fs.readFileSync(path.join(root, 'bin/omarchy-upgrade-to-quattro'), 'utf8')
 const barTextColor = fs.readFileSync(path.join(root, 'bin/omarchy-bar-text-color'), 'utf8')
 const menuImages = fs.readFileSync(path.join(root, 'bin/omarchy-menu-images'), 'utf8')
 const lockService = fs.readFileSync(path.join(root, 'shell/plugins/lock/Service.qml'), 'utf8')
@@ -166,7 +165,6 @@ assert(
     themeSwitcher.includes('preview.mp4'),
   'theme switcher previews video-only themes, named preview files included'
 )
-assert(quattroUpgrade.includes("-iname '*.mp4'"), 'Quattro upgrade can seed a video-only theme background')
 JS
 
 test_tmp=$(mktemp -d)

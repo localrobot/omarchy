@@ -51,22 +51,6 @@ device=$(hw_display)
 [[ $device == "nvidia_wmi_ec_backlight" ]] || fail "an unknown backlight falls back to the first device" "actual: $device"
 pass "an unknown backlight falls back to the first device"
 
-write_backlights appletb_backlight gmux_backlight
-device=$(hw_display)
-[[ $device == "gmux_backlight" ]] || fail "a T2 Mac uses gmux instead of the Touch Bar" "actual: $device"
-pass "a T2 Mac uses gmux instead of the Touch Bar"
-
-write_backlights appletb_backlight
-if hw_display >/dev/null 2>&1; then
-  fail "the T2 Touch Bar is never used as the display backlight"
-fi
-pass "the T2 Touch Bar is never used as the display backlight"
-
-write_backlights acpi_video0 amdgpu_bl0 appletb_backlight gmux_backlight intel_backlight
-device=$(hw_display)
-[[ $device == "gmux_backlight" ]] || fail "gmux outranks the GPU backlights on dual-GPU Macs" "actual: $device"
-pass "gmux outranks the GPU backlights on dual-GPU Macs"
-
 write_backlights
 if hw_display >/dev/null 2>&1; then
   fail "no backlight device reports failure"
@@ -99,11 +83,7 @@ device=$(hw_display)
 printf 'backlight-prefer panel-bl\r\n' >"$platform_root/displays.conf"
 device=$(hw_display)
 [[ $device == "panel-bl" ]] || fail "a file saved with CRLF line ends reads the same" "actual: $device"
-write_displays_conf '# accessory panels' 'backlight-skip accessory-pipe' 'backlight-skip *.dsi.0' 'backlight-prefer panel-bl'
-write_backlights gmux_backlight panel-bl
-device=$(hw_display)
-[[ $device == "gmux_backlight" ]] || fail "gmux still beats a preferred backlight" "actual: $device"
-pass "a platform's preferred backlight follows gmux and beats the GPU backlights"
+pass "a platform's preferred backlight beats the GPU backlights"
 
 write_displays_conf 'backlight-prefer second-bl' 'backlight-prefer first-bl'
 write_backlights first-bl second-bl
@@ -115,10 +95,10 @@ write_displays_conf 'backlight-skip intel_backlight' 'backlight-prefer panel-bl'
 write_backlights acpi_video0 intel_backlight panel-bl
 device=$(hw_display)
 [[ $device == "acpi_video0" ]] || fail "a skip beats preferred and built-in candidates" "actual: $device"
-write_displays_conf 'backlight-skip gmux_backlight'
-write_backlights gmux_backlight intel_backlight
+write_displays_conf 'backlight-skip amdgpu_bl0'
+write_backlights amdgpu_bl0 intel_backlight
 device=$(hw_display)
-[[ $device == "intel_backlight" ]] || fail "a skip beats gmux" "actual: $device"
+[[ $device == "intel_backlight" ]] || fail "a skip beats built-in candidates" "actual: $device"
 pass "a skip beats preferred and built-in candidates"
 
 write_displays_conf 'backlight-prefer panel-*' 'backlight-prefer .' 'backlight-prefer ..'
