@@ -30,6 +30,6 @@ OMARCHY_ALLOW_DIRECT_PACMAN=1 run_guard "pacman -Syu --noconfirm" >"$test_tmp/ov
 [[ ! -s $test_tmp/override.err ]] || fail "pacman guard stays quiet for explicit direct pacman override"
 pass "pacman guard allows explicit direct pacman override"
 
-run_guard "pacman -S firefox" >"$test_tmp/install.out" 2>"$test_tmp/install.err"
+run_guard "pacman -S foot" >"$test_tmp/install.out" 2>"$test_tmp/install.err"
 [[ ! -s $test_tmp/install.err ]] || fail "pacman guard stays quiet for non-sysupgrade pacman command"
 pass "pacman guard ignores non-system-upgrade transactions"

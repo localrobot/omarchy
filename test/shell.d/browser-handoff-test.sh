@@ -25,7 +25,7 @@ cp "$ROOT/config/chrome-flags.conf" "$flags_file"
 echo "# A comment of the user's" >>"$flags_file"
 
 # A running browser's side of the singleton socket: take each command line and
-# acknowledge it, as Chromium does.
+# acknowledge it, as Chrome does.
 python3 - "$socket" "$received" <<'PY' &
 import socket, sys
 server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -80,6 +80,6 @@ kill "$server"
 wait "$server" 2>/dev/null || true
 ! "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable --app=https://example.test ||
   fail "a socket no browser answers on fails the handoff"
-! "$ROOT/bin/omarchy-cmd-browser-handoff" firefox https://example.test ||
+! "$ROOT/bin/omarchy-cmd-browser-handoff" unsupported-browser https://example.test ||
   fail "a browser without a singleton socket fails the handoff"
-pass "the handoff fails when no Chromium-based browser answers, so the caller launches one"
+pass "the handoff fails when no Chrome browser answers, so the caller launches one"

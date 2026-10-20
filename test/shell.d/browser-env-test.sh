@@ -12,8 +12,8 @@ browser=$(env -u BROWSER bash -c 'source "$1"; printf "%s" "$BROWSER"' bash "$en
 [[ $browser == "omarchy-launch-browser" ]] || fail "bash env provides a default browser" "actual: $browser"
 pass "bash env provides a default browser"
 
-browser=$(BROWSER=firefox bash -c 'source "$1"; printf "%s" "$BROWSER"' bash "$envs")
-[[ $browser == "firefox" ]] || fail "bash env preserves the inherited browser" "actual: $browser"
+browser=$(BROWSER=google-chrome bash -c 'source "$1"; printf "%s" "$BROWSER"' bash "$envs")
+[[ $browser == "google-chrome" ]] || fail "bash env preserves the inherited browser" "actual: $browser"
 pass "bash env preserves the inherited browser"
 
 # A session-wide BROWSER makes xdg-settings refuse "set default-web-browser",

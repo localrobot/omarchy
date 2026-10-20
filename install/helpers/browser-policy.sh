@@ -1,32 +1,19 @@
-# Chromium-family machine policy is mandatory for every profile. Directories
+# Chrome machine policy is mandatory for every profile. Directories
 # stay 0755 root:root; omarchy-theme-set-browser-policy is the privileged
 # write for color.json.
 
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/as-root.sh"
 
 BROWSER_POLICY_MANAGED_DIRS=(
-  /etc/chromium/policies/managed
   /etc/opt/chrome/policies/managed
-  /etc/opt/edge/policies/managed
-  /etc/brave/policies/managed
 )
 
 # Ancestors of the managed dirs, shortest first. A writable or attacker-owned
 # parent can rename the leaf aside; install -d follows a planted symlink.
 BROWSER_POLICY_PARENT_DIRS=(
-  /etc/chromium
-  /etc/chromium/policies
+  /etc/opt
   /etc/opt/chrome
   /etc/opt/chrome/policies
-  /etc/opt/edge
-  /etc/opt/edge/policies
-  /etc/brave
-  /etc/brave/policies
-)
-
-BROWSER_POLICY_FIREFOX_DIRS=(
-  /usr/lib/firefox/distribution
-  /opt/zen-browser/distribution
 )
 
 BROWSER_POLICY_DEFAULT_COLOR="#1c2027"
@@ -139,57 +126,3 @@ browser_policy_install_color() {
   return 1
 }
 
-browser_policy_firefox_policy_file_ok() {
-  local file=$1
-  local mode
-  local group_write
-  local other_write
-
-  [[ -f $file && ! -L $file ]] || return 1
-  [[ $(stat -c '%U' "$file") == "root" ]] || return 1
-  mode=$(stat -c '%a' "$file")
-  group_write=$((8#${mode: -2:1}))
-  other_write=$((8#${mode: -1}))
-  (( (group_write & 2) == 0 && (other_write & 2) == 0 ))
-}
-
-browser_policy_firefox_hardened() {
-  local dir=$1
-
-  [[ -d $dir && ! -L $dir ]] || return 1
-  [[ $(stat -c '%a' "$dir") == "755" ]] || return 1
-  [[ $(stat -c '%U' "$dir") == "root" ]] || return 1
-  browser_policy_firefox_policy_file_ok "$dir/policies.json"
-}
-
-browser_policy_install_firefox_policies() {
-  local distribution_dir=$1
-  local policies=${2:-$OMARCHY_PATH/default/firefox/policies.json}
-
-  as_root install -m 644 -o root -g root -T "$policies" "$distribution_dir/policies.json"
-}
-
-# Add Omarchy's default-browser setting to an existing policies.json, keeping
-# whatever else an administrator put there.
-browser_policy_firefox_skip_default_check() {
-  local file=$1/policies.json
-  local tmp
-
-  browser_policy_firefox_policy_file_ok "$file" || return 0
-  [[ $(jq '.policies.DontCheckDefaultBrowser' "$file" 2>/dev/null) == "true" ]] && return 0
-
-  tmp=$(mktemp) || return 1
-  if jq '.policies.DontCheckDefaultBrowser = true' "$file" >"$tmp" 2>/dev/null; then
-    as_root install -m 644 -o root -g root -T "$tmp" "$file"
-  fi
-  rm -f "$tmp"
-}
-
-browser_policy_setup_firefox_distribution() {
-  local distribution_dir=$1
-  local policies=${2:-$OMARCHY_PATH/default/firefox/policies.json}
-
-  browser_policy_setup_parent "$distribution_dir"
-  browser_policy_purge_dir "$distribution_dir"
-  browser_policy_install_firefox_policies "$distribution_dir" "$policies"
-}

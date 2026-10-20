@@ -21,10 +21,7 @@ fi
 # Enterprise policy trust roots. The list is fixed here rather than taken from
 # the caller: the caller chooses a color, never a path.
 POLICY_DIRS=(
-  /etc/chromium/policies/managed
   /etc/opt/chrome/policies/managed
-  /etc/opt/edge/policies/managed
-  /etc/brave/policies/managed
 )
 
 # The path etc/sudoers.d/omarchy-theme-browser names. The privileged half always

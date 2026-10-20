@@ -1,4 +1,4 @@
-// Keep this filename versioned. Chromium caches service workers for extensions
+// Keep this filename versioned. Chrome caches service workers for extensions
 // loaded via --load-extension, so a new URL forces registration of new code.
 
 function copyUrl(url) {

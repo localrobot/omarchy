@@ -172,7 +172,7 @@ for method in mozc hangul pinyin chewing cangjie5; do
     case "$toolkit" in
       gtk) command="python $work/entry.py"; class='^org\.omarchy\.ime-test-gtk$' ;;
       qt) command="qml6 $work/entry.qml"; class='^org\.qt-project\.qml6?$' ;;
-      browser) command="chromium --user-data-dir=$work/chromium --no-first-run --app=file://$work/omarchy-ime-entry.html"; class='^chrome-.*_omarchy-ime-entry\.html-Default$' ;;
+      browser) command="google-chrome --user-data-dir=$work/google-chrome --no-first-run --app=file://$work/omarchy-ime-entry.html"; class='^chrome-.*_omarchy-ime-entry\.html-Default$' ;;
     esac
     launch_app "uwsm app -- $command"
     wait_until "$method $toolkit opens" 30 window_present "$class"

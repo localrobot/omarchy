@@ -27,8 +27,8 @@ case "$*" in
 Sink Input #42
 	Sink: 10
 	Properties:
-		application.name = "Firefox"
-		node.name = "Firefox"
+		application.name = "Google Chrome"
+		node.name = "Google Chrome"
 OUT
     ;;
   "-f json list sinks")

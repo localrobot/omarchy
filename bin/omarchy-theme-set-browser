@@ -5,11 +5,11 @@
 
 source "$OMARCHY_PATH/install/helpers/browser-policy.sh"
 
-CHROMIUM_THEME=$HOME/.local/state/omarchy/current/theme/chromium.theme
+CHROME_THEME=$HOME/.local/state/omarchy/current/theme/chrome.theme
 THEME_HEX_COLOR=$BROWSER_POLICY_DEFAULT_COLOR
 
-if [[ -f $CHROMIUM_THEME ]]; then
-  THEME_HEX_COLOR=$(browser_policy_theme_hex "$(<$CHROMIUM_THEME)")
+if [[ -f $CHROME_THEME ]]; then
+  THEME_HEX_COLOR=$(browser_policy_theme_hex "$(<$CHROME_THEME)")
 fi
 
 # Tests override this with a temporary directory list; production uses the

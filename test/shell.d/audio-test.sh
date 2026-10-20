@@ -42,18 +42,18 @@ assertEqual(audio.sinkGlyph(headphones), '󰋋', 'audio uses headphone sink glyp
 assert(audio.sourceGlyph({ ready: true, properties: { 'device.icon-name': 'camera-webcam' } }).length > 0, 'audio maps webcam source glyph')
 
 assertEqual(audio.friendlyStreamLabel('spotify'), 'Spotify', 'audio normalizes known stream labels')
-assert(audio.streamRepresentsMprisPlayer('Chromium', 'Chromium Browser'), 'audio matches related stream and MPRIS labels')
+assert(audio.streamRepresentsMprisPlayer('Chrome', 'Google Chrome'), 'audio matches related stream and MPRIS labels')
 
 const players = [
   { identity: 'Spotify', canPlay: true, isPlaying: true, dbusName: 'org.mpris.MediaPlayer2.spotify' },
-  { identity: 'Chromium', canPlay: true, isPlaying: false, dbusName: 'org.mpris.MediaPlayer2.chromium' }
+  { identity: 'Chrome', canPlay: true, isPlaying: false, dbusName: 'org.mpris.MediaPlayer2.google-chrome' }
 ]
 const streams = [
-  { ready: true, properties: { 'application.name': 'Chromium' } },
+  { ready: true, properties: { 'application.name': 'Chrome' } },
   { ready: true, properties: { 'application.name': 'audio-src' } }
 ]
 
-assertEqual(audio.matchingMprisStreamLabel('Chromium', players), 'Chromium', 'audio finds matching MPRIS labels')
+assertEqual(audio.matchingMprisStreamLabel('Chrome', players), 'Chrome', 'audio finds matching MPRIS labels')
 assertEqual(audio.unmatchedMprisStreamLabel('audio-src', players, streams), 'Spotify', 'audio uses unmatched MPRIS player for generic streams')
 assertEqual(audio.streamLabel(streams[1], players, streams), 'Spotify', 'audio labels generic streams from MPRIS')
 assert(audio.streamRepresentsPlayer(streams[1], players[0], players, streams), 'audio links generic streams to active player')
@@ -73,7 +73,7 @@ const nodes = requireFromRoot('shell/Commons/AudioNodesModel.js')
 
 for (const name of ['quickshell', 'quickshell-peak-monitor'])
   assert(nodes.isShellLevelMeter(name), 'audio knows the shell meter ' + name)
-for (const name of ['Firefox', 'quickshell-other', '', undefined])
+for (const name of ['Google Chrome', 'quickshell-other', '', undefined])
   assert(!nodes.isShellLevelMeter(name), 'audio counts ' + name + ' as a recording')
 
 // Platform hints: none by default, whole-name patterns, and "replaced" only
@@ -97,7 +97,7 @@ assert(!nodes.platformHidesNode('xdsp_capture.mic', hints, []), 'platform patter
 assert(nodes.platformHidesNode('dsp_mic.1', hints, names), 'platform hints hide a replaced node while its replacement exists')
 assert(!nodes.platformHidesNode('dsp_mic.1', hints, ['dsp_mic.1']), 'platform hints keep a replaced node without its replacement')
 assert(!nodes.platformHidesNode('stereo_mic', hints, names), 'platform hints keep the replacement')
-for (const name of ['Firefox', 'alsa_input.pci-0000_00_1f.3.analog-stereo', '', undefined])
+for (const name of ['Google Chrome', 'alsa_input.pci-0000_00_1f.3.analog-stereo', '', undefined])
   assert(!nodes.platformHidesNode(name, hints, names), 'platform hints keep ' + name)
 assert(!nodes.platformHidesNode('dsp_capture.mic', none, names), 'no platform hints hide nothing')
 

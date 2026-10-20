@@ -21,10 +21,10 @@ SH
 chmod +x "$mock_bin/hyprctl"
 
 dispatch_log="$test_tmp/dispatch"
-clients_json='[{"address":"0xabc","class":"chromium"}]'
+clients_json='[{"address":"0xabc","class":"google-chrome"}]'
 PATH="$mock_bin:$PATH" OMARCHY_TEST_CLIENTS_JSON="$clients_json" \
   OMARCHY_TEST_FOCUS_DISPATCH="$dispatch_log" \
-  bash "$ROOT/bin/omarchy-hyprland-focus-app" '^chromium$'
+  bash "$ROOT/bin/omarchy-hyprland-focus-app" '^google-chrome$'
 
 grep -F 'hl.dsp.focus({ window = "address:0xabc" })' "$dispatch_log" >/dev/null || \
   fail "app focus uses the workspace-aware Hyprland dispatcher"
@@ -45,7 +45,7 @@ grep -F 'hl.dsp.focus({ window = "address:0xagent" })' "$dispatch_log" >/dev/nul
 pass "app focus finds terminals launched under a shared agent class"
 
 clients_json='[
-  {"address":"0xbrowser","class":"chromium","initialClass":"chromium","initialTitle":"Mail settings"}
+  {"address":"0xbrowser","class":"google-chrome","initialClass":"google-chrome","initialTitle":"Mail settings"}
 ]'
 rm -f "$dispatch_log"
 if PATH="$mock_bin:$PATH" OMARCHY_TEST_CLIENTS_JSON="$clients_json" \
@@ -59,12 +59,12 @@ fi
 pass "app focus restricts title matching to agent terminals"
 
 clients_json='[
-  {"address":"0xolder","class":"chromium","focusHistoryID":4},
-  {"address":"0xrecent","class":"chromium","focusHistoryID":1}
+  {"address":"0xolder","class":"google-chrome","focusHistoryID":4},
+  {"address":"0xrecent","class":"google-chrome","focusHistoryID":1}
 ]'
 PATH="$mock_bin:$PATH" OMARCHY_TEST_CLIENTS_JSON="$clients_json" \
   OMARCHY_TEST_FOCUS_DISPATCH="$dispatch_log" \
-  bash "$ROOT/bin/omarchy-hyprland-focus-app" '^chromium$'
+  bash "$ROOT/bin/omarchy-hyprland-focus-app" '^google-chrome$'
 
 grep -F 'hl.dsp.focus({ window = "address:0xrecent" })' "$dispatch_log" >/dev/null || \
   fail "app focus picks the window focused last"

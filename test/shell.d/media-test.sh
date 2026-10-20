@@ -16,10 +16,10 @@ assert(media.canHandleAction({ canTogglePlaying: true }, 'playPause'), 'media ma
 assert(media.canCycleSource({ identity: 'Spotify', canPlay: true }), 'media detects cycleable sources')
 
 assert(media.isPlaybackStream({ isStream: true, type: 'Stream/Output/Audio' }), 'media detects playback streams')
-assertEqual(media.streamLabelKey('PipeWire ALSA [Chromium]'), 'chromium', 'media normalizes stream labels')
+assertEqual(media.streamLabelKey('PipeWire ALSA [Google Chrome]'), 'googlechrome', 'media normalizes stream labels')
 assertEqual(
-  media.rawStreamLabel({ ready: true, properties: { 'application.name': 'Chromium' }, name: 'fallback' }),
-  'Chromium',
+  media.rawStreamLabel({ ready: true, properties: { 'application.name': 'Google Chrome' }, name: 'fallback' }),
+  'Google Chrome',
   'media extracts raw stream labels'
 )
 assertEqual(
@@ -28,8 +28,8 @@ assertEqual(
   'media derives player app labels from DBus names'
 )
 assert(media.playerHasPlaybackStream(
-  { desktopEntry: 'chromium' },
-  [{ ready: true, properties: { 'application.name': 'Chromium' } }]
+  { desktopEntry: 'google-chrome' },
+  [{ ready: true, properties: { 'application.name': 'Google Chrome' } }]
 ), 'media matches players to playback streams')
 
 assertEqual(media.playerKey({ dbusName: 'org.mpris.MediaPlayer2.spotify' }), 'org.mpris.MediaPlayer2.spotify', 'media derives stable player keys')

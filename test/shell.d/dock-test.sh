@@ -19,17 +19,17 @@ assertEqual(dock.normalizePosition(undefined), 'bottom', 'dock sits at the botto
 assert(dock.isVertical('right') && !dock.isVertical('top'), 'dock runs vertically on the left and right')
 
 assertDeepEqual(
-  dock.pinnedIds({ pinned: ['chromium', 'org.gnome.Nautilus.desktop', 'chromium', ''] }, { pinned: ['spotify'] }),
-  ['chromium', 'org.gnome.Nautilus'],
+  dock.pinnedIds({ pinned: ['google-chrome', 'org.gnome.Nautilus.desktop', 'google-chrome', ''] }, { pinned: ['spotify'] }),
+  ['google-chrome', 'org.gnome.Nautilus'],
   'dock pins each desktop id once, without its .desktop suffix'
 )
 assertDeepEqual(dock.pinnedIds({}, { pinned: ['spotify'] }), ['spotify'], 'dock falls back to the default pins')
 assertDeepEqual(dock.pinnedIds({ pinned: [] }, { pinned: ['spotify'] }), [], 'dock keeps an emptied pin list empty')
 
 const app = (key, id, extra) => Object.assign({ key, id, hasEntry: true, workspaceId: 3 }, extra)
-const items = dock.buildItems(['chromium', 'Alacritty'], [
+const items = dock.buildItems(['google-chrome', 'foot'], [
   app('signal', 1),
-  app('chromium', 2),
+  app('google-chrome', 2),
   app('signal', 3),
   app('org.omarchy.agent', 4, { hasEntry: false }),
   app('foot', 5, { workspaceId: -98 })
@@ -37,8 +37,8 @@ const items = dock.buildItems(['chromium', 'Alacritty'], [
 assertDeepEqual(
   items.map(item => [item.key, item.pinned, item.windows.map(window => window.id)]),
   [
-    ['chromium', true, [2]],
-    ['Alacritty', true, []],
+    ['google-chrome', true, [2]],
+    ['foot', true, []],
     ['signal', false, [1, 3]]
   ],
   'dock lists pinned apps first, then running apps grouped by app, leaving out helpers and special workspaces'
@@ -54,32 +54,32 @@ assertEqual(dock.dropIndex(2, 85, 40, 6), 4, 'dock lands a dragged app as many s
 assertEqual(dock.dropIndex(2, -500, 40, 6), 0, 'dock lands an app dragged past the start in the first slot')
 assertEqual(dock.dropIndex(2, 500, 40, 6), 5, 'dock lands an app dragged past the end in the last slot')
 
-const allPins = ['chromium', 'Alacritty', 'spotify-not-installed', 'signal']
-const pinned = { chromium: true, Alacritty: true, signal: true }
+const allPins = ['google-chrome', 'foot', 'spotify-not-installed', 'signal']
+const pinned = { 'google-chrome': true, foot: true, signal: true }
 assertDeepEqual(
-  dock.pinsInOrder(['signal', 'chromium', 'Alacritty', 'slack'], pinned, allPins),
-  ['signal', 'chromium', 'Alacritty', 'spotify-not-installed'],
+  dock.pinsInOrder(['signal', 'google-chrome', 'foot', 'slack'], pinned, allPins),
+  ['signal', 'google-chrome', 'foot', 'spotify-not-installed'],
   'dock saves pins in its order, keeping pins it does not show'
 )
 assertDeepEqual(
-  dock.pinsInOrder(['chromium', 'slack', 'Alacritty', 'signal'], Object.assign({ slack: true }, pinned), allPins),
-  ['chromium', 'slack', 'Alacritty', 'signal', 'spotify-not-installed'],
+  dock.pinsInOrder(['google-chrome', 'slack', 'foot', 'signal'], Object.assign({ slack: true }, pinned), allPins),
+  ['google-chrome', 'slack', 'foot', 'signal', 'spotify-not-installed'],
   'dock pins a running app dragged in among the pins'
 )
 
 assertDeepEqual(
-  dock.orderWithKeyAt(['chromium', 'Alacritty', 'signal'], 'obsidian', 1),
-  ['chromium', 'obsidian', 'Alacritty', 'signal'],
+  dock.orderWithKeyAt(['google-chrome', 'foot', 'signal'], 'obsidian', 1),
+  ['google-chrome', 'obsidian', 'foot', 'signal'],
   'dock puts an app dropped from the app grid where it lands'
 )
 assertDeepEqual(
-  dock.orderWithKeyAt(['chromium', 'Alacritty', 'signal'], 'chromium', 2),
-  ['Alacritty', 'signal', 'chromium'],
+  dock.orderWithKeyAt(['google-chrome', 'foot', 'signal'], 'google-chrome', 2),
+  ['foot', 'signal', 'google-chrome'],
   'dock moves an app it already shows to where it is dropped'
 )
 assertDeepEqual(
-  dock.orderWithKeyAt(['chromium', 'slack', 'signal'], 'slack', 3),
-  ['chromium', 'signal', 'slack'],
+  dock.orderWithKeyAt(['google-chrome', 'slack', 'signal'], 'slack', 3),
+  ['google-chrome', 'signal', 'slack'],
   'dock puts an app kept in the dock at the end'
 )
 
@@ -92,11 +92,11 @@ assertEqual(dock.claimingEntryId('org.omarchy.nvim', terminalEntries), 'nvim', '
 assertEqual(dock.claimingEntryId('org.omarchy.btop', terminalEntries), 'btop', 'dock matches a terminal entry by its program name')
 assertEqual(dock.claimingEntryId('org.omarchy.mail', terminalEntries), 'Mail TUI', 'dock matches an entry that hands the terminal its app id')
 assertEqual(dock.claimingEntryId('org.omarchy.agent', terminalEntries), '', 'dock leaves an app id no entry claims unclaimed')
-assertEqual(dock.claimingEntryId('Alacritty', terminalEntries), '', 'dock leaves a terminal of its own to its own entry')
+assertEqual(dock.claimingEntryId('foot', terminalEntries), '', 'dock leaves a terminal of its own to its own entry')
 
 assertDeepEqual(
-  dock.orderItems([{ key: 'chromium' }, { key: 'signal' }, { key: 'slack' }, { key: 'foot' }], ['slack', 'gone', 'chromium']).map(item => item.key),
-  ['slack', 'chromium', 'signal', 'foot'],
+  dock.orderItems([{ key: 'google-chrome' }, { key: 'signal' }, { key: 'slack' }, { key: 'foot' }], ['slack', 'gone', 'google-chrome']).map(item => item.key),
+  ['slack', 'google-chrome', 'signal', 'foot'],
   'dock keeps its own order, with apps that join going at the end'
 )
 const foot = [
@@ -142,8 +142,8 @@ jq -e '
   fail "dock pins and unpins apps once each" "$(cat "$home/.config/omarchy/shell.json")"
 pass "dock pins and unpins apps through omarchy-dock"
 
-omarchy_dock pinned signal chromium.desktop signal >/dev/null
-[[ $(omarchy_dock pinned | paste -sd ' ') == "signal chromium" ]] ||
+omarchy_dock pinned signal google-chrome.desktop signal >/dev/null
+[[ $(omarchy_dock pinned | paste -sd ' ') == "signal google-chrome" ]] ||
   fail "dock pin order is set in one go" "$(cat "$home/.config/omarchy/shell.json")"
 pass "dock pin order is set through omarchy-dock pinned"
 

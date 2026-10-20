@@ -151,7 +151,7 @@ pass "an owned path is left alone even when the report reads as unowned"
 # A name prefix is not a namespace; only the packages that own system paths.
 fresh_work
 echo "stray" >"$stray"
-write_report omarchy-chromium-bin "$stray"
+write_report omarchy-some-optional-bin "$stray"
 if run_update >"$test_tmp/out" 2>"$test_tmp/err"; then
   fail "an optional omarchy-prefixed package gets its conflicts auto-resolved"
 fi

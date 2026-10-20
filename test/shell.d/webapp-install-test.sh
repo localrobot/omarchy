@@ -32,8 +32,8 @@ grep -Fxq 'Exec=omarchy-launch-webapp "https://example.com"' "$desktop" ||
 pass "webapp install writes an https desktop entry"
 
 grep -Fxq 'StartupWMClass=chrome-example.com__-Default' "$desktop" ||
-  fail "webapp install names the window Chromium opens" "$(cat "$desktop")"
-pass "webapp install names the window Chromium opens, so titlebars can show the app's name"
+  fail "webapp install names the window Chrome opens" "$(cat "$desktop")"
+pass "webapp install names the window Chrome opens, so titlebars can show the app's name"
 
 for case in \
   "https://web.whatsapp.com/|chrome-web.whatsapp.com__-Default" \
@@ -43,7 +43,7 @@ for case in \
   [[ $("$ROOT/bin/omarchy-webapp-window-class" "${case%%|*}") == "${case#*|}" ]] ||
     fail "the window class of ${case%%|*} is ${case#*|}" "$("$ROOT/bin/omarchy-webapp-window-class" "${case%%|*}")"
 done
-pass "web app window classes follow Chromium's host and path naming"
+pass "web app window classes follow Chrome's host and path naming"
 
 if install_webapp "Plain" "example.org/app" "webapp" >"$tmpdir/out" 2>"$tmpdir/err"; then
   :

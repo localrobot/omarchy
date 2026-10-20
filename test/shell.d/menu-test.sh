@@ -83,8 +83,8 @@ assertEqual(menu.parentPathFor(merged.items, 'style.theme'), 'Style', 'menu buil
 assert(menu.isDescendantOf(merged.items, 'style.theme', 'style'), 'menu detects descendants')
 assertEqual(menu.childCount(merged.items, merged.itemOrder, 'style'), 1, 'menu counts children')
 assertEqual(menu.labelFor({ id: 'style.theme', label: 'Theme', checked: 'cmd' }, { 'style.theme': true }), 'Theme ✓', 'menu appends checked marker')
-assertEqual(menu.labelFor({ id: 'install.browser.zen', label: 'Zen', disabled: 'cmd' }, {}, { 'install.browser.zen': true }), 'Zen ✓', 'menu marks a disabled row as something you already have')
-assertEqual(menu.labelFor({ id: 'install.browser.zen', label: 'Zen', disabled: 'cmd' }, {}, { 'install.browser.zen': false }), 'Zen', 'menu leaves an uninstalled row unmarked')
+assertEqual(menu.labelFor({ id: 'install.sample', label: 'Sample', disabled: 'cmd' }, {}, { 'install.sample': true }), 'Sample ✓', 'menu marks a disabled row as something you already have')
+assertEqual(menu.labelFor({ id: 'install.sample', label: 'Sample', disabled: 'cmd' }, {}, { 'install.sample': false }), 'Sample', 'menu leaves an uninstalled row unmarked')
 
 const visibilityItems = {
   hardware: menu.normalizeItem('hardware', { label: 'Hardware' }),
@@ -102,13 +102,13 @@ assert(menu.isVisible(visibilityItems, visibilityOrder, {}, visibilityItems.dyna
 
 // `disabled:` is the softer guard: the row stays listed and only loses the
 // cursor, which is how an already-installed app keeps its place in Install.
-const installed = menu.normalizeItem('install.browser.zen', { label: 'Zen', disabled: 'omarchy-pkg-present zen-browser-bin', action: 'install-zen' })
-assert(menu.isVisible({ 'install.browser.zen': installed }, ['install.browser.zen'], { 'install.browser.zen': false }, installed), 'menu keeps a disabled row visible')
-assert(menu.isDisabled({ 'install.browser.zen': true }, installed), 'menu disables a row whose disabled: succeeded')
-assert(!menu.isDisabled({ 'install.browser.zen': false }, installed), 'menu leaves a row selectable when its disabled: failed')
-assert(!menu.isDisabled({ 'install.browser.zen': true }, visibilityItems.laptop), 'menu never disables a row that declares no disabled:')
+const installed = menu.normalizeItem('install.pkg.sample', { label: 'Sample', disabled: 'omarchy-pkg-present sample-bin', action: 'install-sample' })
+assert(menu.isVisible({ 'install.pkg.sample': installed }, ['install.pkg.sample'], { 'install.pkg.sample': false }, installed), 'menu keeps a disabled row visible')
+assert(menu.isDisabled({ 'install.pkg.sample': true }, installed), 'menu disables a row whose disabled: succeeded')
+assert(!menu.isDisabled({ 'install.pkg.sample': false }, installed), 'menu leaves a row selectable when its disabled: failed')
+assert(!menu.isDisabled({ 'install.pkg.sample': true }, visibilityItems.laptop), 'menu never disables a row that declares no disabled:')
 assert(
-  menu.displayRow({ 'install.browser.zen': installed }, ['install.browser.zen'], {}, { 'install.browser.zen': true }, installed, '', 0).disabled,
+  menu.displayRow({ 'install.pkg.sample': installed }, ['install.pkg.sample'], {}, { 'install.pkg.sample': true }, installed, '', 0).disabled,
   'menu display rows carry their disabled state'
 )
 assert(
@@ -275,8 +275,7 @@ assert(
 )
 assert(!defaultById['install.ai.crush'], 'menu removes Crush from Install > AI')
 // Software you already have keeps its place in Install, dimmed rather than
-// dropped, so the list reads as a catalog of what Omarchy can install.
-// Chromium Account is the sole Install row with anything left to hide for. The
+// dropped, so the list reads as a catalog of what Omarchy can install. The
 // Windows VM, whose guest can't run elsewhere, and the installers that need
 // x86_64 binaries (vendor builds for x86_64 alone, Windows games under Wine)
 // hide only off x86_64. Dropbox's x86_64 client runs under box64 on ARM, which
@@ -732,42 +731,42 @@ const nonAppItems = {
 const nonAppOrder = ['root', 'apps']
 const appRowsFor = ids => ids.map(id => ({ id: `apps.${id}`, kind: 'app', parent: 'apps', label: id, appId: id }))
 
-const firstMerge = menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['alacritty', 'firefox']))
+const firstMerge = menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['foot', 'google-chrome']))
 assert(
-  firstMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox',
+  firstMerge.itemOrder.join(',') === 'root,apps,apps.foot,apps.google-chrome',
   'app merge appends app rows after the static menu items'
 )
 
-const secondMerge = menu.mergeAppRows(firstMerge.items, firstMerge.itemOrder, appRowsFor(['alacritty', 'firefox']))
+const secondMerge = menu.mergeAppRows(firstMerge.items, firstMerge.itemOrder, appRowsFor(['foot', 'google-chrome']))
 assert(
-  secondMerge.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox',
+  secondMerge.itemOrder.join(',') === 'root,apps,apps.foot,apps.google-chrome',
   'repeating the app merge with the same entries does not duplicate rows'
 )
 
 assert(
-  menu.mergeAppRows(secondMerge.items, secondMerge.itemOrder, appRowsFor(['alacritty'])).itemOrder.join(',')
-    === 'root,apps,apps.alacritty',
+  menu.mergeAppRows(secondMerge.items, secondMerge.itemOrder, appRowsFor(['foot'])).itemOrder.join(',')
+    === 'root,apps,apps.foot',
   'app merge drops rows for entries that went away'
 )
 
 assert(
-  menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['firefox', 'firefox'])).itemOrder.join(',')
-    === 'root,apps,apps.firefox',
+  menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['google-chrome', 'google-chrome'])).itemOrder.join(',')
+    === 'root,apps,apps.google-chrome',
   'app merge lists an app once even when two desktop entries share an id'
 )
 
 const orphanedItems = {}
 for (const key in firstMerge.items) orphanedItems[key] = firstMerge.items[key]
-delete orphanedItems['apps.firefox']
-const healed = menu.mergeAppRows(orphanedItems, firstMerge.itemOrder, appRowsFor(['alacritty', 'firefox']))
+delete orphanedItems['apps.google-chrome']
+const healed = menu.mergeAppRows(orphanedItems, firstMerge.itemOrder, appRowsFor(['foot', 'google-chrome']))
 assert(
-  healed.itemOrder.join(',') === 'root,apps,apps.alacritty,apps.firefox'
-    && !!healed.items['apps.firefox'],
+  healed.itemOrder.join(',') === 'root,apps,apps.foot,apps.google-chrome'
+    && !!healed.items['apps.google-chrome'],
   'app merge heals an order entry whose item went missing instead of duplicating it'
 )
 
 assert(
-  !firstMerge.items['apps.firefox'].hasOwnProperty('__probe')
+  !firstMerge.items['apps.google-chrome'].hasOwnProperty('__probe')
     && (() => {
       const before = Object.keys(nonAppItems).length
       menu.mergeAppRows(nonAppItems, nonAppOrder, appRowsFor(['gimp']))

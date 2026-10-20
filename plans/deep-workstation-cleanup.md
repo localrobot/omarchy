@@ -111,39 +111,76 @@ flowchart TD
 
 ---
 
-### Track 3: Browser Transition to Chrome & Complete Purge of Other Browsers
+### Track 3: Browser Transition to Chrome & Complete Purge of Other Browsers [COMPLETED & VERIFIED]
 
-- **Objective**: Complete the transition from Chromium to `google-chrome` across the entire codebase. Obliterate all remaining references to `chromium`, `firefox`, `brave`, `microsoft-edge`, and `zen-browser`.
-- **Files to Rename & Delete**:
-  - Rename `themes/last-horizon/chromium.theme` $\rightarrow$ `themes/last-horizon/chrome.theme`.
-  - Rename `default/themed/chromium.theme.tpl` $\rightarrow$ `default/themed/chrome.theme.tpl`.
-  - Delete `default/firefox/` directory (`policies.json`).
-  - Delete `config/chromium/` directory (`Default/Preferences`).
-- **Script Simplifications & Loop Flattening**:
-  - `bin/omarchy-theme-set-browser-policy`:
-    - Flatten `POLICY_DIRS` from 4 directories to strictly `/etc/opt/chrome/policies/managed`.
-    - Prune all loop iterations for non-existent browsers.
-  - `bin/omarchy-theme-set-browser`:
-    - Update theme state lookup to check `CHROME_THEME="$HOME/.local/state/omarchy/current/theme/chrome.theme"` (with fallback to `chromium.theme` during transition).
-    - Flatten policy checks to `/etc/opt/chrome/policies/managed`.
-  - `install/helpers/browser-policy.sh`:
-    - Restrict `BROWSER_POLICY_MANAGED_DIRS` strictly to `/etc/opt/chrome/policies/managed`.
-    - Restrict `BROWSER_POLICY_PARENT_DIRS` strictly to `/etc/opt`, `/etc/opt/chrome`, `/etc/opt/chrome/policies`.
-    - Delete `BROWSER_POLICY_FIREFOX_DIRS`.
-    - Delete all Firefox policy functions: `browser_policy_firefox_policy_file_ok`, `browser_policy_firefox_hardened`, `browser_policy_install_firefox_policies`, `browser_policy_firefox_skip_default_check`, `browser_policy_setup_firefox_distribution`.
+- **Status**: Completed & 100% Verified
+- **Objective**: Complete the transition from Chromium to `google-chrome` across the entire codebase with 100% feature parity. Obliterate all remaining references to `chromium`, `firefox`, `brave`, `microsoft-edge`, and `zen-browser`.
+- **Files Renamed, Created & Deleted**:
+  - Renamed `themes/last-horizon/chromium.theme` $\rightarrow$ `themes/last-horizon/chrome.theme`.
+  - Renamed `default/themed/chromium.theme.tpl` $\rightarrow$ `default/themed/chrome.theme.tpl`.
+  - Created `config/google-chrome/Default/Preferences` (replaces legacy `config/chromium/Default/Preferences`) to guarantee dark mode and appearance parity.
+  - Added explicit `chrome.theme` matching `colors.toml` background across all 5 retained themes (`everforest`, `last-horizon`, `matte-black`, `miasma`, `osaka-jade`).
+  - Deleted `default/firefox/` directory (`policies.json`).
+  - Deleted `config/chromium/` directory (`Default/Preferences`).
+- **Feature Parity & Script Enhancements**:
+  - `bin/omarchy-install-browser`:
+    - Added `# omarchy:alias=omarchy install chrome` so both `omarchy install browser` and `omarchy install chrome` route cleanly.
+    - Added automatic seeding of `~/.config/google-chrome/Default/Preferences` on install if not present.
   - `install/config/theme-system.sh`:
-    - Delete lines 9–13 (`mkdir -p /usr/lib/chromium`, `/usr/lib/chromium/initial_preferences`).
+    - Configured `/opt/google/chrome/initial_preferences` with `{"distribution":{"require_eula":false},"browser":{"theme":{"color_scheme":0,"color_scheme2":0}}}` to skip EULA/ToS dialog and align with system dark appearance on fresh install.
+  - `bin/omarchy-theme-set-browser-policy`:
+    - Flattened `POLICY_DIRS` from 4 directories strictly to `/etc/opt/chrome/policies/managed`.
+    - Pruned loop iterations for non-existent browsers.
+  - `bin/omarchy-theme-set-browser`:
+    - Updated theme state lookup to check strictly `CHROME_THEME="$HOME/.local/state/omarchy/current/theme/chrome.theme"`.
+    - Flattened policy checks strictly to `/etc/opt/chrome/policies/managed`.
+  - `install/helpers/browser-policy.sh`:
+    - Restricted `BROWSER_POLICY_MANAGED_DIRS` strictly to `/etc/opt/chrome/policies/managed`.
+    - Restricted `BROWSER_POLICY_PARENT_DIRS` strictly to `/etc/opt`, `/etc/opt/chrome`, `/etc/opt/chrome/policies`.
+    - Deleted `BROWSER_POLICY_FIREFOX_DIRS`.
+    - Deleted all Firefox policy functions: `browser_policy_firefox_policy_file_ok`, `browser_policy_firefox_hardened`, `browser_policy_install_firefox_policies`, `browser_policy_firefox_skip_default_check`, `browser_policy_setup_firefox_distribution`.
   - `default/hypr/apps/browser.lua` & `default/hypr/apps/pip.lua`:
-    - Replace `tag = "chromium-based-browser"` with `tag = "chrome-browser"`.
+    - Replaced `tag = "chromium-based-browser"` with `tag = "chrome-browser"`.
   - `shell/plugins/notifications/NotificationLogic.js`:
-    - Rename `isChromiumDerived(app, appIcon)` $\rightarrow$ `isChromeDerived(app, appIcon)`.
-    - Simplify logic: return `source.indexOf("chrom") >= 0`. Prune `brave`, `vivaldi`, `microsoft-edge`, `opera`.
+    - Renamed and simplified `isChromeDerived(app, appIcon)`: return `source.indexOf("chrom") >= 0`. Pruned all references to other browsers.
+  - `shell/plugins/menu/MenuModel.js`:
+    - Obliterated comment referencing `Zen Browser`.
+- **Test Suite Alignment**:
+  - `test/shell.d/menu-test.sh`: Replaced obsolete `install.browser.zen` test cases with generic install fixture.
+  - `test/shell.d/menu-guards-test.sh`: Purged `zen` directory fixture and `zen:w:0` assertion, replacing with generic test fixtures.
+  - Made `test/shell.d/chrome-copy-url-test.sh`, `test/shell.d/chrome-whatsapp-slim-test.sh`, and `test/shell.d/whatsapp-slim-test.sh` executable.
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (381 commands).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Browser test suite (`browser-policy-dir-test.sh`, `browser-policy-sudoers-test.sh`, `browser-env-test.sh`, `theme-set-browser-test.sh`, `launch-browser-test.sh`, `browser-handoff-test.sh`, `browser-link-handoff-test.sh`, `default-browser-lookup-test.sh`, `chrome-ytdlp-test.sh`): 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
   - `shell/plugins/notifications/Service.qml`:
-    - Align comments and docstrings from Chromium to Chrome.
+    - Aligned comments from Chromium to Chrome.
   - `shell/plugins/panels/audio/Panel.qml`:
-    - Align comments referencing Chromium streams.
-  - `bin/omarchy-theme-set`:
-    - Update `colour_only` staging references from `chromium.theme` to `chrome.theme`.
+    - Aligned comments referencing Chromium streams to Chrome.
+  - `default/agents/skills/omarchy/theming.md` & `docs/theming.md`:
+    - Updated references from `chromium.theme` to `chrome.theme`.
+- **Test Suite Alignment**:
+  - `test/shell.d/browser-policy-dir-test.sh`:
+    - Retargeted parent repair and planted symlink tests to `/etc/opt/chrome/policies/managed`.
+    - Updated theme iteration to `chrome.theme`.
+    - Removed Firefox distribution, policy file hardening, and policy merge tests.
+  - `test/shell.d/browser-policy-sudoers-test.sh`:
+    - Updated expected policy directory count to 1 (`/etc/opt/chrome/policies/managed`).
+    - Updated test to write/clean `chrome.theme`.
+  - `test/shell.d/theme-staging-test.sh`:
+    - Replaced `chromium.theme` with `chrome.theme` in `colour_only`.
+  - `test/shell.d/notifications-test.sh`:
+    - Replaced multi-browser assertions with `isChromeDerived('Google Chrome')` / `isChromeDerived('', 'google-chrome')`.
+  - `test/shell.d/unowned-system-paths-test.sh`:
+    - Removed unowned path exceptions for `/usr/share/chromium/extensions`, `/usr/lib/firefox/distribution`, `/usr/share/microsoft-edge/extensions`, `/usr/lib/chromium/initial_preferences`.
+  - `test/shell.d/hyprland-floating-workspaces-test.sh`:
+    - Updated window rule tag test to `chrome-browser`.
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (381 commands).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Shell tests (`browser-policy-dir-test.sh`, `browser-policy-sudoers-test.sh`, `theme-staging-test.sh`, `default-apps-test.sh`, `default-browser-lookup-test.sh`, `browser-env-test.sh`, `browser-handoff-test.sh`, `command-operand-boundaries-test.sh`): Passed 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 

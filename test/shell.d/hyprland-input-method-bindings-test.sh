@@ -98,16 +98,16 @@ assert_fires() {
 prefix="CTRL + SPACE"
 direct=$'non_consuming\nexec timeout 0.3 fcitx5-remote --check -c'
 assert_fires "the terminal prefix switches to direct input" "$direct" "$prefix" "com.mitchellh.ghostty" "terminal*"
-assert_fires "the prefix leaves input alone outside terminals" "non_consuming" "$prefix" "chromium" "browser"
+assert_fires "the prefix leaves input alone outside terminals" "non_consuming" "$prefix" "google-chrome" "browser"
 for layout in us kr; do
   TEST_LAYOUT="$layout" assert_fires "the terminal prefix works with $layout keyboards too" "$direct" "$prefix" "foot" "terminal"
 done
 TEST_KEYBOARD_ONLY=true assert_fires "keyboard-only profiles use the same prefix bind" "$direct" "$prefix" "foot" "terminal"
 
 assert_fires "Super + I cycles configured input independently of custom Fcitx keys" \
-  "exec omarchy-input-method cycle" "SUPER + I" "chromium"
+  "exec omarchy-input-method cycle" "SUPER + I" "google-chrome"
 assert_fires "Super + Shift + I cycles configured input back" \
-  "exec omarchy-input-method cycle back" "SUPER + SHIFT + I" "chromium"
+  "exec omarchy-input-method cycle back" "SUPER + SHIFT + I" "google-chrome"
 TEST_KEYBOARD_ONLY=true assert_fires "Super + I cycles keyboard layouts without an input engine" \
   "exec omarchy-input-method cycle" "SUPER + I" "foot" "terminal"
 

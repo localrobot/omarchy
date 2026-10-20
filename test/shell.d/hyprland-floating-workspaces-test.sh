@@ -551,8 +551,8 @@ printf 'o.workspace_mode({ workspace = "1", mode = "floating" })\n' >"$modes_dir
 if ! run_lua '
 o.window("^1password$", { tag = "+floating-window" })
 o.window({ tag = "floating-window" }, { float = true })
-o.window("^chromium$", { tag = "+chromium-based-browser" })
-o.window({ tag = "chromium-based-browser", title = "^Meet - .+" }, { float = true })
+o.window("^(google-chrome|google-chrome-stable)$", { tag = "+chrome-browser" })
+o.window({ tag = "chrome-browser", title = "^Meet - .+" }, { float = true })
 require("default.hypr.workspace-layouts")
 local rule
 for _, candidate in ipairs(state().rules) do

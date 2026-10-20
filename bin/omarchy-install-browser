@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # omarchy:summary=Install Google Chrome
+# omarchy:alias=omarchy install chrome
 # omarchy:args=[chrome]
-# omarchy:examples=omarchy install browser
+# omarchy:examples=omarchy install browser | omarchy install chrome
 
 set -e
 
@@ -19,6 +20,10 @@ omarchy-pkg-aur-add google-chrome || exit 1
 browser_policy_setup_dir /etc/opt/chrome/policies/managed
 mkdir -p ~/.config
 cp -f "$OMARCHY_PATH/config/chrome-flags.conf" ~/.config/chrome-flags.conf
+if [[ ! -e ~/.config/google-chrome/Default/Preferences ]]; then
+  mkdir -p ~/.config/google-chrome/Default
+  cp -f "$OMARCHY_PATH/config/google-chrome/Default/Preferences" ~/.config/google-chrome/Default/Preferences
+fi
 omarchy-install-chrome-copy-url
 omarchy-install-chrome-ytdlp
 omarchy-theme-set-browser

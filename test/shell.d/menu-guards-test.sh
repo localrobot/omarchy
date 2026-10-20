@@ -8,24 +8,24 @@ run_node_test <<'JS'
 const menu = requireFromRoot('shell/plugins/menu/MenuModel.js')
 
 const items = {
-  'setup.default.browser.brave': { id: 'setup.default.browser.brave', when: 'omarchy-pkg-present brave-bin', checked: '[[ "$(omarchy-default-browser)" == "brave" ]]' },
-  'setup.default.browser.zen': { id: 'setup.default.browser.zen', when: 'omarchy-pkg-present zen-browser-bin', checked: '[[ "$(omarchy-default-browser)" == "zen" ]]' },
-  'install.browser.zen': { id: 'install.browser.zen', disabled: 'omarchy-pkg-present zen-browser-bin' },
+  'setup.default.app.alpha': { id: 'setup.default.app.alpha', when: 'omarchy-pkg-present alpha-bin', checked: '[[ "$(omarchy-default-browser)" == "chrome" ]]' },
+  'setup.default.app.beta': { id: 'setup.default.app.beta', when: 'omarchy-pkg-present beta-bin', checked: '[[ "$(omarchy-default-browser)" == "chrome" ]]' },
+  'install.app.beta': { id: 'install.app.beta', disabled: 'omarchy-pkg-present beta-bin' },
   'plain': { id: 'plain', label: 'No guards' }
 }
 const script = menu.guardScript(items)
 const browserSlot = `\${__omarchy_read_${menu.guardReaders.indexOf('omarchy-default-browser')}}`
 
 assert(
-  script.includes('if { omarchy-pkg-present brave-bin; } >/dev/null 2>&1; then echo setup.default.browser.brave:w:1; else echo setup.default.browser.brave:w:0; fi'),
+  script.includes('if { omarchy-pkg-present alpha-bin; } >/dev/null 2>&1; then echo setup.default.app.alpha:w:1; else echo setup.default.app.alpha:w:0; fi'),
   'guard script reports a when: as <id>:w:<0|1>'
 )
 assert(
-  script.includes('then echo setup.default.browser.zen:c:1; else echo setup.default.browser.zen:c:0; fi'),
+  script.includes('then echo setup.default.app.beta:c:1; else echo setup.default.app.beta:c:0; fi'),
   'guard script reports a checked: as <id>:c:<0|1>'
 )
 assert(
-  script.includes('if { omarchy-pkg-present zen-browser-bin; } >/dev/null 2>&1; then echo install.browser.zen:d:1; else echo install.browser.zen:d:0; fi'),
+  script.includes('if { omarchy-pkg-present beta-bin; } >/dev/null 2>&1; then echo install.app.beta:d:1; else echo install.app.beta:d:0; fi'),
   'guard script reports a disabled: as <id>:d:<0|1>'
 )
 assert(!/\bplain:[wcd]:/.test(script), 'guard script skips items with nothing to evaluate')
@@ -39,7 +39,7 @@ assertEqual(
   'guard script reads a value command once for the whole batch'
 )
 assert(
-  script.includes(`[[ "${browserSlot}" == "brave" ]]`) && !script.includes('"$(omarchy-default-browser)"'),
+  script.includes(`[[ "${browserSlot}" == "chrome" ]]`) && !script.includes('"$(omarchy-default-browser)"'),
   'guard script substitutes the captured answer into the expression'
 )
 assert(
@@ -264,11 +264,11 @@ pass "Extra Themes shows exactly when omarchy-theme-update has something to pull
 # whole, and it would still print an Updating: line on its way to the wrong
 # directory.
 many="$themes_home/many/.config/omarchy/themes"
-mkdir -p "$many/tokyo night/.git" "$many/zen/.git" "$many/handmade"
+mkdir -p "$many/tokyo night/.git" "$many/forest/.git" "$many/handmade"
 ln -s "$themes_home/checkout" "$many/in-progress"
 
 listed=$(HOME="$themes_home/many" LC_ALL=C "$ROOT/bin/omarchy-theme-extras")
-[[ $listed == "$many/tokyo night"$'\n'"$many/zen" ]] ||
+[[ $listed == "$many/tokyo night"$'\n'"$many/forest" ]] ||
   fail "omarchy-theme-extras lists every clone and nothing else" "got: $listed"
 pass "omarchy-theme-extras lists every clone and nothing else"
 
@@ -277,7 +277,7 @@ trap 'rm -rf "$stub_dir" "$themes_home" "$git_calls"' EXIT
 HOME="$themes_home/many" LC_ALL=C GIT_CALLS="$git_calls" PATH="$ROOT/bin:$stub_dir:$PATH" \
   "$ROOT/bin/omarchy-theme-update" >/dev/null 2>&1
 pulled=$(<"$git_calls")
-[[ $pulled == "<-C><$many/tokyo night><pull>"$'\n'"<-C><$many/zen><pull>" ]] ||
+[[ $pulled == "<-C><$many/tokyo night><pull>"$'\n'"<-C><$many/forest><pull>" ]] ||
   fail "omarchy-theme-update pulls each clone by its whole path" "got: $pulled"
 pass "omarchy-theme-update pulls each clone by its whole path"
 
@@ -301,7 +301,7 @@ case "$1" in
   [[ -z ${PACMAN_QI_FAILS:-} ]] || exit 1
   # A transaction landing while the set is being read.
   case "${PACMAN_DURING_QI:-}" in
-  install) mkdir -p "$FIXTURE_DB/local/zen-browser-bin-1.0-1" ;;
+  install) mkdir -p "$FIXTURE_DB/local/beta-bin-1.0-1" ;;
   lock) touch "$FIXTURE_DB/db.lck" ;;
   esac
   if [[ -d $FIXTURE_DB/local/gvim-9.2-1 ]]; then
@@ -327,7 +327,7 @@ cache_script=$(node -e '
   process.stdout.write(menu.guardScript({
     bash: { id: "bash", when: "omarchy-pkg-present bash" },
     vim: { id: "vim", when: "omarchy-pkg-present vim" },
-    zen: { id: "zen", when: "omarchy-pkg-present zen-browser-bin" }
+    beta: { id: "beta", when: "omarchy-pkg-present beta-bin" }
   }))
 ')
 
@@ -352,20 +352,20 @@ queried() {
 }
 
 dir=$(cache_case reuse)
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "a first batch answers from pacman" "$(batch "$dir")"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "a first batch answers from pacman" "$(batch "$dir")"
 queried "$dir" || fail "a first batch asks pacman"
 [[ -f $dir/runtime/omarchy-menu-packages ]] || fail "a first batch stores the package set"
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "a cached batch answers as pacman did, provides included"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "a cached batch answers as pacman did, provides included"
 ! queried "$dir" || fail "a batch over an unchanged database does not ask pacman" "$(<"$dir/pacman.log")"
 pass "a batch over an unchanged package database answers from the stored set without asking pacman"
 
 # Upgrades rename an entry, installs add one and removals drop one; each has
 # to be seen by the very next batch.
-mkdir "$dir/db/local/zen-browser-bin-1.0-1"
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:1 " ]] || fail "an install shows on the next batch" "$(batch "$dir")"
+mkdir "$dir/db/local/beta-bin-1.0-1"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:1 " ]] || fail "an install shows on the next batch" "$(batch "$dir")"
 queried "$dir" || fail "an install makes the next batch ask pacman"
 rmdir "$dir/db/local/gvim-9.2-1"
-[[ $(batch "$dir") == "bash:w:1 vim:w:0 zen:w:1 " ]] || fail "a removal shows on the next batch, provides included" "$(batch "$dir")"
+[[ $(batch "$dir") == "bash:w:1 vim:w:0 beta:w:1 " ]] || fail "a removal shows on the next batch, provides included" "$(batch "$dir")"
 mv "$dir/db/local/bash-5.3-1" "$dir/db/local/bash-5.3-2"
 batch "$dir" >/dev/null
 queried "$dir" || fail "an upgrade makes the next batch ask pacman"
@@ -376,8 +376,8 @@ pass "installs, removals and upgrades reach the very next batch"
 dir=$(cache_case dbpath)
 batch "$dir" OMARCHY_PACMAN_DB_PATH= >/dev/null
 [[ -f $dir/runtime/omarchy-menu-packages ]] || fail "the database pacman-conf names is cached"
-mkdir "$dir/db/local/zen-browser-bin-1.0-1"
-[[ $(batch "$dir" OMARCHY_PACMAN_DB_PATH=) == "bash:w:1 vim:w:1 zen:w:1 " ]] ||
+mkdir "$dir/db/local/beta-bin-1.0-1"
+[[ $(batch "$dir" OMARCHY_PACMAN_DB_PATH=) == "bash:w:1 vim:w:1 beta:w:1 " ]] ||
   fail "an install in the database pacman-conf names reaches the next batch" "$(batch "$dir" OMARCHY_PACMAN_DB_PATH=)"
 queried "$dir" || fail "an install in the database pacman-conf names makes the next batch ask pacman"
 pass "the stamp follows the database pacman.conf's DBPath names"
@@ -386,7 +386,7 @@ pass "the stamp follows the database pacman.conf's DBPath names"
 # exist before its desc does, and nothing would move the stamp afterwards.
 dir=$(cache_case locked)
 touch "$dir/db/db.lck"
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "a batch during a transaction still answers" "$(batch "$dir")"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "a batch during a transaction still answers" "$(batch "$dir")"
 [[ ! -e $dir/runtime/omarchy-menu-packages ]] || fail "a batch during a transaction stores nothing"
 rm "$dir/db/db.lck"
 batch "$dir" >/dev/null
@@ -402,7 +402,7 @@ for during in install lock; do
   queried "$dir" || fail "a batch asks pacman before a transaction lands mid-read ($during)"
   [[ ! -e $dir/runtime/omarchy-menu-packages ]] || fail "a set read across a transaction is never stored ($during)"
   rm -f "$dir/db/db.lck"
-  [[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:$([[ $during == "install" ]] && echo 1 || echo 0) " ]] ||
+  [[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:$([[ $during == "install" ]] && echo 1 || echo 0) " ]] ||
     fail "the batch after a mid-read transaction answers from a fresh set ($during)" "$(batch "$dir")"
   queried "$dir" || fail "the batch after a mid-read transaction asks pacman again ($during)"
 done
@@ -411,19 +411,19 @@ pass "a set read across a transaction that lands mid-read is used once and never
 # A failed query answers for its own batch, as before, but an empty or
 # provide-less set stored now would hide rows until the next transaction.
 dir=$(cache_case failed)
-[[ $(batch "$dir" PACMAN_QI_FAILS=1) == "bash:w:1 vim:w:0 zen:w:0 " ]] || fail "a failed query answers for its own batch" "$(batch "$dir" PACMAN_QI_FAILS=1)"
+[[ $(batch "$dir" PACMAN_QI_FAILS=1) == "bash:w:1 vim:w:0 beta:w:0 " ]] || fail "a failed query answers for its own batch" "$(batch "$dir" PACMAN_QI_FAILS=1)"
 [[ ! -e $dir/runtime/omarchy-menu-packages ]] || fail "a failed query is never stored"
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "the batch after a failed query asks again" "$(batch "$dir")"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "the batch after a failed query asks again" "$(batch "$dir")"
 pass "a set from a failed pacman query is never stored"
 
 # A set stored under another stamp is never believed.
 dir=$(cache_case stale)
-printf '%s\n' "0:0:0:0" bash gvim vim zen-browser-bin >"$dir/runtime/omarchy-menu-packages"
-[[ $(batch "$dir") == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "a set stored under another stamp is ignored" "$(batch "$dir")"
+printf '%s\n' "0:0:0:0" bash gvim vim beta-bin >"$dir/runtime/omarchy-menu-packages"
+[[ $(batch "$dir") == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "a set stored under another stamp is ignored" "$(batch "$dir")"
 queried "$dir" || fail "a set stored under another stamp makes the batch ask pacman"
 pass "a set stored under another database stamp is ignored and replaced"
 
 dir=$(cache_case no-runtime)
-[[ $(batch "$dir" XDG_RUNTIME_DIR=) == "bash:w:1 vim:w:1 zen:w:0 " ]] || fail "a batch without a runtime dir still answers"
+[[ $(batch "$dir" XDG_RUNTIME_DIR=) == "bash:w:1 vim:w:1 beta:w:0 " ]] || fail "a batch without a runtime dir still answers"
 [[ -z $(ls -A "$dir/runtime") ]] || fail "a batch without a runtime dir stores nothing"
 pass "a batch without a runtime dir asks pacman and stores nothing"

@@ -174,7 +174,7 @@ pass "a theme name cannot climb out of the theme directories"
 # generates. Every generated theme file is either denied to an installed theme or
 # recorded here as carrying colour, so a new template fails until it is placed.
 denied=(foot.ini gum_env.lua hyprland.lua neovim.lua vscode.json)
-colour_only=(btop.theme chromium.theme claude.json fcitx5-theme.conf hyprland-preview-share-picker.css keyboard.rgb obsidian.css pi.json shell.toml vscode-theme.json)
+colour_only=(btop.theme chrome.theme claude.json fcitx5-theme.conf hyprland-preview-share-picker.css keyboard.rgb obsidian.css pi.json shell.toml vscode-theme.json)
 
 for tpl in "$ROOT"/default/themed/*.tpl; do
   generated=$(basename "$tpl" .tpl)

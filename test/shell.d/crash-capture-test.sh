@@ -167,15 +167,15 @@ pass "un-muting a program brings its crash notifications back"
 # characters and the executable's basename is not, and announcing the truncated
 # one would leave a dutifully-followed mute matching nothing forever.
 reset_entries
-crash_entry chromium-browse /usr/lib/chromium/chromium-browser
+crash_entry google-chrome-s /opt/google/chrome/google-chrome-stable
 run_watch
-announced chromium-browser ||
+announced google-chrome-stable ||
   fail "the toast announces a name the mute cannot be keyed on, so following the diagnosis mutes nothing"
 pass "the toast announces the name the mute is keyed on"
 
-mute chromium-browser on
+mute google-chrome-stable on
 run_watch
-! announced chromium-browser ||
+! announced google-chrome-stable ||
   fail "the mute is keyed on the name the notification announced, not on the truncated COMM"
 pass "muting the announced name silences a program whose COMM was truncated"
 
@@ -183,7 +183,7 @@ pass "muting the announced name silences a program whose COMM was truncated"
 # with a five-second gap, and the watcher restarts on `journalctl -n 0`, which
 # never replays the crashes it missed while it was away.
 reset_entries
-crash_entry chromium-browse /usr/lib/chromium/chromium-browser
+crash_entry google-chrome-s /opt/google/chrome/google-chrome-stable
 crash_entry nautilus /usr/bin/nautilus
 run_watch
 announced nautilus ||
@@ -277,8 +277,8 @@ pass "the command lists what it muted"
 
 # The watcher keys on the basename, so the command has to take the path a crash
 # recorded and land on the same flag the watcher will look for.
-crash_mute /usr/lib/chromium/chromium-browser >/dev/null
-[[ -f $(mute_flag chromium-browser) ]] ||
+crash_mute /opt/google/chrome/google-chrome-stable >/dev/null
+[[ -f $(mute_flag google-chrome-stable) ]] ||
   fail "a binary's path is muted verbatim rather than by name, so the watcher never sees that flag"
 pass "the command reduces a path to the name the watcher checks"
 

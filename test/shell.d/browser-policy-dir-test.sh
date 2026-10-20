@@ -117,43 +117,47 @@ pass "a hardened directory must be root-owned"
 
 saved_parent_dirs=("${BROWSER_POLICY_PARENT_DIRS[@]}")
 parent_root=$test_tmp/parents
-mkdir -p "$parent_root/etc/chromium/policies/managed/keep"
-printf 'keep\n' >"$parent_root/etc/chromium/policies/managed/keep/x"
-chmod 0777 "$parent_root/etc/chromium" "$parent_root/etc/chromium/policies"
-chmod 755 "$parent_root/etc/chromium/policies/managed"
+mkdir -p "$parent_root/etc/opt/chrome/policies/managed/keep"
+printf 'keep\n' >"$parent_root/etc/opt/chrome/policies/managed/keep/x"
+chmod 0777 "$parent_root/etc/opt" "$parent_root/etc/opt/chrome" "$parent_root/etc/opt/chrome/policies"
+chmod 755 "$parent_root/etc/opt/chrome/policies/managed"
 BROWSER_POLICY_PARENT_DIRS=(
-  "$parent_root/etc/chromium"
-  "$parent_root/etc/chromium/policies"
+  "$parent_root/etc/opt"
+  "$parent_root/etc/opt/chrome"
+  "$parent_root/etc/opt/chrome/policies"
 )
 as_root() { unprivileged_as_root "$@"; }
-if browser_policy_parents_hardened "$parent_root/etc/chromium/policies/managed"; then
+if browser_policy_parents_hardened "$parent_root/etc/opt/chrome/policies/managed"; then
   fail "a world-writable policy parent is not treated as hardened"
 fi
-browser_policy_setup_parents_for "$parent_root/etc/chromium/policies/managed"
-mode=$(stat -c '%a' "$parent_root/etc/chromium")
-[[ $mode == "755" ]] || fail "setup tightens /etc/chromium" "mode=$mode"
-mode=$(stat -c '%a' "$parent_root/etc/chromium/policies")
-[[ $mode == "755" ]] || fail "setup tightens /etc/chromium/policies" "mode=$mode"
-[[ -d $parent_root/etc/chromium/policies/managed/keep ]] ||
+browser_policy_setup_parents_for "$parent_root/etc/opt/chrome/policies/managed"
+mode=$(stat -c '%a' "$parent_root/etc/opt")
+[[ $mode == "755" ]] || fail "setup tightens /etc/opt" "mode=$mode"
+mode=$(stat -c '%a' "$parent_root/etc/opt/chrome")
+[[ $mode == "755" ]] || fail "setup tightens /etc/opt/chrome" "mode=$mode"
+mode=$(stat -c '%a' "$parent_root/etc/opt/chrome/policies")
+[[ $mode == "755" ]] || fail "setup tightens /etc/opt/chrome/policies" "mode=$mode"
+[[ -d $parent_root/etc/opt/chrome/policies/managed/keep ]] ||
   fail "parent repair does not purge the managed directory"
 pass "policy parent directories are tightened to 0755 without purging the leaf"
 
 symlink_root=$test_tmp/symlink-parents
-mkdir -p "$symlink_root/etc" "$symlink_root/attacker/policies/managed"
+mkdir -p "$symlink_root/etc/opt" "$symlink_root/attacker/policies/managed"
 printf 'planted\n' >"$symlink_root/attacker/policies/managed/evil.json"
-ln -s "$symlink_root/attacker" "$symlink_root/etc/chromium"
+ln -s "$symlink_root/attacker" "$symlink_root/etc/opt/chrome"
 BROWSER_POLICY_PARENT_DIRS=(
-  "$symlink_root/etc/chromium"
-  "$symlink_root/etc/chromium/policies"
+  "$symlink_root/etc/opt"
+  "$symlink_root/etc/opt/chrome"
+  "$symlink_root/etc/opt/chrome/policies"
 )
 as_root() { unprivileged_as_root "$@"; }
-browser_policy_setup_dir "$symlink_root/etc/chromium/policies/managed"
-[[ ! -L $symlink_root/etc/chromium ]] || fail "setup replaces a planted /etc/chromium symlink"
-[[ -d $symlink_root/etc/chromium && ! -L $symlink_root/etc/chromium ]] ||
-  fail "setup recreates /etc/chromium as a real directory"
-[[ -d $symlink_root/etc/chromium/policies && ! -L $symlink_root/etc/chromium/policies ]] ||
-  fail "setup recreates /etc/chromium/policies as a real directory"
-[[ ! -e $symlink_root/etc/chromium/policies/managed/evil.json ]] ||
+browser_policy_setup_dir "$symlink_root/etc/opt/chrome/policies/managed"
+[[ ! -L $symlink_root/etc/opt/chrome ]] || fail "setup replaces a planted /etc/opt/chrome symlink"
+[[ -d $symlink_root/etc/opt/chrome && ! -L $symlink_root/etc/opt/chrome ]] ||
+  fail "setup recreates /etc/opt/chrome as a real directory"
+[[ -d $symlink_root/etc/opt/chrome/policies && ! -L $symlink_root/etc/opt/chrome/policies ]] ||
+  fail "setup recreates /etc/opt/chrome/policies as a real directory"
+[[ ! -e $symlink_root/etc/opt/chrome/policies/managed/evil.json ]] ||
   fail "setup does not keep policy that lived behind a planted parent symlink"
 grep -Fxq 'planted' "$symlink_root/attacker/policies/managed/evil.json" ||
   fail "replacing a parent symlink does not delete the symlink target"
@@ -161,48 +165,30 @@ BROWSER_POLICY_PARENT_DIRS=("${saved_parent_dirs[@]}")
 pass "policy setup does not follow a planted parent symlink"
 
 leaf_link_root=$test_tmp/leaf-link
-mkdir -p "$leaf_link_root/etc/chromium/policies" "$leaf_link_root/attacker"
+mkdir -p "$leaf_link_root/etc/opt/chrome/policies" "$leaf_link_root/attacker"
 printf 'planted\n' >"$leaf_link_root/attacker/evil.json"
-chmod 755 "$leaf_link_root/etc/chromium" "$leaf_link_root/etc/chromium/policies"
-ln -s "$leaf_link_root/attacker" "$leaf_link_root/etc/chromium/policies/managed"
+chmod 755 "$leaf_link_root/etc/opt/chrome" "$leaf_link_root/etc/opt/chrome/policies"
+ln -s "$leaf_link_root/attacker" "$leaf_link_root/etc/opt/chrome/policies/managed"
 BROWSER_POLICY_PARENT_DIRS=(
-  "$leaf_link_root/etc/chromium"
-  "$leaf_link_root/etc/chromium/policies"
+  "$leaf_link_root/etc/opt"
+  "$leaf_link_root/etc/opt/chrome"
+  "$leaf_link_root/etc/opt/chrome/policies"
 )
 as_root() { unprivileged_as_root "$@"; }
-if browser_policy_dir_hardened "$leaf_link_root/etc/chromium/policies/managed"; then
+if browser_policy_dir_hardened "$leaf_link_root/etc/opt/chrome/policies/managed"; then
   fail "a planted managed symlink is not treated as hardened"
 fi
-browser_policy_setup_dir "$leaf_link_root/etc/chromium/policies/managed"
-[[ ! -L $leaf_link_root/etc/chromium/policies/managed ]] ||
+browser_policy_setup_dir "$leaf_link_root/etc/opt/chrome/policies/managed"
+[[ ! -L $leaf_link_root/etc/opt/chrome/policies/managed ]] ||
   fail "setup replaces a planted managed symlink"
-[[ -d $leaf_link_root/etc/chromium/policies/managed && ! -L $leaf_link_root/etc/chromium/policies/managed ]] ||
+[[ -d $leaf_link_root/etc/opt/chrome/policies/managed && ! -L $leaf_link_root/etc/opt/chrome/policies/managed ]] ||
   fail "setup recreates managed as a real directory"
-[[ ! -e $leaf_link_root/etc/chromium/policies/managed/evil.json ]] ||
+[[ ! -e $leaf_link_root/etc/opt/chrome/policies/managed/evil.json ]] ||
   fail "setup does not keep policy that lived behind a planted managed symlink"
 grep -Fxq 'planted' "$leaf_link_root/attacker/evil.json" ||
   fail "replacing a managed symlink does not delete the symlink target"
 BROWSER_POLICY_PARENT_DIRS=("${saved_parent_dirs[@]}")
 pass "policy setup does not follow a planted managed symlink"
-
-fx_link_root=$test_tmp/fx-link
-mkdir -p "$fx_link_root/attacker" "$fx_link_root/opt"
-printf 'planted\n' >"$fx_link_root/attacker/policies.json"
-ln -s "$fx_link_root/attacker" "$fx_link_root/opt/zen"
-as_root() { unprivileged_as_root "$@"; }
-if browser_policy_firefox_hardened "$fx_link_root/opt/zen"; then
-  fail "a planted Firefox distribution symlink is not treated as hardened"
-fi
-browser_policy_setup_firefox_distribution "$fx_link_root/opt/zen" ||
-  fail "Firefox setup replaces a planted distribution symlink"
-[[ ! -L $fx_link_root/opt/zen ]] || fail "Firefox setup unlinks a planted distribution symlink"
-[[ -d $fx_link_root/opt/zen && ! -L $fx_link_root/opt/zen ]] ||
-  fail "Firefox setup recreates the distribution directory"
-[[ -f $fx_link_root/opt/zen/policies.json && ! -L $fx_link_root/opt/zen/policies.json ]] ||
-  fail "Firefox setup writes policies.json into the recreated directory"
-grep -Fxq 'planted' "$fx_link_root/attacker/policies.json" ||
-  fail "replacing a Firefox distribution symlink does not delete the symlink target"
-pass "Firefox setup does not follow a planted distribution symlink"
 
 [[ $(browser_policy_theme_hex "242,240,229") == "#f2f0e5" ]] ||
   fail "theme colour converts an RGB triple to hex"
@@ -221,20 +207,20 @@ for malformed in "" "not,a,color" "1,2" "1,2,3,4" "256,0,0" "999,999,999" "-1,0,
 done
 pass "theme colour is six hex digits or the stock grey"
 
-for theme in "$ROOT"/themes/*/chromium.theme; do
+for theme in "$ROOT"/themes/*/chrome.theme; do
   [[ -f $theme ]] || continue
   rgb=$(<$theme)
   hex=$(browser_policy_theme_hex "$rgb")
   [[ $hex =~ ^#[0-9a-f]{6}$ ]] ||
-    fail "shipped $(basename "$(dirname "$theme")") chromium.theme parses as hex" "got: $hex from $(printf %q "$rgb")"
+    fail "shipped $(basename "$(dirname "$theme")") chrome.theme parses as hex" "got: $hex from $(printf %q "$rgb")"
   if [[ $hex == "#1c2027" && ! $rgb =~ ^[[:space:]]*28[[:space:]]*,[[:space:]]*32[[:space:]]*,[[:space:]]*39[[:space:]]*$ ]]; then
-    fail "shipped $(basename "$(dirname "$theme")") chromium.theme is a valid RGB triple" "got: $(printf %q "$rgb")"
+    fail "shipped $(basename "$(dirname "$theme")") chrome.theme is a valid RGB triple" "got: $(printf %q "$rgb")"
   fi
 done
-pass "shipped chromium.theme files parse as RGB triples"
+pass "shipped chrome.theme files parse as RGB triples"
 
 grep -F 'browser_policy_theme_hex' "$ROOT/bin/omarchy-theme-set-browser" >/dev/null ||
-  fail "omarchy-theme-set-browser parses chromium.theme through browser_policy_theme_hex"
+  fail "omarchy-theme-set-browser parses chrome.theme through browser_policy_theme_hex"
 grep -F 'omarchy-theme-set-browser-policy' "$ROOT/bin/omarchy-theme-set-browser" >/dev/null ||
   fail "omarchy-theme-set-browser writes colour through omarchy-theme-set-browser-policy"
 if grep -E 'printf.*THEME_RGB_COLOR' "$ROOT/bin/omarchy-theme-set-browser" >/dev/null; then
@@ -242,40 +228,6 @@ if grep -E 'printf.*THEME_RGB_COLOR' "$ROOT/bin/omarchy-theme-set-browser" >/dev
 fi
 pass "omarchy-theme-set-browser validates the theme colour"
 
-fx_policy=$test_tmp/policies.json
-printf '%s\n' '{"policies":{}}' >"$fx_policy"
-chmod 644 "$fx_policy"
-if browser_policy_firefox_policy_file_ok "$fx_policy"; then
-  fail "a user-owned policies.json is not treated as hardened"
-fi
-ln -sf "$fx_policy" "$test_tmp/policies-link.json"
-if browser_policy_firefox_policy_file_ok "$test_tmp/policies-link.json"; then
-  fail "a policies.json symlink is not treated as hardened"
-fi
-pass "Firefox policy files must be root-owned regular files without group or other write"
-
-dist=$test_tmp/distribution
-mkdir -p "$dist"
-printf 'original\n' >"$test_tmp/firefox-pwn"
-ln -s "$test_tmp/firefox-pwn" "$dist/policies.json"
-as_root() { unprivileged_as_root "$@"; }
-browser_policy_install_firefox_policies "$dist" ||
-  fail "Firefox policy install replaces a planted policies.json symlink"
-[[ -f $dist/policies.json && ! -L $dist/policies.json ]] ||
-  fail "Firefox policy install unlinks a planted policies.json symlink instead of writing through it"
-grep -Fxq 'original' "$test_tmp/firefox-pwn" || fail "Firefox policy install leaves the symlink target unchanged"
-grep -q '"policies"' "$dist/policies.json" || fail "Firefox policy install writes the stock policies"
-pass "Firefox policy install does not follow a planted policies.json symlink"
-
-dir_dist=$test_tmp/distribution-dir
-mkdir -p "$dir_dist"
-mkdir "$dir_dist/policies.json"
-as_root() { unprivileged_as_root "$@"; }
-if browser_policy_install_firefox_policies "$dir_dist" 2>/dev/null; then
-  fail "Firefox policy install refuses a planted policies.json directory"
-fi
-[[ -d $dir_dist/policies.json ]] || fail "Firefox policy install leaves a planted policies.json directory in place"
-pass "Firefox policy install does not write into a planted policies.json directory"
 
 grep -F 'exit "$failed"' "$ROOT/bin/omarchy-theme-set-browser" >/dev/null ||
   fail "omarchy-theme-set-browser exits non-zero when a policy write fails"
@@ -311,17 +263,3 @@ if grep -nE 'chmod a\+rwx\b|chmod a\+rw\b|chmod a\+w\b|chmod o\+w|chmod ugo\+w|c
 fi
 pass "browser policy setup is not world-writable"
 
-fx_merge=$test_tmp/fx-merge
-mkdir -p "$fx_merge"
-printf '{"policies": {"DisableTelemetry": true}}\n' >"$fx_merge/policies.json"
-as_root() { unprivileged_as_root "$@"; }
-# Temp files are user-owned; trust them as the root-owned file they stand in for.
-browser_policy_firefox_policy_file_ok() { [[ -f $1 && ! -L $1 ]]; }
-browser_policy_firefox_skip_default_check "$fx_merge"
-browser_policy_firefox_skip_default_check "$fx_merge"
-[[ $(jq -c '.policies' "$fx_merge/policies.json") == '{"DisableTelemetry":true,"DontCheckDefaultBrowser":true}' ]] ||
-  fail "Firefox's default browser check is added beside an administrator's policies" "$(cat "$fx_merge/policies.json")"
-printf 'not json\n' >"$fx_merge/policies.json"
-browser_policy_firefox_skip_default_check "$fx_merge"
-[[ $(<"$fx_merge/policies.json") == "not json" ]] || fail "an unreadable Firefox policies.json is left alone"
-pass "Firefox's default browser check is merged into existing policies"

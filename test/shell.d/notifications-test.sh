@@ -8,9 +8,9 @@ run_node_test <<'JS'
 const fs = require('fs')
 const notifications = requireFromRoot('shell/plugins/notifications/NotificationLogic.js')
 
-assert(notifications.isChromiumDerived('Brave Browser', ''), 'notifications detect chromium-derived apps by name')
-assert(notifications.isChromiumDerived('', 'microsoft-edge'), 'notifications detect chromium-derived apps by icon')
-assert(!notifications.isChromiumDerived('Slack', ''), 'notifications do not treat unrelated apps as chromium-derived')
+assert(notifications.isChromeDerived('Google Chrome', ''), 'notifications detect chrome-derived apps by name')
+assert(notifications.isChromeDerived('', 'google-chrome'), 'notifications detect chrome-derived apps by icon')
+assert(!notifications.isChromeDerived('Slack', ''), 'notifications do not treat unrelated apps as chrome-derived')
 
 assertEqual(
   notifications.sanitizeBody('<img src="x">Hello', 'Slack', ''),
@@ -164,15 +164,15 @@ assertEqual(
 )
 
 assertEqual(
-  notifications.sanitizeBody('<a href="https://example.com">example.com</a> Message body', 'Chromium', ''),
+  notifications.sanitizeBody('<a href="https://example.com">example.com</a> Message body', 'Google Chrome', ''),
   'Message body',
-  'notifications strip chromium leading origin links'
+  'notifications strip chrome leading origin links'
 )
 
 assertEqual(
-  notifications.sanitizeBody('https://example.com/path Message body', 'Chromium', ''),
+  notifications.sanitizeBody('https://example.com/path Message body', 'Google Chrome', ''),
   'Message body',
-  'notifications strip chromium leading origin text'
+  'notifications strip chrome leading origin text'
 )
 
 assertEqual(
@@ -372,7 +372,7 @@ assert(
   'notifications ignore identity fields when deciding whether a refresh has work'
 )
 
-const calendarReminder = { originalId: 20, app: 'Chromium', summary: 'Interview', body: 'Today, 11:00 AM' }
+const calendarReminder = { originalId: 20, app: 'Google Chrome', summary: 'Interview', body: 'Today, 11:00 AM' }
 assert(
   notifications.isDuplicatePopup(calendarReminder, Object.assign({}, calendarReminder, { originalId: 21 })),
   'notifications treat the same message from the same sender under a new id as a duplicate'
@@ -476,7 +476,7 @@ assertEqual(
   'notifications preserve popup expire timeouts unlike history rows'
 )
 
-// Persisted entries must not reference images another process owns: Chromium
+// Persisted entries must not reference images another process owns: Chrome
 // web apps (WhatsApp avatars included) delete their scoped /tmp files when
 // the notification closes, and image:// URLs die with the live object.
 assertEqual(

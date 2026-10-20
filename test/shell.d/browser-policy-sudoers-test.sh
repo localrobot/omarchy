@@ -34,15 +34,13 @@ gated=$(grep -A1 -E '^if \(\( EUID == 0 \)\); then$' "$helper" || true)
 
 pass "browser policy sudoers rule is scoped to a single color argument"
 
-for dir in /etc/chromium/policies/managed /etc/opt/chrome/policies/managed \
-  /etc/opt/edge/policies/managed /etc/brave/policies/managed; do
-  grep -Fx "  $dir" "$helper" >/dev/null ||
-    fail "omarchy-theme-set-browser-policy names $dir in its fixed policy directory list"
-done
+dir=/etc/opt/chrome/policies/managed
+grep -Fx "  $dir" "$helper" >/dev/null ||
+  fail "omarchy-theme-set-browser-policy names $dir in its fixed policy directory list"
 
 policy_dir_count=$(sed -n '/^POLICY_DIRS=(/,/^)/p' "$helper" | grep -c '^  /')
-((policy_dir_count == 4)) ||
-  fail "omarchy-theme-set-browser-policy writes only the four known policy directories" \
+((policy_dir_count == 1)) ||
+  fail "omarchy-theme-set-browser-policy writes only the Chrome policy directory" \
     "got: $policy_dir_count"
 
 grep -F 'install -m 0644 -o root -g root -T' "$helper" >/dev/null ||
@@ -159,9 +157,9 @@ mkdir -p "$theme_dir"
 color_for_theme() {
   : >"$test_tmp/color"
   if [[ $# -gt 0 ]]; then
-    printf '%s' "$1" >"$theme_dir/chromium.theme"
+    printf '%s' "$1" >"$theme_dir/chrome.theme"
   else
-    rm -f "$theme_dir/chromium.theme"
+    rm -f "$theme_dir/chrome.theme"
   fi
 
   HOME="$setter_home" COLOR_LOG="$test_tmp/color" PATH="$setter_bin:$stub_bin:$PATH" \

@@ -42,8 +42,8 @@ Source Output #67
 Source Output #90
 	Driver: PipeWire
 	Properties:
-		application.name = "Firefox"
-		node.name = "Firefox"
+		application.name = "Google Chrome"
+		node.name = "Google Chrome"
 Source Output #91
 	Properties:
 		node.name = "native-recorder"

@@ -194,7 +194,7 @@ grep -Fxq 'omarchy-theme-set-browser:' "$setup_log" ||
   fail "Chrome browser installer applies the current theme"
 pass "Chrome browser installer restores the complete Omarchy setup"
 
-if omarchy-default-browser firefox 2>/dev/null; then
+if omarchy-default-browser unsupported-browser 2>/dev/null; then
   fail "omarchy-default-browser rejects unsupported browsers"
 fi
 pass "omarchy-default-browser rejects unsupported browsers"

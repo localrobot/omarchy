@@ -33,7 +33,7 @@ the terminal config `foot.ini` (names the program the terminal launches), and `v
 through `$OMARCHY_PATH/default/themed/*.tpl`, and named on stderr.
 
 Everything else a cloned theme ships is kept, including `btop.theme`,
-`chromium.theme`, `helix.toml`, `icons.theme`, `keyboard.rgb` and `shell.toml`.
+`chrome.theme`, `helix.toml`, `icons.theme`, `keyboard.rgb` and `shell.toml`.
 Omarchy tells a cloned theme from the user's own by the `.git` directory a clone
 leaves behind.
 
