@@ -14,15 +14,14 @@ matching guide before starting:
 
 # Documentation Layout
 
-Three documentation trees, split by genre and audience:
+Two documentation trees, split by genre and audience:
 
 - `agents/skills/` - task procedure ("do this when doing X"), for anyone working on the codebase
 - `docs/` - reference on how the system is shaped (file layout, update pipeline, theming, shell architecture), for anyone working on the codebase; skills link here for depth
-- `manual/` - end-user documentation for using Omarchy, published; never codebase internals
 
 # Style
 
-- In markdown documents (`plans/`, `docs/`, `manual/`), write full lines — no hard wrapping at 80 columns; break only at structural boundaries like headings and list items
+- In markdown documents (`plans/`, `docs/`), write full lines — no hard wrapping at 80 columns; break only at structural boundaries like headings and list items
 - Two spaces for indentation, no tabs
 - Use bash 5 conditionals: use `[[ ]]` for string/file tests and `(( ))` for numeric tests
 - In `[[ ]]`, don't quote variables, but do quote string literals when comparing values (e.g., `[[ $branch == "dev" ]]`)
@@ -84,7 +83,7 @@ Ask a helper; don't read `uname -m` or the device tree in feature code:
 
 Where platform code lives:
 
-- Packages: `install/omarchy-base.packages` for everyone, `install/omarchy-aarch64.packages` for every ARM machine, `install/omarchy-<platform>.packages` for one family, and base packages with no aarch64 build in `install/omarchy-x86_64-only.packages`. `omarchy-pkg-defaults` composes them.
+- Packages: `install/omarchy-base.packages` for everyone, `install/omarchy-aarch64.packages` for every ARM machine, and `install/omarchy-<platform>.packages` for one family. `omarchy-pkg-defaults` composes them.
 - Pacman templates: `default/pacman/` for x86, `default/pacman/<platform>/` for each ARM platform.
 - Hardware setup: `install/hardware/<vendor-or-family>/`, gated by a predicate. `install/hardware/apple/` holds Intel Mac quirks; Apple Silicon's own setup ships in the omarchy-mac packages.
 - Boot chains Omarchy can't drive generically: a platform package behind `omarchy-lifecycle-dispatch` ([`docs/lifecycle-dispatch.md`](docs/lifecycle-dispatch.md)). Platforms that boot Limine with UKIs like x86 keep the generic path.

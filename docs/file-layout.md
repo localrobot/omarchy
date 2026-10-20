@@ -26,9 +26,8 @@ Two other packages live in `omarchy-pkgs` but stand alone:
 `omarchy-keyring` (GPG keys for pacman) and `omarchy-nvim` (the Neovim
 setup; independently seeds `/etc/skel`).
 
-Some trees ship in neither package and exist only in the repo: `manual/`
-(user manual chapters), `agents/skills/` (contributor task guides), `docs/`,
-`test/`, and `plans/`.
+Some trees ship in neither package and exist only in the repo:
+`agents/skills/` (contributor task guides), `docs/`, `test/`, and `plans/`.
 
 Three layers populate `$HOME`:
 
