@@ -228,27 +228,62 @@ flowchart TD
 
 ---
 
-### Block 6: Proprietary AI Models, Account Switchers & Redundant Runtimes
+### Block 6: Proprietary AI Models, Account Switchers & Redundant Runtimes [COMPLETED]
 
-- **Objective**: Keep strictly `antigravity-cli` (system default), `opencode` (universal harness), and `llama-server`. Purge multi-account quota rotation scripts and redundant agent wrappers.
-- **Files to Remove**:
-  - Multi-account rotation: `bin/omarchy-agent-account-*` (10 scripts: `add`, `copy`, `exec`, `home`, `list`, `mode`, `remove`, `rename`, `state`, `transfer`, `use`)
-  - Quota scanners: `bin/omarchy-agent-usage-fireworks`, `bin/omarchy-agent-usage-kimi`, `bin/omarchy-agent-usage-update`
-  - Unused AI installers & removers:
+- **Status**: Completed in working tree; ready for commit.
+- **Objective**: Keep strictly `antigravity-cli` (system default), `opencode` (universal harness), and `llama-server`. Purge multi-account quota rotation scripts, proprietary usage scanners, and redundant agent wrappers.
+- **Files Removed (48 files)**:
+  - Multi-account rotation (11 files):
+    - `bin/omarchy-agent-account-add`, `bin/omarchy-agent-account-copy`, `bin/omarchy-agent-account-exec`, `bin/omarchy-agent-account-home`, `bin/omarchy-agent-account-list`
+    - `bin/omarchy-agent-account-mode`, `bin/omarchy-agent-account-remove`, `bin/omarchy-agent-account-rename`, `bin/omarchy-agent-account-state`, `bin/omarchy-agent-account-transfer`, `bin/omarchy-agent-account-use`
+  - Quota scanners (3 files):
+    - `bin/omarchy-agent-usage-fireworks`, `bin/omarchy-agent-usage-kimi`, `bin/omarchy-agent-usage-update`
+  - Unused AI installers, removers & wrappers (14 files):
     - `bin/omarchy-install-ai-chatgpt`, `bin/omarchy-remove-ai-chatgpt`
     - `bin/omarchy-install-ai-claude`, `bin/omarchy-remove-ai-claude`
     - `bin/omarchy-remove-ai-grok-bot`
-    - `bin/omarchy-install-ai-hermes`, `bin/omarchy-remove-ai-hermes`, `bin/omarchy-install-hermes-cli`
-    - `bin/omarchy-install-ai-openclaw`, `bin/omarchy-remove-ai-openclaw`, `bin/omarchy-install-openclaw-cli`
-- **Code Paths & Helpers to Update**:
-  - `default/omarchy/omarchy-menu.jsonc`: prune account-switch options.
-- **Tests to Prune / Align**:
-  - `test/shell.d/agent-account-*.sh` (5 tests)
-  - `test/shell.d/agent-usage-*.sh` (4 tests)
-  - `test/shell.d/remove-ai-test.sh`
-  - `test/shell.d/openclaw-*.sh` (2 tests)
-  - `test/shell.d/hermes-*.sh` (4 tests)
-- **Verification**: `./test/cli`.
+    - `bin/omarchy-install-ai-hermes`, `bin/omarchy-remove-ai-hermes`, `bin/omarchy-install-hermes-cli`, `bin/omarchy-theme-set-hermes`
+    - `bin/omarchy-install-ai-openclaw`, `bin/omarchy-remove-ai-openclaw`, `bin/omarchy-install-openclaw-cli`, `bin/omarchy-launch-openclaw`, `bin/omarchy-openclaw-onboard`
+  - Configs & templates (2 files):
+    - `etc/mise/conf.d/omarchy-agent-accounts.toml`
+    - `default/themed/hermes.yaml.tpl`
+  - Obsolete test suites (18 files):
+    - `test/shell.d/agent-account-autoswitch-test.sh`
+    - `test/shell.d/agent-account-copy-test.sh`
+    - `test/shell.d/agent-account-exec-test.sh`
+    - `test/shell.d/agent-account-recovery-test.sh`
+    - `test/shell.d/agent-account-test.sh`
+    - `test/shell.d/agent-usage-fallback-test.sh`
+    - `test/shell.d/agent-usage-fireworks-scanner-test.sh`
+    - `test/shell.d/agent-usage-kimi-regression-test.sh`
+    - `test/shell.d/agent-usage-kimi-test.sh`
+    - `test/shell.d/agent-usage-update-test.sh`
+    - `test/shell.d/remove-ai-test.sh`
+    - `test/shell.d/hermes-cli-test.sh`
+    - `test/shell.d/hermes-desktop-install-test.sh`
+    - `test/shell.d/hermes-remove-test.sh`
+    - `test/shell.d/hermes-theme-test.sh`
+    - `test/shell.d/launch-openclaw-test.sh`
+    - `test/shell.d/openclaw-cli-test.sh`
+    - `test/shell.d/openclaw-onboard-test.sh`
+- **Code Paths & Helpers Updated**:
+  - `bin/omarchy`: removed `openclaw` from `GROUP_DESCRIPTIONS`, updated `agent` description to "AI coding agent launcher", updated comments.
+  - `bin/omarchy-agent`: pruned unneeded proprietary models (`copilot`, `crush`, `claude`, `grok`, `openclaw`, `codex`, `cursor-agent`, `hermes`, `muse`, `omp`, `ori`), keeping `opencode`, `agy`, `pi`, `kimi`; pruned multi-account pinning logic.
+  - `bin/omarchy-theme-set`: removed `omarchy-theme-set-hermes`.
+  - `bin/omarchy-provision-user`: removed `~/.hermes/skills` provisioning logic.
+  - `default/hypr/bindings/applications.lua`: removed ChatGPT and Grok keybindings.
+  - `default/omarchy/launcher.hides`: removed `hermes`.
+  - `default/i18n/en/cli.json`: purged `hermes.deleteData` and `openclaw.deleteData`.
+- **Tests Aligned**:
+  - `test/cli`: re-targeted flags-only family command test from `omarchy agent account` to `omarchy update system`.
+  - `test/shell.d/provision-user-test.sh`: removed Hermes skills assertions.
+  - `test/shell.d/theme-staging-test.sh`: removed `hermes.yaml` from `colour_only`.
+  - `test/shell.d/app-search-test.sh`: re-targeted launcher hiding assertions from `hermes` to `foot`.
+  - `test/shell.d/agents-panel-test.sh`: removed `omarchy-agent-usage-fireworks` disk read.
+- **Verification**:
+  - `bin/omarchy commands --check`: passed (386 commands clean).
+  - `./test/cli`: 120/120 passed.
+  - `find . -xtype l`: 0 broken symlinks.
 
 ---
 

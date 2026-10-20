@@ -26,7 +26,7 @@ declare -A ROUTE_IS_ALIAS
 declare -A BINARY_TO_KEY
 declare -A GROUP_DESCRIPTIONS
 
-GROUP_DESCRIPTIONS[agent]="AI coding agents, their usage, and subscription accounts"
+GROUP_DESCRIPTIONS[agent]="AI coding agent launcher"
 GROUP_DESCRIPTIONS[ascii]="Text drawn as ASCII art"
 GROUP_DESCRIPTIONS[audio]="Audio input and output controls"
 GROUP_DESCRIPTIONS[bar]="Omarchy shell bar layout and settings"
@@ -68,7 +68,6 @@ GROUP_DESCRIPTIONS[monitor]="Monitor status helpers"
 GROUP_DESCRIPTIONS[network]="Network status helpers"
 GROUP_DESCRIPTIONS[notification]="Notification helpers"
 GROUP_DESCRIPTIONS[mise]="Mise tool wrappers"
-GROUP_DESCRIPTIONS[openclaw]="OpenClaw agent platform setup"
 GROUP_DESCRIPTIONS[osd]="On-screen display status helpers"
 GROUP_DESCRIPTIONS[pkg]="Package management helpers"
 GROUP_DESCRIPTIONS[plugin]="Omarchy shell plugin and bar widget management"
@@ -409,8 +408,8 @@ command_requires_args() {
 }
 
 # A command whose documented arguments are all flags can't take a word, so a
-# word after it names something else: `omarchy agent account` is the account
-# commands, not an argument to omarchy-agent.
+# word after it names something else: `omarchy agent prompt` is the prompt
+# command, not an argument to omarchy-agent.
 command_takes_only_flags() {
   local key="$1"
   local args="${COMMAND_ARGS[$key]}"

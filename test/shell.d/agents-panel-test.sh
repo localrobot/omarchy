@@ -33,13 +33,6 @@ assert(!/t === "a" \|\| t === "A"/.test(panelSource), 'adding an account has no 
 assert(/if \(!accounts\[a\]\.active\) \{/.test(panelSource) && /if \(row\.length > 0\) rows\.push\(row\)/.test(panelSource), 'the active account with nothing to fix is not a keyboard stop')
 assert(/text: section\.provider \? \(root\.helpDisplayText\(section\.provider\.authHelpText\) \|\| root\.statusDisplayText\(section\.provider\.usageStatusText\) \|\| ""\) : ""/.test(panelSource), 'the trouble line falls back to the usage status when a record has no auth help')
 assert(/case "Run `codex login` to authenticate\.":\s*return Commons\.I18n\.t\("agents\.helpRunToAuthenticate"\)\.arg\("`codex login`"\)/.test(panelSource), 'known collector help lines are translated at display, commands kept verbatim')
-// A reworded collector line would silently fall back to English, so every
-// fixed help line the collectors cache must still be one the panel maps.
-for (const name of ['fireworks']) {
-  const collector = fs.readFileSync(root + '/bin/omarchy-agent-usage-' + name, 'utf8')
-  const help = collector.match(/^AUTH_HELP = "([^"]+)"$/m)
-  assert(help && panelSource.includes('case ' + JSON.stringify(help[1]) + ':'), name + ' auth help is translated in the panel')
-}
 const mainSource = fs.readFileSync(root + '/shell/plugins/agents/Main.qml', 'utf8')
 assert(/var from = Math\.min\(0\.8, \(threshold - 15\) \/ 100\)/.test(mainSource), 'faster checks start 15 points below the switch threshold')
 assert(/rows\.push\(\[\{ kind: "provider", index: p \}\]\)/.test(panelSource), "every agent's header is a keyboard stop")

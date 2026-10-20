@@ -126,14 +126,14 @@ output=$("$CLI" hw asus)
 assert_output_contains "partial hardware prefix renders matching commands" "$output" "omarchy hw asus rog"
 assert_output_contains "partial hardware prefix includes nested match" "$output" "omarchy hw asus proart x870e"
 
-# omarchy-agent takes only flags, so a word after it names the account
-# commands rather than reaching the agent launcher.
-output=$("$CLI" agent account)
-assert_output_contains "a family under a flags-only command renders its commands" "$output" "omarchy agent account use"
-output=$("$CLI" agent account --help)
-assert_output_contains "a family under a flags-only command renders its help" "$output" "omarchy agent account add"
-output=$("$CLI" agent --help)
-assert_output_contains "the flags-only command keeps its own help" "$output" "omarchy agent [--inline] [--pick]"
+# omarchy-update takes only flags, so a word after it names the update system
+# commands rather than reaching the update runner.
+output=$("$CLI" update system)
+assert_output_contains "a family under a flags-only command renders its commands" "$output" "omarchy update system pkgs"
+output=$("$CLI" update system --help)
+assert_output_contains "a family under a flags-only command renders its help" "$output" "omarchy update system pkgs"
+output=$("$CLI" update --help)
+assert_output_contains "the flags-only command keeps its own help" "$output" "omarchy update [-y]"
 
 output=$("$CLI" menu --help)
 assert_output_contains "menu group includes share fallback route" "$output" "omarchy menu share"
