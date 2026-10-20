@@ -4,10 +4,10 @@ mkdir -p ~/.config/omarchy/themes
 if [[ ! -s $HOME/.local/state/omarchy/current/theme.name ]]; then
   # iso-chroot and provision-owner both run without a live session to notify.
   if [[ ${OMARCHY_SETUP_CONTEXT:-runtime} != "runtime" ]]; then
-    OMARCHY_THEME_HEADLESS=1 omarchy-theme-set "Tokyo Night"
+    OMARCHY_THEME_HEADLESS=1 omarchy-theme-set "Matte Black"
     rm -f ~/.config/google-chrome/SingletonLock # otherwise archiso owns the Chrome singleton
   else
-    omarchy-theme-set "Tokyo Night"
+    omarchy-theme-set "Matte Black"
   fi
 fi
 omarchy-theme-set-pi --activate

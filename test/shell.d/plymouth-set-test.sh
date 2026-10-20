@@ -173,8 +173,8 @@ pass "a theme name cannot carry a command into the unlock screen"
 
 # The two ordinary paths still work: a named theme is applied, and `default`
 # resets rather than being looked up as a theme.
-run_unlock_action "tokyo-night"
-[[ $(cat "$set_args" 2>/dev/null) == $'1\ntokyo-night' ]] ||
+run_unlock_action "matte-black"
+[[ $(cat "$set_args" 2>/dev/null) == $'1\nmatte-black' ]] ||
   fail "an ordinary theme name still reaches omarchy-plymouth-set-by-theme" "$(cat "$set_args" 2>/dev/null)"
 
 run_unlock_action "default"

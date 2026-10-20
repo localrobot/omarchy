@@ -26,11 +26,11 @@ calls="$test_tmp/theme-calls"
 touch "$test_tmp/home/.config/google-chrome/SingletonLock"
 HOME="$test_tmp/home" PATH="$mock_bin:$PATH" OMARCHY_TEST_THEME_CALLS="$calls" \
   bash "$ROOT/install/user/theme.sh"
-grep -Fx 'Tokyo Night' "$calls" >/dev/null || fail "user theme setup seeds Tokyo Night when no theme exists"
+grep -Fx 'Matte Black' "$calls" >/dev/null || fail "user theme setup seeds Matte Black when no theme exists"
 [[ -f $test_tmp/home/.config/google-chrome/SingletonLock ]] || fail "runtime user theme setup preserves Chrome's singleton lock"
 
 : >"$calls"
-printf 'Solitude\n' >"$test_tmp/home/.local/state/omarchy/current/theme.name"
+printf 'Osaka Jade\n' >"$test_tmp/home/.local/state/omarchy/current/theme.name"
 HOME="$test_tmp/home" PATH="$mock_bin:$PATH" OMARCHY_TEST_THEME_CALLS="$calls" \
   bash "$ROOT/install/user/theme.sh"
 [[ ! -s $calls ]] || fail "user theme setup preserves an existing theme"

@@ -15,7 +15,7 @@ background="$intro_state/theme/backgrounds/road.webp"
 mkdir -p "$(dirname "$background")" "$theme_intro_dir" "$intro_runtime"
 printf 'matching still\n' >"$background"
 printf 'theme video\n' >"$theme_intro_dir/road.mp4"
-printf 'tokyo-night\n' >"$intro_state/theme.name"
+printf 'matte-black\n' >"$intro_state/theme.name"
 ln -s "$background" "$intro_state/background"
 
 resolved=$(HOME="$intro_home" "$ROOT/bin/omarchy-theme-bg-boot-intro" --resolve-only)
@@ -25,7 +25,7 @@ resolved=$(HOME="$intro_home" "$ROOT/bin/omarchy-theme-bg-boot-intro" --resolve-
 [[ -z $resolved ]] || fail "a background without a matching video has no intro" "$resolved"
 printf 'theme video\n' >"$theme_intro_dir/road.mp4"
 
-custom_background="$intro_home/.config/omarchy/backgrounds/tokyo-night/road.webp"
+custom_background="$intro_home/.config/omarchy/backgrounds/matte-black/road.webp"
 mkdir -p "${custom_background%/*}"
 printf 'different still with the same name\n' >"$custom_background"
 ln -nsf "$custom_background" "$intro_state/background"

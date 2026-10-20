@@ -2,7 +2,7 @@
 
 # omarchy:summary=Print the directory holding a theme, preferring a user-installed copy
 # omarchy:args=<theme-name>
-# omarchy:examples=omarchy theme dir tokyo-night
+# omarchy:examples=omarchy theme dir matte-black
 
 theme="${1:-}"
 

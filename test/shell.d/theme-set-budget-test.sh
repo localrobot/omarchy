@@ -77,7 +77,7 @@ stub sudo 'exit 1'
 stub pkexec 'exit 1'
 stub pgrep '[[ " $* " == *" hunk "* ]] || exit 1'
 stub tmux '[[ $1 == "list-sessions" ]] && printf "%s\n" one two three'
-stub code "[[ \$* == *--list-extensions* ]] && { sleep $STUB_COST; echo enkia.tokyo-night; }"
+stub code "[[ \$* == *--list-extensions* ]] && { sleep $STUB_COST; echo TahaYVR.matteblack; }"
 # Hunk's settle nudge sleeps from inside omarchy-theme-set-hunk; with a gate set
 # it waits for the gate instead. Every other sleep is a real one.
 cat >"$stub_bin/sleep" <<'SH'
@@ -104,8 +104,8 @@ SH
 chmod +x "$stub_bin/bash"
 
 # VS Code's own registry already lists the theme's extension.
-mkdir -p "$test_home/.vscode/extensions/enkia.tokyo-night" "$test_home/.config/Code/User"
-jq -n '[{identifier: {id: "enkia.tokyo-night"}, relativeLocation: "enkia.tokyo-night"}]' \
+mkdir -p "$test_home/.vscode/extensions/TahaYVR.matteblack" "$test_home/.config/Code/User"
+jq -n '[{identifier: {id: "TahaYVR.matteblack"}, relativeLocation: "TahaYVR.matteblack"}]' \
   >"$test_home/.vscode/extensions/extensions.json"
 echo '{}' >"$test_home/.config/Code/User/settings.json"
 
@@ -126,14 +126,14 @@ run_theme_set() {
 
 # A first switch sets up the scratch home, so the timed ones change between two
 # themes the way a user would.
-run_theme_set "Catppuccin" || fail "theme set runs in a scratch home" "$(cat "$sandbox/theme-set.log")"
+run_theme_set "Everforest" || fail "theme set runs in a scratch home" "$(cat "$sandbox/theme-set.log")"
 
 # Each theme is held to the budget on its own: the two take different paths
-# through the hooks (Tokyo Night's VS Code extension is installed, Catppuccin's
+# through the hooks (Matte Black's VS Code extension is installed, Everforest's
 # is not), and a fast one must not cover for a slow one.
 declare -A best=()
 slowest_theme=""
-for theme in "Tokyo Night" "Catppuccin" "Tokyo Night" "Catppuccin"; do
+for theme in "Matte Black" "Everforest" "Matte Black" "Everforest"; do
   : >"$calls"
   start=$EPOCHREALTIME
   run_theme_set "$theme" || fail "theme set switches to $theme in a scratch home" "$(cat "$sandbox/theme-set.log")"
@@ -187,8 +187,8 @@ pass "theme set reads VS Code's extension registry instead of starting the edito
 # stays held until the gate opens (10s at most), and returns having sent both.
 sleep 1.5
 : >"$calls"
-HUNK_GATE="$sandbox/hunk-gate" run_theme_set "Catppuccin" ||
-  fail "theme set switches to Catppuccin in a scratch home" "$(cat "$sandbox/theme-set.log")"
+HUNK_GATE="$sandbox/hunk-gate" run_theme_set "Everforest" ||
+  fail "theme set switches to Everforest in a scratch home" "$(cat "$sandbox/theme-set.log")"
 nudges=$(grep -c '^pkill -WINCH -x hunk' "$calls" || true)
 touch "$sandbox/hunk-gate"
 (( nudges == 1 )) || fail "theme set returns before Hunk's settle nudge" "Hunk was nudged $nudges times before the switch returned."

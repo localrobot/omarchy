@@ -84,15 +84,15 @@ ForceCommand /bin/bash {remote}
             raise SystemExit(0)
           assert server.poll() is None and time.monotonic() < deadline, log_path.read_text()
           time.sleep(0.05)
-      for theme in ('tokyo-night', 'nord'):
+      for theme in ('matte-black', 'miasma'):
         (current / 'theme.name').write_text(theme + '\n')
         result = subprocess.run([str(root / 'bin/omarchy-theme-set-herdr-machines')], env=environment, capture_output=True, text=True, timeout=10)
         assert result.returncode == 0 and 'theme-received' in result.stdout, (result.stdout, result.stderr, log_path.read_text())
-        if theme == 'tokyo-night':
+        if theme == 'matte-black':
           (stage / 'identity').rename(stage / 'identity-unavailable')
       assert log_path.read_text().count('Accepted publickey') == 1, log_path.read_text()
       received = (stage / 'received').read_text()
-      assert 'theme=tokyo-night' in received and 'theme=nord' in received
+      assert 'theme=matte-black' in received and 'theme=miasma' in received
       assert (runtime / 'omarchy-theme-sync').stat().st_mode & 0o777 == 0o700
       lock = runtime / 'omarchy-theme-set-herdr-machines.lock'
       assert subprocess.run(['flock', '-n', str(lock), 'true']).returncode == 0, 'SSH master retained the theme sync lock'

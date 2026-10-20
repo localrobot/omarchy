@@ -22,8 +22,8 @@ current_background_name() {
   basename "$(readlink "$current_state/background")"
 }
 
-theme_a="tokyo-night"
-theme_b="catppuccin"
+theme_a="matte-black"
+theme_b="osaka-jade"
 
 set_theme "$theme_a"
 mapfile -t theme_a_backgrounds < <(find "$current_state/theme/backgrounds" -maxdepth 1 -type f -print | sort)

@@ -95,9 +95,8 @@ scale_console_font() {
   setfont "${best:-default8x16}" 2>/dev/null || true
 }
 
-# Same Tokyo Night VT palette the ISO configurator sets, so the first-boot
-# form looks like a continuation of the install.
-set_tokyo_night_colors() {
+# VT palette set so the first-boot form looks like a continuation of the install.
+set_vt_colors() {
   [[ $(tty 2>/dev/null) == /dev/tty* ]] || return 0
   echo -en "\e]P01a1b26"; echo -en "\e]P1f7768e"; echo -en "\e]P29ece6a"
   echo -en "\e]P3e0af68"; echo -en "\e]P47aa2f7"; echo -en "\e]P5bb9af7"
@@ -1296,7 +1295,7 @@ main() {
   # Font sizing waits for the console to settle, so it lives inside
   # greeter_screen (which owns that settle) rather than running here on a VT
   # that may still be in a transitional mode this early in first boot.
-  set_tokyo_night_colors
+  set_vt_colors
   greeter_screen
 
   while ! "$0" --attempt; do

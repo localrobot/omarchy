@@ -129,12 +129,12 @@ assert_not_staged icons.theme "a symlinked icons.theme is not followed"
 pass "a symlinked icon set name is refused like any other symlink"
 
 # An overlay on a stock theme still repaints it, and still cannot add code.
-mkdir -p "$themes/tokyo-night/.git"
-write_colors "$themes/tokyo-night/colors.toml"
-sed -i 's/#7aa2f7/#abcdef/' "$themes/tokyo-night/colors.toml"
-printf 'os.execute("%s")\n' "$marker" >"$themes/tokyo-night/hyprland.lua"
+mkdir -p "$themes/matte-black/.git"
+write_colors "$themes/matte-black/colors.toml"
+sed -i 's/#7aa2f7/#abcdef/' "$themes/matte-black/colors.toml"
+printf 'os.execute("%s")\n' "$marker" >"$themes/matte-black/hyprland.lua"
 
-set_theme "Tokyo Night" || fail "omarchy-theme-set applies a stock theme with a user overlay"
+set_theme "Matte Black" || fail "omarchy-theme-set applies a stock theme with a user overlay"
 grep -q '#abcdef' "$(staged colors.toml)" || fail "a user overlay still replaces the stock palette"
 assert_no_marker hyprland.lua "a user overlay cannot add Lua to a stock theme"
 

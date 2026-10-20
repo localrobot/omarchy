@@ -66,7 +66,7 @@ reset_remotes() {
   local machine
   for machine in alpha beta gamma local-box; do
     mkdir -p "$SYNC_TEST/remotes/$machine/.local/state/omarchy/current"
-    echo "tokyo-night" >"$SYNC_TEST/remotes/$machine/.local/state/omarchy/current/theme.name"
+    echo "matte-black" >"$SYNC_TEST/remotes/$machine/.local/state/omarchy/current/theme.name"
     mkdir -p "$SYNC_TEST/remotes/$machine/.local/state/omarchy/toggles"
     touch "$SYNC_TEST/remotes/$machine/.local/state/omarchy/toggles/herdr-theme-sync"
   done

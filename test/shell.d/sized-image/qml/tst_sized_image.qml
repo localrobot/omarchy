@@ -10,7 +10,7 @@ Item {
   height: 400
 
   // A 2560x1440 screenshot-sized file.
-  readonly property url bigImage: Qt.resolvedUrl("../../../../themes/tokyo-night/preview.png")
+  readonly property url bigImage: Qt.resolvedUrl("../../../../themes/matte-black/preview.png")
   // A 400x10 strip.
   readonly property url narrowImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAAKCAMAAACt6/hvAAAAA1BMVEX/AAAZ4gk3AAAAG0lEQVRIx+3BMQEAAADCoPVPbQ0PoAAAAIAfAw+qAAHXXPJgAAAAAElFTkSuQmCC"
 

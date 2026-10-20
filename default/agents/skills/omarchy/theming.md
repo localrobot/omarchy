@@ -7,7 +7,7 @@ Read this before changing themes, backgrounds, fonts, or theme colors.
 ```bash
 omarchy theme list              # Show available themes
 omarchy theme current           # Show current theme
-omarchy theme set <name>        # Apply theme ("Tokyo Night" and "tokyo-night" both work)
+omarchy theme set <name>        # Apply theme ("Matte Black" and "matte-black" both work)
 omarchy theme bg next           # Cycle background
 omarchy theme install <url>     # Install from git repo
 ```
@@ -15,7 +15,7 @@ omarchy theme install <url>     # Install from git repo
 ## Making a New Theme
 
 1. Create a directory under `~/.config/omarchy/themes`.
-2. See how an existing theme is done via `/usr/share/omarchy/themes/catppuccin`.
+2. See how an existing theme is done via `/usr/share/omarchy/themes/matte-black`.
 3. Download a matching background (or several) from the internet and put them in `~/.config/omarchy/themes/<name-of-new-theme>/backgrounds/`.
 4. When done with the theme, run `omarchy theme set "Name of new theme"`.
 

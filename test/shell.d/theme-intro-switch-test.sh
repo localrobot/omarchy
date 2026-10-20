@@ -14,7 +14,7 @@ log="$test_tmp/commands"
 mkdir -p "$state" "$commands" "$home/.local/state/omarchy/theme-backgrounds"
 for theme in alpha beta; do
   mkdir -p "$themes/$theme/backgrounds/intros"
-  cp "$ROOT/themes/tokyo-night/colors.toml" "$themes/$theme/colors.toml"
+  cp "$ROOT/themes/matte-black/colors.toml" "$themes/$theme/colors.toml"
   printf 'still\n' >"$themes/$theme/backgrounds/1-sky.webp"
   printf 'still\n' >"$themes/$theme/backgrounds/2-road.webp"
   printf 'intro\n' >"$themes/$theme/backgrounds/intros/2-road.mp4"

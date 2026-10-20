@@ -178,43 +178,30 @@ flowchart TD
 
 ---
 
-### Track 5: Theme Consolidation (Retain 5 Themes, Delete 18 Themes)
+### Track 5: Theme Consolidation (Retain 5 Themes, Delete 18 Themes) [COMPLETED & VERIFIED]
 
-- **Objective**: Streamline the themes directory to strictly the 5 retained workstation themes: `everforest`, `last-horizon`, `matte-black`, `miasma`, and `osaka-jade`. Delete all other 18 themes, their backgrounds, intros, and preview images (~100MB freed). Configure `matte-black` as the default seeded theme.
+- **Status**: Completed & 100% Verified
+- **Objective**: Streamline the themes directory to strictly the 5 retained workstation themes: `everforest`, `last-horizon`, `matte-black`, `miasma`, and `osaka-jade`. Delete all other 18 themes, their backgrounds, intros, and preview images (~105MB freed). Configure `matte-black` as the default seeded theme.
 - **Retained Themes (5)**:
   - `themes/everforest/`
   - `themes/last-horizon/`
-  - `themes/matte-black/`
+  - `themes/matte-black/` (Default)
   - `themes/miasma/`
   - `themes/osaka-jade/`
-- **Directories to Physically Delete (18 Themes)**:
-  - `themes/catppuccin/`
-  - `themes/catppuccin-latte/`
-  - `themes/ethereal/`
-  - `themes/flexoki-light/`
-  - `themes/gruvbox/`
-  - `themes/hackerman/`
-  - `themes/kanagawa/`
-  - `themes/lumon/`
-  - `themes/lupine/`
-  - `themes/nord/`
-  - `themes/retro-82/`
-  - `themes/ristretto/`
-  - `themes/rose-pine/`
-  - `themes/solitude/`
-  - `themes/starship/`
-  - `themes/tokyo-night/`
-  - `themes/vantablack/`
-  - `themes/white/`
-- **Script & Default Updates**:
-  - `install/user/theme.sh`:
-    - Update default initial theme seed from `"Tokyo Night"` to `"matte-black"`.
-  - `bin/omarchy-dev-theme-preview`:
-    - Update examples to reference `matte-black` and `themes/matte-black/colors.toml`.
-  - `bin/omarchy-theme-dir`:
-    - Update examples to reference `matte-black`.
-  - `default/agents/skills/omarchy/SKILL.md` & `default/agents/skills/omarchy/theming.md`:
-    - Update documentation examples from `catppuccin` / `tokyo-night` to `matte-black` / `everforest`.
+- **Directories Deleted (18 Themes)**:
+  - `themes/catppuccin/`, `themes/catppuccin-latte/`, `themes/ethereal/`, `themes/flexoki-light/`, `themes/gruvbox/`, `themes/hackerman/`, `themes/kanagawa/`, `themes/lumon/`, `themes/lupine/`, `themes/nord/`, `themes/retro-82/`, `themes/ristretto/`, `themes/rose-pine/`, `themes/solitude/`, `themes/starship/`, `themes/tokyo-night/`, `themes/vantablack/`, `themes/white/`
+- **Default Seed & Configuration Updated**:
+  - `install/user/theme.sh`: Seeded default theme updated to `"Matte Black"`.
+  - `bin/omarchy-dev-theme-preview`, `bin/omarchy-theme-dir`, `bin/omarchy-theme-list`, `bin/omarchy-theme-remove`, `bin/omarchy-theme-set`: Updated examples from Tokyo Night/Gruvbox to Matte Black.
+  - `default/agents/skills/omarchy/theming.md`: Updated examples to Matte Black.
+  - `bin/omarchy-provision-owner`: Renamed `set_tokyo_night_colors` to `set_vt_colors`.
+  - `default/limine/limine.conf`: Cleaned up branding comment.
+  - Test suites aligned: `test/cli`, `test/shell.d/user-theme-test.sh`, `test/shell.d/theme-staging-test.sh`, `test/shell.d/theme-intro-switch-test.sh`, `test/shell.d/theme-set-retint-order-test.sh`, `test/shell.d/theme-set-budget-test.sh`, `test/shell.d/theme-background-memory-test.sh`, `test/shell.d/plymouth-set-test.sh`, `test/shell.d/background-intro-test.sh`, `test/shell.d/fixtures/theme-set-herdr-ssh-reuse.py`, `test/shell.d/sized-image/qml/tst_sized_image.qml`.
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (383 commands).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Shell tests (`theme-background-memory-test.sh`, `theme-set-budget-test.sh`, `theme-intro-switch-test.sh`, `theme-set-retint-order-test.sh`, `user-theme-test.sh`, `theme-templates-test.sh`, `hyprland-window-transparency-test.sh`, `theme-staging-test.sh`): Passed 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 
