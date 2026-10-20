@@ -78,7 +78,6 @@ stub pkexec 'exit 1'
 stub pgrep '[[ " $* " == *" hunk "* ]] || exit 1'
 stub tmux '[[ $1 == "list-sessions" ]] && printf "%s\n" one two three'
 stub code "[[ \$* == *--list-extensions* ]] && { sleep $STUB_COST; echo enkia.tokyo-night; }"
-stub qmk_hid
 # Hunk's settle nudge sleeps from inside omarchy-theme-set-hunk; with a gate set
 # it waits for the gate instead. Every other sleep is a real one.
 cat >"$stub_bin/sleep" <<'SH'
@@ -109,10 +108,6 @@ mkdir -p "$test_home/.vscode/extensions/enkia.tokyo-night" "$test_home/.config/C
 jq -n '[{identifier: {id: "enkia.tokyo-night"}, relativeLocation: "enkia.tokyo-night"}]' \
   >"$test_home/.vscode/extensions/extensions.json"
 echo '{}' >"$test_home/.config/Code/User/settings.json"
-
-# Cursor is the one editor the VS Code hook names by absolute path.
-mkdir -p "$test_home/.local/state/omarchy/toggles"
-touch "$test_home/.local/state/omarchy/toggles/skip-cursor-theme-changes"
 
 run_theme_set() {
   env -i \
@@ -157,7 +152,7 @@ done
 
 # The stubs only prove anything if the switches reached them.
 cat "$sandbox"/calls-*.log >"$sandbox/calls-all.log"
-for reached in "pgrep -x hunk" "qmk_hid via" "tmux list-sessions" "hyprctl reload" "omarchy-theme-set-browser-policy"; do
+for reached in "pgrep -x hunk" "tmux list-sessions" "hyprctl reload" "omarchy-theme-set-browser-policy"; do
   grep -qF -- "$reached" "$sandbox/calls-all.log" ||
     fail "theme set reaches the stubbed apps ($reached)" "$(cut -c1-160 "$sandbox/calls-all.log" | sort -u)"
 done

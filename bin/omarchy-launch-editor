@@ -24,7 +24,7 @@ fi
 omarchy-cmd-present "$editor" || editor="nvim"
 
 case "${editor##*/}" in
-nvim | vim | nano | micro | hx | helix | fresh)
+nvim | vim | nano | micro | fresh)
   if [[ $inline == "true" ]]; then
     exec "$editor" -- "$@"
   else

@@ -168,21 +168,63 @@ flowchart TD
 
 ---
 
-### Block 5: Commercial Apps & 3rd-Party Proprietary Services
+### Block 5: Commercial Apps, Proprietary Services & Non-Stock Editors [COMPLETED]
 
-- **Objective**: Remove proprietary third-party commercial sync tools and streaming host services.
-- **Files to Remove**:
-  - `bin/omarchy-install-service-dropbox`, `bin/omarchy-remove-service-dropbox`
-  - `bin/omarchy-install-service-spotify`
-  - `bin/omarchy-install-service-nordvpn`
-  - `bin/omarchy-install-service-signal`
-  - `bin/omarchy-install-service-sunshine`, `bin/omarchy-remove-service-sunshine`
-- **Code Paths & Helpers to Update**:
-  - `default/omarchy/omarchy-menu.jsonc`: remove entries for Dropbox, Spotify, NordVPN, Signal, Sunshine.
-- **Tests to Prune / Align**:
-  - `test/shell.d/dropbox-test.sh`
-  - `test/shell.d/menu-test.sh` (remove Dropbox row assertions)
-- **Verification**: `./test/cli`.
+- **Status**: Completed in working tree; ready for commit.
+- **Objective**: Purge commercial cloud sync tools, media players, chat clients, streaming hosts, mesh VPN, proprietary password manager, and non-stock editors (Dropbox, Spotify, Signal, NordVPN, Sunshine, Slack, Tailscale, Bitwarden, Cursor, Helix).
+- **Files Removed (36 files)**:
+  - Dropbox:
+    - `bin/omarchy-install-service-dropbox`, `bin/omarchy-remove-service-dropbox`, `bin/omarchy-installed-service-dropbox`
+    - `shell/plugins/panels/dropbox/` (6 files: `DropboxIcon.qml`, `manifest.json`, `Model.js`, `Panel.qml`, `Service.qml`, `status.py`)
+    - `test/shell.d/dropbox-test.sh`
+  - Spotify: `bin/omarchy-install-service-spotify`, `bin/omarchy-launch-spotify`
+  - Signal: `bin/omarchy-install-service-signal`, `bin/omarchy-launch-signal`
+  - NordVPN: `bin/omarchy-install-service-nordvpn`
+  - Sunshine: `bin/omarchy-install-service-sunshine`, `bin/omarchy-remove-service-sunshine`
+  - Tailscale:
+    - `bin/omarchy-install-service-tailscale`, `bin/omarchy-remove-service-tailscale`, `bin/omarchy-installed-service-tailscale`
+    - `bin/omarchy-tailscale-receive`, `bin/omarchy-tailscale-send`
+    - `default/systemd/user/omarchy-tailscale-receive.service`
+    - `shell/plugins/panels/tailscale/` (6 files: `manifest.json`, `Model.js`, `Panel.qml`, `README.md`, `Service.qml`, `TailscaleIcon.qml`)
+    - `test/shell.d/tailscale-test.sh`, `test/shell.d/tailscale-receive-test.sh`
+  - Helix:
+    - `bin/omarchy-install-editor-helix`, `bin/omarchy-restart-helix`
+    - `default/themed/helix.toml.tpl`
+  - Test suites: `test/shell.d/installed-service-test.sh`
+- **Code Paths & Helpers Updated**:
+  - `bin/omarchy`: removed `tailscale` from `GROUP_DESCRIPTIONS`.
+  - `bin/omarchy-bar`: removed optional widgets discovery loop (`optional_widgets="[]"`).
+  - `bin/omarchy-default-editor`: pruned `cursor` and `helix` options, usage strings, and install invocations.
+  - `bin/omarchy-launch-editor`: removed `hx | helix` case handler.
+  - `bin/omarchy-theme-set`: removed `omarchy-restart-helix` from `visible_theme_commands`.
+  - `bin/omarchy-theme-set-vscode`: pruned `skip-cursor-theme-changes` block and updated summary.
+  - `default/hypr/bindings/applications.lua`: removed Spotify and Signal keybindings.
+  - `default/omarchy/launcher.hides`: removed dropbox entry.
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`:
+    - Removed `install.service.dropbox`, `install.service.spotify`, `install.service.signal`, `install.service.nordvpn`, `remove.service.dropbox`.
+    - Removed `install.service.slack`, `install.service.tailscale`, `install.service.bitwarden`, `remove.service.tailscale`.
+    - Removed `install.editor.cursor`, `install.editor.helix`.
+    - Removed `setup.default.editor.cursor`, `setup.default.editor.helix`.
+  - `default/i18n/en/shell.json`: purged all `dropbox.*` and `tailscale.*` keys.
+  - `default/i18n/en/cli.json`: purged `nordvpn.rebootNow` and `tailscale.*` keys.
+  - `default/agents/skills/omarchy/capture.md`: removed tailscale send/receive commands.
+  - `shell/plugins/README.md` & `shell/plugins/bar/README.md`: removed Tailscale panel/bar widget entries.
+  - `shell/plugins/bar/widgets/TrayModel.js`: cleared `widgetsForTrayItems`.
+  - `shell/Ui/ToggleSwitch.qml`: updated docstring to remove Tailscale service reference.
+- **Tests Aligned**:
+  - `test/shell.d/config-test.sh`: removed `omarchy-tailscale-receive.service` from package defaults, replaced tailscale in test layout, simplified bar defaults/refresh tests.
+  - `test/shell.d/bar-icon-geometry-test.sh`: removed `DropboxIcon` and `TailscaleIcon` imports, checks, and instantiations.
+  - `test/shell.d/plugin-enable-test.sh`, `test/shell.d/plugins-test.sh`, `test/shell.d/bar-test.sh`: re-targeted to `omarchy.elsewhen`.
+  - `test/shell.d/menu-test.sh`: updated `editor` array to remove Cursor and Helix; updated ranking assertion.
+  - `test/shell.d/default-apps-test.sh`: removed `cursor` and `helix` cases and installers.
+  - `test/shell.d/theme-staging-test.sh`: removed `helix.toml` from `colour_only`.
+  - `test/shell.d/vscode-theme-test.sh`: removed packaged Cursor executable probes; updated toggle test to `skip-codium-theme-changes`.
+  - `test/shell.d/theme-set-budget-test.sh`: removed `skip-cursor-theme-changes` toggle and legacy `qmk_hid` stub assertion.
+  - `test/shell.d/tray-test.sh`: removed Dropbox layout assertions.
+- **Verification**:
+  - `bin/omarchy commands --check`: passed (414 commands clean).
+  - `./test/cli`: 120/120 passed.
+  - `find . -xtype l`: 0 broken symlinks.
 
 ---
 

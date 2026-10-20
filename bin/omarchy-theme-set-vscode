@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# omarchy:summary=Sync Omarchy theme to VS Code, VSCodium, and Cursor
+# omarchy:summary=Sync Omarchy theme to VS Code and VSCodium
 # omarchy:hidden=true
 
 VS_CODE_THEME_DESCRIPTOR="$HOME/.local/state/omarchy/current/theme/vscode.json"
@@ -198,7 +198,4 @@ if ! omarchy-toggle-enabled skip-vscode-insiders-theme-changes; then
 fi
 if ! omarchy-toggle-enabled skip-codium-theme-changes; then
   set_theme "codium" "$HOME/.config/VSCodium/User/settings.json" "$HOME/.vscode-oss/extensions"
-fi
-if ! omarchy-toggle-enabled skip-cursor-theme-changes; then
-  set_theme "/usr/bin/cursor" "$HOME/.config/Cursor/User/settings.json" "$HOME/.cursor/extensions"
 fi

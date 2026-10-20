@@ -47,9 +47,6 @@ omarchy capture text    # Select a region; extracted text goes to the clipboard
 omarchy share clipboard               # Share the clipboard via LocalSend
 omarchy share file <path...>          # Share files with nearby devices
 omarchy share folder <path>           # Share a folder
-
-omarchy tailscale send <machine> <file...>    # Taildrop to a tailnet machine
-omarchy tailscale receive [directory]         # Save incoming Taildrop files
 ```
 
 Shrink large captures before sharing them:

@@ -20,25 +20,8 @@ cat >"$FAKE_BIN/omarchy-toggle-enabled" <<'EOF'
 exit 1
 EOF
 
-cat >"$FAKE_BIN/cursor" <<'EOF'
-#!/bin/bash
-touch "$CURSOR_SHIM_CALLED"
-exit 1
-EOF
-
 chmod +x "$FAKE_BIN"/*
 printf '{"name":"Hackerman","extension":"akamud.vscode-theme-onedark"}\n' >"$CURRENT_THEME/vscode.json"
-
-EDITOR_PROBE_LOG="$TEST_HOME/editor-probes.log" \
-  CURSOR_SHIM_CALLED="$TEST_HOME/cursor-shim-called" \
-  PATH="$FAKE_BIN:$ROOT/bin:$PATH" \
-  HOME="$TEST_HOME" \
-  "$ROOT/bin/omarchy-theme-set-vscode"
-
-grep -Fxq '/usr/bin/cursor' "$TEST_HOME/editor-probes.log" || fail "VS Code theme sync probes the packaged Cursor executable"
-[[ ! -e $TEST_HOME/cursor-shim-called ]] || fail "VS Code theme sync ignores a PATH-provided Cursor Agent shim"
-[[ ! -e $TEST_HOME/.config/Cursor/User/settings.json ]] || fail "VS Code theme sync skips Cursor when the packaged executable is unavailable"
-pass "VS Code theme sync selects the packaged Cursor executable"
 
 # Whether the theme's extension is installed comes from the editor's extension
 # registry, so a theme switch doesn't boot Electron for --list-extensions.
@@ -114,7 +97,7 @@ SKIP_BIN="$TEST_HOME/skip-bin"
 mkdir -p "$SKIP_BIN"
 cat >"$SKIP_BIN/omarchy-toggle-enabled" <<'EOF2'
 #!/bin/bash
-[[ $1 == "skip-cursor-theme-changes" ]]
+[[ $1 == "skip-codium-theme-changes" ]]
 EOF2
 chmod +x "$SKIP_BIN/omarchy-toggle-enabled"
 EDITOR_PROBE_LOG="$TEST_HOME/editor-probes.log" PATH="$SKIP_BIN:$FAKE_BIN:$ROOT/bin:$PATH" HOME="$TEST_HOME" \

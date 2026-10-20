@@ -153,20 +153,13 @@ const defaultById = Object.fromEntries(defaultItems.map(item => [item.id, item])
 // item count does the order tiebreak alone bury an installed app.
 const rankBase = menu.mergeMenuSources(defaultItems, [])
 const ranked = menu.mergeAppRows(rankBase.items, rankBase.itemOrder, [
-  { id: 'apps.spotify', parent: 'apps', kind: 'app', label: 'Spotify', description: '', aliases: [] },
   { id: 'apps.fontforge', parent: 'apps', kind: 'app', label: 'FontForge', description: '', aliases: [] },
-  { id: 'apps.slack', parent: 'apps', kind: 'app', label: 'Slack', description: '', aliases: [] }
+  { id: 'apps.zed', parent: 'apps', kind: 'app', label: 'Zed', description: '', aliases: [] }
 ])
 const rankScore = (id, query) => menu.searchScore(ranked.items, ranked.items[id], query)
 assert(
-  ['install.service.spotify', 'remove.service.spotify'].every(
-    id => rankScore('apps.spotify', 'spotify') < rankScore(id, 'spotify')
-  ),
-  'menu ranks an installed app above menu entries matching the query equally well'
-)
-assert(
-  ['install.service.slack', 'remove.service.slack'].every(
-    id => rankScore('apps.slack', 'slack') < rankScore(id, 'slack')
+  ['install.editor.zed'].every(
+    id => rankScore('apps.zed', 'zed') < rankScore(id, 'zed')
   ),
   'menu ranks an app matching the query as a whole word above exact-labeled menu entries'
 )
@@ -269,7 +262,7 @@ assertDeepEqual(
 )
 const expectedDefaults = {
   terminal: ['Alacritty', 'Foot', 'Ghostty', 'Kitty'],
-  editor: ['Neovim', 'VSCode', 'Cursor', 'Zed', 'Sublime Text', 'Helix', 'Vim', 'Emacs'],
+  editor: ['Neovim', 'VSCode', 'Zed', 'Sublime Text', 'Vim', 'Emacs'],
   dictation: ['Voxtype']
 }
 assert(
@@ -298,22 +291,12 @@ assertDeepEqual(
     .filter(item => item.id.startsWith('install.') && item.action && item.when)
     .map(item => item.id)
     .sort(),
-  [...x86OnlyInstalls, 'install.service.dropbox'].sort(),
+  x86OnlyInstalls.sort(),
   'menu never hides an Install row because the software is already there'
 )
 assert(
   x86OnlyInstalls.every(id => defaultById[id].when === windowsGuard),
   'menu hides the x86_64-only installers only off x86_64'
-)
-assertEqual(
-  defaultById['install.service.dropbox'].when,
-  fourKPageGuard,
-  'menu offers Dropbox wherever box64 can run it, on x86_64 and on ARM with 4K pages'
-)
-assert(
-  !defaultById['install.service.spotify'].when
-    && defaultById['install.service.spotify'].disabled.includes('applications/Spotify.desktop'),
-  'menu offers Spotify on every platform and dims it once its client or web player is installed'
 )
 assert(
   ['install.editor.vscode', 'install.development.rust'].every(
@@ -327,8 +310,7 @@ assertEqual(
   'menu asks the same presence question it used to hide the row with'
 )
 assert(
-  defaultItems.filter(item => item.id.startsWith('remove.')).every(item => !item.disabled)
-    && defaultById['remove.service.dropbox'].when === 'omarchy-pkg-present dropbox',
+  defaultItems.filter(item => item.id.startsWith('remove.')).every(item => !item.disabled),
   'menu still hides Remove rows for software that is not installed'
 )
 assertDeepEqual(

@@ -488,17 +488,11 @@
   "setup.default.editor.vscode": {
     "label": "VSCode"
   },
-  "setup.default.editor.cursor": {
-    "label": "Cursor"
-  },
   "setup.default.editor.zed": {
     "label": "Zed"
   },
   "setup.default.editor.sublime": {
     "label": "Sublime Text"
-  },
-  "setup.default.editor.helix": {
-    "label": "Helix"
   },
   "setup.default.editor.vim": {
     "label": "Vim"
@@ -614,44 +608,17 @@
   "install.preinstalls": {
     "label": "Preinstalls"
   },
-  "install.service.dropbox": {
-    "label": "Dropbox"
-  },
-  "install.service.spotify": {
-    "label": "Spotify"
-  },
-  "install.service.signal": {
-    "label": "Signal"
-  },
-  "install.service.slack": {
-    "label": "Slack"
-  },
-  "install.service.tailscale": {
-    "label": "Tailscale"
-  },
-  "install.service.nordvpn": {
-    "label": "NordVPN"
-  },
   "install.service.once": {
     "label": "ONCE"
   },
-  "install.service.bitwarden": {
-    "label": "Bitwarden"
-  },
   "install.editor.vscode": {
     "label": "VSCode"
-  },
-  "install.editor.cursor": {
-    "label": "Cursor"
   },
   "install.editor.zed": {
     "label": "Zed"
   },
   "install.editor.sublime": {
     "label": "Sublime Text"
-  },
-  "install.editor.helix": {
-    "label": "Helix"
   },
   "install.editor.vim": {
     "label": "Vim"
@@ -772,12 +739,6 @@
   },
   "remove.security.sudoless-docker": {
     "label": "Sudoless Docker"
-  },
-  "remove.service.dropbox": {
-    "label": "Dropbox"
-  },
-  "remove.service.tailscale": {
-    "label": "Tailscale"
   },
   "remove.service.ssh-agent": {
     "label": "SSH Agent"

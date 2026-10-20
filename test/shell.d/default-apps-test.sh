@@ -66,7 +66,6 @@ omarchy-pkg-add|omarchy-pkg-aur-add)
   printf 'pkg:%s\n' "$package" >>"$OMARCHY_TEST_INSTALL_LOG"
   case $package in
   google-chrome) command=google-chrome-stable ;;
-  cursor-bin) command=cursor ;;
   sublime-text-4) command=subl ;;
   vim) command=vim ;;
   neovim) command=nvim ;;
@@ -89,7 +88,6 @@ omarchy-install-editor-*)
   case $editor in
   vscode) command=code ;;
   zed) command=zeditor ;;
-  helix) command=helix ;;
   emacs) command=emacs ;;
   esac
   ;;
@@ -106,7 +104,6 @@ for installer in \
   omarchy-install-terminal \
   omarchy-install-editor-vscode \
   omarchy-install-editor-zed \
-  omarchy-install-editor-helix \
   omarchy-install-editor-emacs; do
   ln -s omarchy-test-installer "$mock_bin/$installer"
 done
@@ -157,10 +154,8 @@ terminal_cases=(
 
 editor_cases=(
   'code code editor:vscode'
-  'cursor cursor pkg:cursor-bin'
   'zed zeditor editor:zed'
   'sublime_text subl pkg:sublime-text-4'
-  'helix helix editor:helix'
   'vim vim pkg:vim'
   'emacs emacs editor:emacs'
   'nvim nvim pkg:neovim'

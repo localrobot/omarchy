@@ -191,7 +191,7 @@ const byId = Object.fromEntries(manifests.map(manifestPath => {
 }))
 for (const [id, section] of Object.entries({
   'omarchy.active-window': 'left',
-  'omarchy.dropbox': 'right'
+  'omarchy.elsewhen': 'right'
 })) {
   check(byId[id]?.barWidget?.defaultSection === section, `${id} must default to the ${section} bar section`)
 }

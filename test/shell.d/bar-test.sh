@@ -481,7 +481,7 @@ assertDeepEqual(bar.sections, ['left', 'centerBegin', 'center', 'centerEnd', 'ri
 assertDeepEqual(utilSections, bar.sections, 'Util and BarModel list the same bar sections')
 const trayModel = requireFromRoot('shell/plugins/bar/widgets/TrayModel.js')
 for (const section of bar.sections)
-  assert(trayModel.layoutHasWidget({ [section]: ['omarchy.dropbox'] }, 'omarchy.dropbox'), `the tray finds a widget in ${section}`)
+  assert(trayModel.layoutHasWidget({ [section]: ['omarchy.elsewhen'] }, 'omarchy.elsewhen'), `the tray finds a widget in ${section}`)
 assert(/function normalizeLayout\(layout\) \{\s*return Util\.normalizeLayout\(/.test(barSource), 'bar normalizes every section the way the shared helper does')
 
 // Panel tabbing and positional hotkeys take the center as one section.

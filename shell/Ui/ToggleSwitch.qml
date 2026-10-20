@@ -8,8 +8,8 @@ import qs.Commons as Commons
 //
 // The caller owns the value: bind `checked` to real state and flip it in
 // response to `toggled()`. Services that already track a desired state
-// optimistically (see the Tailscale service's `_desired`) get an instant knob
-// throw for free, because `checked` is already the optimistic value.
+// optimistically get an instant knob throw for free, because `checked`
+// is already the optimistic value.
 //
 // `busy` marks an operation in flight and swallows further clicks, but leaves
 // hover, cursor, and tooltips alone so the control does not flicker every time

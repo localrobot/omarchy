@@ -158,7 +158,6 @@ package_defaults = [
   ("default/systemd/user/bt-agent.service", "/usr/lib/systemd/user/bt-agent.service", "systemd/user/bt-agent.service"),
   ("default/systemd/user/omarchy-sleep-lock.service", "/usr/lib/systemd/user/omarchy-sleep-lock.service", "systemd/user/omarchy-sleep-lock.service"),
   ("default/systemd/user/omarchy-migrate-notify.service", "/usr/lib/systemd/user/omarchy-migrate-notify.service", "systemd/user/omarchy-migrate-notify.service"),
-  ("default/systemd/user/omarchy-tailscale-receive.service", "/usr/lib/systemd/user/omarchy-tailscale-receive.service", "systemd/user/omarchy-tailscale-receive.service"),
   ("default/systemd/user/omarchy-fcitx5.service", "/usr/lib/systemd/user/omarchy-fcitx5.service", "systemd/user/omarchy-fcitx5.service"),
   ("default/systemd/user/omarchy-crash-watch.service", "/usr/lib/systemd/user/omarchy-crash-watch.service", "systemd/user/omarchy-crash-watch.service"),
   ("default/systemd/zram-generator.conf.d/90-omarchy.conf", "/usr/lib/systemd/zram-generator.conf.d/90-omarchy.conf", "systemd/zram-generator.conf.d/90-omarchy.conf"),
@@ -281,7 +280,7 @@ cat >"$TMPDIR/home/.config/omarchy/shell.json" <<'JSON'
   "bar": {
     "layout": {
       "left": [{ "id": "omarchy.menu" }, { "id": "omarchy.workspaces" }, { "id": "omarchy.active-window" }],
-      "center": [{ "id": "omarchy.clock" }, { "id": "omarchy.weather" }, { "id": "omarchy.system-update" }, { "id": "omarchy.tailscale" }],
+      "center": [{ "id": "omarchy.clock" }, { "id": "omarchy.weather" }, { "id": "omarchy.system-update" }, { "id": "omarchy.media" }],
       "right": [{ "id": "omarchy.tray" }, { "id": "omarchy.microphone" }, { "id": "omarchy.bluetooth" }]
     }
   },
@@ -479,74 +478,19 @@ cat >"$mock_bin/omarchy-shell" <<'SH'
 printf 'ok\n'
 SH
 
-cat >"$mock_bin/omarchy-installed-service-dropbox" <<'SH'
-#!/bin/bash
-set -euo pipefail
-
-[[ ${OMARCHY_TEST_DROPBOX:-0} == "1" ]]
-SH
-
-cat >"$mock_bin/omarchy-installed-service-tailscale" <<'SH'
-#!/bin/bash
-set -euo pipefail
-
-[[ ${OMARCHY_TEST_TAILSCALE:-0} == "1" ]]
-SH
-
 chmod +x "$mock_bin"/*
 mock_path="$mock_bin:$ROOT/bin:$PATH"
 
-HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" OMARCHY_TEST_DROPBOX=0 OMARCHY_TEST_TAILSCALE=0 omarchy-bar defaults
+HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" omarchy-bar defaults
 jq -e --slurpfile defaults "$ROOT/config/omarchy/shell.json" '
   .bar == $defaults[0].bar and
   .plugins == []
 ' "$TMPDIR/home/.config/omarchy/shell.json" >/dev/null
 pass "bar defaults restores the stock bar"
 
-HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" OMARCHY_TEST_DROPBOX=1 OMARCHY_TEST_TAILSCALE=1 omarchy-bar defaults
-jq -e '
-  def ids: map(.id // .);
-  (.bar.layout.right | ids) as $right |
-  ($right | index("omarchy.tray")) as $tray |
-  ($right | index("omarchy.tailscale") == $tray + 1) and
-  ($right | index("omarchy.dropbox") == $tray + 2) and
-  ([.bar.layout[]] | map(ids) | add | map(select(. == "omarchy.tailscale")) | length == 1)
-' "$TMPDIR/home/.config/omarchy/shell.json" >/dev/null
-pass "bar defaults places plugins for running optional services"
-
-HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" \
-  OMARCHY_TEST_SHELL_DOWN=1 OMARCHY_TEST_DROPBOX=1 OMARCHY_TEST_TAILSCALE=1 \
-  omarchy-bar defaults
-jq -e '
-  def ids: map(.id // .);
-  (.bar.layout.right | ids) as $right |
-  ($right | index("omarchy.tray")) as $tray |
-  ($right | index("omarchy.tailscale") == $tray + 1) and
-  ($right | index("omarchy.dropbox") == $tray + 2) and
-  ([.bar.layout[]] | map(ids) | add | map(select(. == "omarchy.tailscale")) | length == 1)
-' "$TMPDIR/home/.config/omarchy/shell.json" >/dev/null
-pass "bar defaults places service widgets without a running shell"
-
-HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" OMARCHY_TEST_DROPBOX=0 OMARCHY_TEST_TAILSCALE=0 omarchy-refresh-shell
-jq -e '
-  def ids: map(.id // .);
-  ([.bar.layout[]] | map(ids) | add) as $all |
-  ($all | index("omarchy.dropbox") == null) and
-  ($all | index("omarchy.tailscale") == null)
-' "$TMPDIR/home/.config/omarchy/shell.json" >/dev/null
-pass "shell refresh keeps optional service widgets absent when services are unavailable"
-
-HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" OMARCHY_TEST_DROPBOX=1 OMARCHY_TEST_TAILSCALE=1 omarchy-refresh-shell
-jq -e '
-  def ids: map(.id // .);
-  (.bar.layout.right | ids) as $right |
-  ($right | index("omarchy.tray")) as $tray |
-  ($right | index("omarchy.tailscale") == $tray + 1) and
-  ($right | index("omarchy.dropbox") == $tray + 2) and
-  ([.bar.layout[]] | map(ids) | add | map(select(. == "omarchy.tailscale")) | length == 1)
-' "$TMPDIR/home/.config/omarchy/shell.json" >/dev/null
+HOME="$TMPDIR/home" OMARCHY_PATH="$ROOT" PATH="$mock_path" omarchy-refresh-shell
 [[ -f $TMPDIR/home/.local/state/omarchy/restart-shell-called ]] || fail "shell refresh restarts shell"
-pass "shell refresh places optional service widgets when services are available"
+pass "shell refresh restarts shell"
 
 if grep -RIl 'upgrade-to-quattro\|Omarchy 4\.0 is upgraded' "$ROOT/migrations" >/dev/null; then
   fail "4.0 upgrade is not modeled as a migration"

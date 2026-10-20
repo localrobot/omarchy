@@ -34,8 +34,8 @@ grep -Fqx 'shell enablePlugin omarchy.clock {"before":"omarchy.weather"}' "$call
   fail "plugin enable did not preserve relative placement"
 pass "plugin enable forwards relative placement"
 
-run_enable omarchy.dropbox >/dev/null
-grep -Fqx 'shell enablePlugin omarchy.dropbox {}' "$calls" ||
+run_enable omarchy.elsewhen >/dev/null
+grep -Fqx 'shell enablePlugin omarchy.elsewhen {}' "$calls" ||
   fail "plugin enable did not use manifest-default placement"
 pass "plugin enable leaves default placement to the registry"
 
