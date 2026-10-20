@@ -44,10 +44,10 @@ fi
 SCRIPT
 chmod +x "$tmp_dir/bin/pacman"
 
-cat >"$tmp_dir/data/applications/ChatGPT.desktop" <<'DESKTOP'
+cat >"$tmp_dir/data/applications/WhatsApp.desktop" <<'DESKTOP'
 [Desktop Entry]
-Name=ChatGPT
-Exec=omarchy-launch-webapp https://example.com
+Name=WhatsApp
+Exec=omarchy-launch-webapp https://web.whatsapp.com
 DESKTOP
 
 cat >"$tmp_dir/data/applications/Docker.desktop" <<'DESKTOP'
@@ -73,14 +73,14 @@ export PATH="$tmp_dir/bin:$PATH"
 export XDG_DATA_HOME="$tmp_dir/data"
 export XDG_DATA_DIRS="$tmp_dir/system"
 
-"$ROOT/bin/omarchy-remove-launcher-entry" ChatGPT.desktop ChatGPT
+"$ROOT/bin/omarchy-remove-launcher-entry" WhatsApp.desktop WhatsApp
 "$ROOT/bin/omarchy-remove-launcher-entry" Docker.desktop Docker
 "$ROOT/bin/omarchy-remove-launcher-entry" native.desktop Native
 "$ROOT/bin/omarchy-remove-launcher-entry" aliens.desktop Aliens
 
 mapfile -t lines <"$TEST_LOG"
 
-[[ ${lines[0]} == "web:false:ChatGPT" ]] || fail "launcher remove routes web apps by desktop name" "${lines[0]}"
+[[ ${lines[0]} == "web:false:WhatsApp" ]] || fail "launcher remove routes web apps by desktop name" "${lines[0]}"
 pass "launcher remove routes web apps by desktop name"
 
 [[ ${lines[1]} == "tui:false:Docker" ]] || fail "launcher remove routes TUIs by desktop name" "${lines[1]}"

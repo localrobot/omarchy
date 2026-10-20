@@ -73,7 +73,7 @@ SH
 
 cat >"$watch_bin/omarchy-default-agent" <<'SH'
 #!/bin/bash
-echo claude
+echo agy
 SH
 
 cat >"$watch_bin/omarchy-notification-wait" <<'SH'
@@ -112,6 +112,7 @@ run_watch() {
 
   : >"$NOTIFY_LOG"
 
+  OMARCHY_PATH="$ROOT" \
   PATH="$watch_bin:$ROOT/bin:$PATH" \
   JOURNAL_ENTRIES="$JOURNAL_ENTRIES" \
   NOTIFY_LOG="$NOTIFY_LOG" \

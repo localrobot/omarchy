@@ -195,7 +195,7 @@ elif [[ -f $ICON_REF ]]; then
   ICON_VALUE=$(install_user_icon "$ICON_REF" "$(safe_icon_name "$APP_NAME")")
 else
   # Bundled Omarchy icons are package-owned under /usr/share/icons/hicolor.
-  # Accept either "ChatGPT" or the historical "ChatGPT.png" argument form.
+  # Accept either "AppName" or the historical "AppName.png" argument form.
   ICON_VALUE=$(icon_name_from_ref "$ICON_REF")
 fi
 

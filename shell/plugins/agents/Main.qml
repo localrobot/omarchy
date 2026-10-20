@@ -809,7 +809,7 @@ Item {
   // version and title-case the words around it.
   function friendlyModelName(id) {
     if (!id) return I18n.t("agents.unknownModel")
-    var name = String(id).replace(/^claude-/, "").replace(/-\d{8}$/, "")
+    var name = String(id).replace(/-\d{8}$/, "")
     var parts = name.split("-")
     var words = []
     var version = []

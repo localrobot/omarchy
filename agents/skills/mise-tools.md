@@ -21,10 +21,10 @@ Agent CLIs also set `auto_update = "4h"`, so mise upgrades them before they run 
 
 ```toml
 [tools]
-codex = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
+opencode = { version = "latest", lazy = true, auto_update = "4h", minimum_release_age = "0s" }
 ```
 
-Do not add handwritten wrappers for ordinary tools. Hermes keeps its custom installer because it needs Python 3.13 and must defer to Hermes Desktop when that app owns the command.
+Do not add handwritten wrappers for ordinary tools.
 
 ## Choose the registry name
 

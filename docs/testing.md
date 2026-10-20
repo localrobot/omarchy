@@ -19,7 +19,7 @@ the end and exits non-zero.
   `# omarchy:summary=` header and against removed or redundant fields — plus
   the theme pipeline: template rendering (`omarchy-theme-set-templates`,
   `omarchy-theme-color`, `omarchy-theme-osc`), the theme sync commands
-  (tmux, GNOME, VS Code, Pi, Claude) run against stub binaries and a fake
+  (tmux, GNOME, VS Code, Pi) run against stub binaries and a fake
   `$HOME`.
 - **`./test/shell`** — runs every `test/shell.d/*-test.sh` (except
   `base-test.sh` itself). Each file is an independent suite covering one area:

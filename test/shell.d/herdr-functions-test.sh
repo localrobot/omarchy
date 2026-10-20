@@ -25,13 +25,13 @@ export HERDR_PANE_ID="current-pane"
 export HERDR_WORKSPACE_ID="workspace"
 
 cd "$test_dir"
-hdlm "codex --flag='value with spaces'" "claude --model sonnet"
+hdlm "opencode --flag='value with spaces'" "agy --model custom"
 
 mapfile -t commands <"$log"
 
 expected_first=$(printf 'cd %q && hdl %q %q' \
-  "$test_dir/first project's files" "codex --flag='value with spaces'" "claude --model sonnet")
-expected_second=$(printf 'hdl %q %q' "codex --flag='value with spaces'" "claude --model sonnet")
+  "$test_dir/first project's files" "opencode --flag='value with spaces'" "agy --model custom")
+expected_second=$(printf 'hdl %q %q' "opencode --flag='value with spaces'" "agy --model custom")
 
 [[ ${commands[0]} == "$expected_first" ]] || fail "hdlm safely quotes its first queued command"
 pass "hdlm safely quotes its first queued command"
@@ -40,9 +40,9 @@ pass "hdlm safely quotes its first queued command"
 pass "hdlm preserves agent argument boundaries"
 
 : >"$log"
-hdlm "codex --quiet"
+hdlm "opencode --quiet"
 mapfile -t commands <"$log"
-expected_first=$(printf 'cd %q && hdl %q' "$test_dir/first project's files" "codex --quiet")
+expected_first=$(printf 'cd %q && hdl %q' "$test_dir/first project's files" "opencode --quiet")
 
 [[ ${commands[0]} == "$expected_first" ]] || fail "hdlm omits an absent second agent argument"
 pass "hdlm omits an absent second agent argument"

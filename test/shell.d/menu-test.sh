@@ -275,13 +275,7 @@ assert(
 )
 assert(!defaultById['install.ai.crush'], 'menu removes Crush from Install > AI')
 // Software you already have keeps its place in Install, dimmed rather than
-// dropped, so the list reads as a catalog of what Omarchy can install. The
-// Windows VM, whose guest can't run elsewhere, and the installers that need
-// x86_64 binaries (vendor builds for x86_64 alone, Windows games under Wine)
-// hide only off x86_64. Dropbox's x86_64 client runs under box64 on ARM, which
-// needs 4K pages, so it hides only where pages are larger. Spotify installs its
-// web player where its client can't run, so it never hides. Any other `when:`
-// here is a row that went back to vanishing once installed.
+// dropped, so the list reads as a catalog of what Omarchy can install.
 const windowsGuard = 'omarchy-hw-x86'
 const x86OnlyInstalls = []
 const fourKPageGuard = '[[ $(getconf PAGESIZE) == 4096 ]]'

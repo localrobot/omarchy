@@ -130,7 +130,7 @@ Item {
   //     should show.
   //   - urgency=critical AND app_name=notify-send: bare-CLI emergency alerts.
   //     Trusted because it's almost always omarchy or system shell scripts —
-  //     chat apps set app_name to their brand (Slack/Vesktop/etc.), which
+  //     third-party apps set app_name to their brand, which
   //     falls outside this rule.
   function shouldBypassDnd(notification) {
     return NotificationLogic.shouldBypassDnd(notification, NotificationUrgency.Critical)
@@ -428,7 +428,7 @@ Item {
       // Notification already torn down by the server — fall through to focus.
       console.warn("invoke default failed:", e)
     }
-    // Chat apps (Slack, Vesktop, etc.) rarely register a "default"
+    // Many third-party apps rarely register a "default"
     // libnotify action — they just expect clicking the notification to
     // focus their window. Fall back to focusing the sending app by class so
     // that click-to-jump actually works.

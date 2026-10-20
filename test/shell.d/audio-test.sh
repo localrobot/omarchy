@@ -41,11 +41,11 @@ assert(audio.isHeadphones(headphones), 'audio detects headphone devices')
 assertEqual(audio.sinkGlyph(headphones), '󰋋', 'audio uses headphone sink glyph')
 assert(audio.sourceGlyph({ ready: true, properties: { 'device.icon-name': 'camera-webcam' } }).length > 0, 'audio maps webcam source glyph')
 
-assertEqual(audio.friendlyStreamLabel('spotify'), 'Spotify', 'audio normalizes known stream labels')
+assertEqual(audio.friendlyStreamLabel('cliamp'), 'cliamp', 'audio normalizes known stream labels')
 assert(audio.streamRepresentsMprisPlayer('Chrome', 'Google Chrome'), 'audio matches related stream and MPRIS labels')
 
 const players = [
-  { identity: 'Spotify', canPlay: true, isPlaying: true, dbusName: 'org.mpris.MediaPlayer2.spotify' },
+  { identity: 'cliamp', canPlay: true, isPlaying: true, dbusName: 'org.mpris.MediaPlayer2.cliamp' },
   { identity: 'Chrome', canPlay: true, isPlaying: false, dbusName: 'org.mpris.MediaPlayer2.google-chrome' }
 ]
 const streams = [
@@ -54,8 +54,8 @@ const streams = [
 ]
 
 assertEqual(audio.matchingMprisStreamLabel('Chrome', players), 'Chrome', 'audio finds matching MPRIS labels')
-assertEqual(audio.unmatchedMprisStreamLabel('audio-src', players, streams), 'Spotify', 'audio uses unmatched MPRIS player for generic streams')
-assertEqual(audio.streamLabel(streams[1], players, streams), 'Spotify', 'audio labels generic streams from MPRIS')
+assertEqual(audio.unmatchedMprisStreamLabel('audio-src', players, streams), 'cliamp', 'audio uses unmatched MPRIS player for generic streams')
+assertEqual(audio.streamLabel(streams[1], players, streams), 'cliamp', 'audio labels generic streams from MPRIS')
 assert(audio.streamRepresentsPlayer(streams[1], players[0], players, streams), 'audio links generic streams to active player')
 
 // A virtual source is untyped in Quickshell (no audio); PulseAudio's source

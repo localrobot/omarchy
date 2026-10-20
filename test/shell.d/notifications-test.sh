@@ -10,10 +10,10 @@ const notifications = requireFromRoot('shell/plugins/notifications/NotificationL
 
 assert(notifications.isChromeDerived('Google Chrome', ''), 'notifications detect chrome-derived apps by name')
 assert(notifications.isChromeDerived('', 'google-chrome'), 'notifications detect chrome-derived apps by icon')
-assert(!notifications.isChromeDerived('Slack', ''), 'notifications do not treat unrelated apps as chrome-derived')
+assert(!notifications.isChromeDerived('GenericApp', ''), 'notifications do not treat unrelated apps as chrome-derived')
 
 assertEqual(
-  notifications.sanitizeBody('<img src="x">Hello', 'Slack', ''),
+  notifications.sanitizeBody('<img src="x">Hello', 'GenericApp', ''),
   'Hello',
   'notifications strip inline image tags'
 )
@@ -49,7 +49,7 @@ function survivingTagNames(text) {
 // sanitizer's output instead would pass a body whose surviving tag the newline
 // rewrite later splits open.
 function assertNoImageSurvives(body, description) {
-  const out = notifications.styledBody(body, 'Slack', '')
+  const out = notifications.styledBody(body, 'GenericApp', '')
   const names = survivingTagNames(out)
   assert(
     !names.includes('img'),
@@ -93,7 +93,7 @@ assertNoImageSurvives(
 // issue an outbound GET. Asserted on the whole output rather than through
 // assertNoImageSurvives so it holds even if that helper is ever loosened.
 assertEqual(
-  notifications.sanitizeBody('<\u0085img src="http://host/nel.png">after', 'Slack', ''),
+  notifications.sanitizeBody('<\u0085img src="http://host/nel.png">after', 'GenericApp', ''),
   'after',
   'notifications strip an image tag whose separator is U+0085, which Qt skips but \\s does not'
 )
@@ -120,14 +120,14 @@ assertNoImageSurvives(
 )
 
 assertEqual(
-  notifications.styledBody('<x\n<img src="http://host/split.png">', 'Slack', ''),
+  notifications.styledBody('<x\n<img src="http://host/split.png">', 'GenericApp', ''),
   '<x<br/>',
   'notifications drop the image half of a tag the newline rewrite splits'
 )
 
 // The rewrite itself still happens, and body markup other than images survives it.
 assertEqual(
-  notifications.styledBody('<b>bold</b>\nsecond line', 'Slack', ''),
+  notifications.styledBody('<b>bold</b>\nsecond line', 'GenericApp', ''),
   '<b>bold</b><br/>second line',
   'notifications keep body markup and the line break the card renders'
 )
@@ -146,19 +146,19 @@ assert(
 )
 
 assertEqual(
-  notifications.sanitizeBody('trailing <img src="http://host/z.png"', 'Slack', ''),
+  notifications.sanitizeBody('trailing <img src="http://host/z.png"', 'GenericApp', ''),
   'trailing ',
   'notifications strip an unterminated image tag the renderer would close itself'
 )
 
 assertEqual(
-  notifications.sanitizeBody('<IMG SRC="http://host/u.png">shout', 'Slack', ''),
+  notifications.sanitizeBody('<IMG SRC="http://host/u.png">shout', 'GenericApp', ''),
   'shout',
   'notifications strip image tags regardless of case'
 )
 
 assertEqual(
-  notifications.sanitizeBody('<b>bold</b> and <a href="http://host">link</a>', 'Slack', ''),
+  notifications.sanitizeBody('<b>bold</b> and <a href="http://host">link</a>', 'GenericApp', ''),
   '<b>bold</b> and <a href="http://host">link</a>',
   'notifications keep the body markup the body-markup capability advertises'
 )
@@ -176,7 +176,7 @@ assertEqual(
 )
 
 assertEqual(
-  notifications.sanitizeBody('https://example.com/path Message body', 'Slack', ''),
+  notifications.sanitizeBody('https://example.com/path Message body', 'GenericApp', ''),
   'https://example.com/path Message body',
   'notifications keep non-browser leading origin text'
 )
@@ -190,7 +190,7 @@ assert(!notifications.shouldRenderCompactGlyph('K', 'file:///tmp/image.png', tru
 assert(notifications.shouldBypassDnd({ appName: 'omarchy-action', urgency: 1 }, 2), 'omarchy action toasts bypass DND')
 assert(notifications.shouldBypassDnd({ appName: 'notify-send', urgency: 2 }, 2), 'critical notify-send bypasses DND')
 assert(!notifications.shouldBypassDnd({ appName: 'notify-send', urgency: 1 }, 2), 'normal notify-send does not bypass DND')
-assert(!notifications.shouldBypassDnd({ appName: 'Slack', urgency: 2 }, 2), 'critical app notifications do not bypass DND')
+assert(!notifications.shouldBypassDnd({ appName: 'GenericApp', urgency: 2 }, 2), 'critical app notifications do not bypass DND')
 assert(!notifications.shouldBypassDnd({ appName: 'omarchy-menu-keybindings', urgency: 1 }, 2), 'omarchy command app names do not bypass DND')
 assert(!notifications.isEphemeralApp('omarchy-menu-keybindings'), 'notifications treat omarchy command app names as normal apps')
 
@@ -318,7 +318,7 @@ assertDeepEqual(
 const replacement = notifications.replacementSnapshot(
   {
     id: 12,
-    appName: 'Slack',
+    appName: 'GenericApp',
     summary: 'Thread v2',
     body: 'message 2',
     image: 'file:///tmp/new.png',
@@ -386,7 +386,7 @@ assert(
   'notifications keep toasts whose body differs'
 )
 assert(
-  !notifications.isDuplicatePopup(calendarReminder, Object.assign({}, calendarReminder, { originalId: 21, app: 'Slack' })),
+  !notifications.isDuplicatePopup(calendarReminder, Object.assign({}, calendarReminder, { originalId: 21, app: 'GenericApp' })),
   'notifications keep identical text from a different sender'
 )
 assert(

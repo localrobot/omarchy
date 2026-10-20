@@ -184,10 +184,11 @@ flowchart TD
 
 ---
 
-### Track 4: Unused AI Models, Commercial Apps & Asset/Icon Purge
+### Track 4: Unused AI Models, Commercial Apps & Asset/Icon Purge [COMPLETED & VERIFIED]
 
+- **Status**: Completed & 100% Verified
 - **Objective**: Purge all remaining artifacts, icons, SVGs, and control loops for non-retained AI models (`claude`, `codex`, `chatgpt`, `grok`, `hermes`, `openclaw`) and removed commercial software (`tailscale`, `spotify`, `slack`, `bitwarden`, `nordvpn`, `dropbox`).
-- **Physical Assets & Files to Delete**:
+- **Physical Assets & Files Deleted (13 files)**:
   - `applications/icons/ChatGPT.png`
   - `default/fonts/omarchy/hermes.svg`
   - `shell/plugins/agents/assets/claude.svg`
@@ -202,28 +203,36 @@ flowchart TD
   - `default/hypr/apps/hermes.lua`
   - `default/hypr/apps/webcam-overlay.lua`
 - **Script Simplifications & Loop Flattening**:
-  - `bin/omarchy-theme-set`:
-    - Remove `omarchy-theme-set-claude` from `other_theme_commands`.
-  - `bin/omarchy-provision-user`:
-    - Prune `~/.claude/skills` and `~/.codex/skills` from directory creation and symlinking loops.
-  - `default/bash/aliases`:
-    - Remove `alias cx='...'` (claude) and `alias cy='...'` (codex).
-    - Remove `alias ix='tdl cx'` and `alias icx='tdl c cx'`.
-  - `default/i18n/en/keybindings.json`:
-    - Remove `ChatGPT`, `Grok`, `Signal`.
-  - `bin/omarchy-agent`:
-    - Clean up OpenClaw comments.
-  - `bin/omarchy-file-select`:
-    - Replace `--title "Send with Tailscale"` example with generic title.
-  - `bin/omarchy-hyprland-focus-app`:
-    - Replace `Slack` example with `Google Chrome` / `Foot`.
-  - `bin/omarchy-system-factory-reset` & `bin/omarchy-system-factory-reset-finish`:
-    - Remove `/var/lib/tailscale` cleanup.
-  - `shell/plugins/panels/audio/Model.js`:
-    - Remove `spotify` normalization from `friendlyStreamLabel`.
-  - `shell/plugins/agents/manifest.json`:
-    - Update description to remove Claude, Codex, Grok, Fireworks references.
-    - Remove `claude`, `codex`, `grok`, `fireworks` from `defaults.providers`.
+  - `bin/omarchy-theme-set`: Removed `omarchy-theme-set-claude` from `other_theme_commands`.
+  - `bin/omarchy-provision-user`: Pruned `~/.claude/skills` and `~/.codex/skills` from directory creation and symlinking loops.
+  - `default/bash/aliases`: Removed `cx` (claude), `cy` (codex), `ix`, `icx`.
+  - `default/i18n/en/keybindings.json`: Removed `ChatGPT`, `Grok`, `Signal`.
+  - `bin/omarchy-agent`: Cleaned up OpenClaw comments.
+  - `bin/omarchy-file-select`: Replaced `--title "Send with Tailscale"` example with LocalSend.
+  - `bin/omarchy-hyprland-focus-app`: Replaced `Slack` example with Google Chrome.
+  - `bin/omarchy-system-factory-reset` & `bin/omarchy-system-factory-reset-finish`: Removed `/var/lib/tailscale` cleanup.
+  - `shell/plugins/panels/audio/Model.js`: Replaced `spotify` normalization with `cliamp` in `friendlyStreamLabel`.
+  - `shell/plugins/agents/manifest.json`: Updated description to remove Claude, Codex, Grok, Fireworks references; pruned non-retained providers from `defaults.providers`.
+  - `shell/plugins/agents/Panel.qml`: Pruned `addProviders` and error cases for Claude, Codex, Grok.
+  - `shell/plugins/agents/Main.qml`: Simplified `friendlyModelName`.
+  - `shell/plugins/agents/README.md`: Pruned Dropbox sync example.
+  - `shell/plugins/notifications/Service.qml`: Replaced Slack comments with generic third-party app commentary.
+  - `docs/file-layout.md` & `docs/testing.md`: Aligned documentation with pruned agents and skills.
+  - `agents/skills/icon-font.md` & `agents/skills/mise-tools.md`: Replaced Grok/Codex/Hermes examples with retained tools (OpenCode).
+- **Test Suite Alignment**:
+  - `test/cli`: Pruned Claude theme template generation, sync, and activation tests.
+  - `test/shell.d/theme-staging-test.sh`: Removed `claude.json` from `colour_only`.
+  - `test/shell.d/hyprland-binding-conflicts-test.sh` & `test/shell.d/hyprland-default-config-test.sh`: Replaced ChatGPT binding assertions with WhatsApp.
+  - `test/shell.d/launcher-remove-test.sh`: Replaced ChatGPT desktop fixture with WhatsApp.
+  - `test/shell.d/crash-capture-test.sh`: Replaced `echo claude` with `echo agy`; ensured `OMARCHY_PATH` is passed to sub-invocations.
+  - `test/shell.d/agent-invitation-test.sh`: Replaced `claude` with `agy` and stubbed `omarchy-default-agent` accurately.
+  - `test/shell.d/herdr-functions-test.sh`: Replaced `codex`/`claude` commands with `opencode`/`agy`.
+  - `test/shell.d/dock-test.sh`, `test/shell.d/audio-test.sh`, `test/shell.d/media-test.sh`, `test/shell.d/webapp-install-test.sh`, `test/shell.d/notifications-test.sh`: Replaced `spotify` and `slack` fixtures with generic/retained tools (`obsidian`, `cliamp`, `imv`, `GenericApp`).
+- **Verification**:
+  - `bin/omarchy commands --check`: Passed (380 commands).
+  - `./test/cli`: Passed (108/108 tests green).
+  - Individual shell tests (`theme-staging-test.sh`, `hyprland-binding-conflicts-test.sh`, `hyprland-default-config-test.sh`, `launcher-remove-test.sh`, `agent-invitation-test.sh`, `herdr-functions-test.sh`, `dock-test.sh`, `audio-test.sh`, `media-test.sh`, `webapp-install-test.sh`, `notifications-test.sh`, `default-agent-test.sh`): 100% green.
+  - Zero broken symlinks (`find . -xtype l`).
 
 ---
 

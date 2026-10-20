@@ -25,7 +25,13 @@ while (($# > 0)); do
 done
 ((${#exec_args[@]})) && echo "exec:${exec_args[*]}" >>"$TEST_LOG"
 EOF
-chmod +x "$test_bin/omarchy-notification-send"
+cat >"$test_bin/omarchy-default-agent" <<'EOF'
+#!/bin/bash
+if [[ -f $HOME/.config/omarchy/defaults/agent ]]; then
+  cat "$HOME/.config/omarchy/defaults/agent"
+fi
+EOF
+chmod +x "$test_bin/omarchy-notification-send" "$test_bin/omarchy-default-agent"
 
 run_invitation_hook() {
   cp "$ROOT/install/user/first-run/setup-agent.hook" "$hook_path"
@@ -50,7 +56,7 @@ pass "agent invitation only runs once"
 # no invitation and no default.
 fresh_home=$(mktemp -d)
 mkdir -p "$fresh_home/.config/omarchy/defaults"
-printf 'claude\n' >"$fresh_home/.config/omarchy/defaults/agent"
+printf 'agy\n' >"$fresh_home/.config/omarchy/defaults/agent"
 : >"$log_file"
 cp "$ROOT/install/user/first-run/setup-agent.hook" "$hook_path"
 HOME="$fresh_home" PATH="$test_bin:$ROOT/bin:$PATH" TEST_LOG="$log_file" bash "$hook_path"

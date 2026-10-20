@@ -167,7 +167,7 @@ top-level keys can be set with
 |---|---|---|
 | `refreshIntervalSec` | `900` | How often the usage records regenerate |
 | `syncMode` | `"Off"` | `"On"` writes this machine's snapshot and merges the others |
-| `syncDir` | `""` | A folder synced by Syncthing, Dropbox, rsync, … |
+| `syncDir` | `""` | A folder synced by Syncthing, rsync, … |
 | `syncFileName` | `<hostname>.json` | This machine's snapshot file |
 | `syncDeviceId` | hostname | Stable device name inside the snapshot |
 

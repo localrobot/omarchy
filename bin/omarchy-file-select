@@ -2,7 +2,7 @@
 
 # omarchy:summary=Pick files with the desktop file chooser
 # omarchy:args=[--title <title>] [--multiple] [--directory] [--extensions "<ext ext...>"]
-# omarchy:examples=omarchy file select --title "Send with Tailscale" --multiple | omarchy file select --title "Pick image" --extensions "png svg" | omarchy file select --title "Share folder" --directory
+# omarchy:examples=omarchy file select --title "Send with LocalSend" --multiple | omarchy file select --title "Pick image" --extensions "png svg" | omarchy file select --title "Share folder" --directory
 
 # Python rather than bash, alone among the commands here, because the portal
 # answers a request with a Response signal addressed to the connection that

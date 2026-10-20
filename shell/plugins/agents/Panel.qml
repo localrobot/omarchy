@@ -241,9 +241,7 @@ Panel {
   // notification too.
 
   readonly property var addProviders: [
-    { providerId: "claude", providerName: "Claude Code" },
-    { providerId: "codex", providerName: "Codex" },
-    { providerId: "grok", providerName: "Grok" }
+    { providerId: "kimi", providerName: "Kimi" }
   ]
   property string addStage: ""
   property string addProvider: ""
@@ -283,10 +281,7 @@ Panel {
     addStatus = Commons.I18n.t("agents.starting")
     addCode = ""
     addUrl = ""
-    // Claude's login offers pasting a code back whenever its page shows one,
-    // and its prompt for it has no newline to read it by, so the field is
-    // there from the start.
-    addNeedsPaste = addProvider === "claude"
+    addNeedsPaste = false
     addResult = ""
     addStage = "running"
     addProcess.command = ["omarchy-agent-account-add", "--events", addProvider].concat(label !== "" ? [label] : [])
@@ -444,10 +439,7 @@ Panel {
     addStatus = Commons.I18n.t("agents.starting")
     addCode = ""
     addUrl = ""
-    // Claude's login offers pasting a code back whenever its page shows one,
-    // and its prompt for it has no newline to read it by, so the field is
-    // there from the start.
-    addNeedsPaste = addProvider === "claude"
+    addNeedsPaste = false
     addResult = ""
     addStage = "running"
     addProcess.command = ["omarchy-agent-account-add", "--events", "--reauth",
@@ -646,22 +638,6 @@ Panel {
   function helpDisplayText(text) {
     var value = String(text || "")
     switch (value) {
-    case "Run `claude auth login` to restore authoritative usage.":
-      return Commons.I18n.t("agents.helpRunToRestoreUsage").arg("`claude auth login`")
-    case "Run `codex login` to authenticate.":
-      return Commons.I18n.t("agents.helpRunToAuthenticate").arg("`codex login`")
-    case "Start Grok, or run `grok login`, to sign in.":
-      return Commons.I18n.t("agents.helpStartOrRunToSignIn").arg("Grok").arg("`grok login`")
-    case "Start Grok to see its limits; signing in again is not needed.":
-      return Commons.I18n.t("agents.helpStartToSeeLimits").arg("Grok")
-    case "Grok's saved sign-in expired. Start Grok to refresh it.":
-      return Commons.I18n.t("agents.helpSignInExpired").arg("Grok")
-    case "Set FIREWORKS_API_KEY, run `firectl set-api-key`, or sign in to Fireworks in pi or opencode.":
-      return Commons.I18n.t("agents.helpFireworksSignIn").arg("FIREWORKS_API_KEY").arg("`firectl set-api-key`")
-    case "codex not found in PATH":
-      return Commons.I18n.t("agents.helpNotInPath").arg("codex")
-    case "Fireworks usage scan failed":
-      return Commons.I18n.t("agents.helpScanFailed").arg("Fireworks")
     }
     return value
   }
