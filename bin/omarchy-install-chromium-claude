@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# omarchy:summary=Install the Claude extension for Chromium-based browsers
+# omarchy:summary=Install the Claude extension for Chrome
 # omarchy:requires-sudo=true
 
 set -euo pipefail
@@ -13,12 +13,9 @@ EXTENSION_ID="fcoeoabgfenejglbffodgkkbkcdhcgfn"
 EXTENSION_JSON='{ "external_update_url": "https://clients2.google.com/service/update2/crx" }'
 PACKAGED_PATH=/usr/bin/omarchy-install-chromium-claude
 
-# Brave and Brave Origin share Chromium's external extension directory.
-# Seed all supported browsers, including those installed after choosing Claude.
+# Register the extension for Google Chrome.
 EXTENSION_DIRS=(
-  /usr/share/chromium/extensions
   /usr/share/google-chrome/extensions
-  /usr/share/microsoft-edge/extensions
 )
 
 installed=true

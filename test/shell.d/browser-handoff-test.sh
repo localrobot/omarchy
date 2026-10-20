@@ -8,8 +8,8 @@ require_command python3
 require_command socat
 
 # The handoff only stands in for the packaged browser itself.
-if [[ $(type -P chromium) != "/usr/bin/chromium" ]]; then
-  skip "browser handoff needs /usr/bin/chromium"
+if [[ $(type -P google-chrome-stable) != "/usr/bin/google-chrome-stable" ]]; then
+  skip "browser handoff needs /usr/bin/google-chrome-stable"
   exit 0
 fi
 
@@ -17,11 +17,11 @@ test_tmp=$(mktemp -d)
 trap 'rm -rf "$test_tmp"' EXIT
 
 export XDG_CONFIG_HOME="$test_tmp/config"
-socket="$XDG_CONFIG_HOME/chromium/SingletonSocket"
+socket="$XDG_CONFIG_HOME/google-chrome/SingletonSocket"
 received="$test_tmp/received"
 mkdir -p "${socket%/*}"
-flags_file="$XDG_CONFIG_HOME/chromium-flags.conf"
-cp "$ROOT/config/chromium-flags.conf" "$flags_file"
+flags_file="$XDG_CONFIG_HOME/chrome-flags.conf"
+cp "$ROOT/config/chrome-flags.conf" "$flags_file"
 echo "# A comment of the user's" >>"$flags_file"
 
 # A running browser's side of the singleton socket: take each command line and
@@ -48,37 +48,37 @@ for _ in $(seq 100); do
   sleep 0.02
 done
 
-(cd "$test_tmp" && "$ROOT/bin/omarchy-cmd-browser-handoff" chromium --app="https://example.test/a b") ||
+(cd "$test_tmp" && "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable --app="https://example.test/a b") ||
   fail "the running browser acknowledges a handed off command line"
 
 expected=$(printf 'START\0%s\0browser\0--app=https://example.test/a b' "$test_tmp" | od -c)
 [[ $(od -c <"$received") == "$expected" ]] ||
-  fail "the handoff sends the working directory and arguments as Chromium's singleton expects" "$(od -c <"$received")"
+  fail "the handoff sends the working directory and arguments as Chrome's singleton expects" "$(od -c <"$received")"
 pass "a command line is handed to the running browser over its singleton socket"
 
-! "$ROOT/bin/omarchy-cmd-browser-handoff" chromium --user-data-dir=/elsewhere https://example.test ||
+! "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable --user-data-dir=/elsewhere https://example.test ||
   fail "another data directory is left to a browser of its own"
 mkdir -p "$test_tmp/wrapper"
-printf '#!/bin/bash\nexec /usr/bin/chromium --profile-directory=Work "$@"\n' >"$test_tmp/wrapper/chromium"
-chmod +x "$test_tmp/wrapper/chromium"
-! PATH="$test_tmp/wrapper:$PATH" "$ROOT/bin/omarchy-cmd-browser-handoff" chromium https://example.test ||
+printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable --profile-directory=Work "$@"\n' >"$test_tmp/wrapper/google-chrome-stable"
+chmod +x "$test_tmp/wrapper/google-chrome-stable"
+! PATH="$test_tmp/wrapper:$PATH" "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable https://example.test ||
   fail "a wrapper standing in for the browser is left to run"
-! CHROME_USER_DATA_DIR=/elsewhere "$ROOT/bin/omarchy-cmd-browser-handoff" chromium https://example.test ||
+! CHROME_USER_DATA_DIR=/elsewhere "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable https://example.test ||
   fail "a data directory from the environment is left to a browser of its own"
 
 # The handoff forwards no flags file, so any flag beyond Omarchy's own, which
 # may be meant for each launch, needs the launcher.
 for flag in '--new-window' '--enable-features=A --profile-directory="Profile 1"'; do
-  cp "$ROOT/config/chromium-flags.conf" "$flags_file"
+  cp "$ROOT/config/chrome-flags.conf" "$flags_file"
   echo "$flag" >>"$flags_file"
-  ! "$ROOT/bin/omarchy-cmd-browser-handoff" chromium https://example.test ||
+  ! "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable https://example.test ||
     fail "a flags file with $flag is left to the launcher"
 done
 
 # The browser is gone but its socket file is left, as after a crash.
 kill "$server"
 wait "$server" 2>/dev/null || true
-! "$ROOT/bin/omarchy-cmd-browser-handoff" chromium --app=https://example.test ||
+! "$ROOT/bin/omarchy-cmd-browser-handoff" google-chrome-stable --app=https://example.test ||
   fail "a socket no browser answers on fails the handoff"
 ! "$ROOT/bin/omarchy-cmd-browser-handoff" firefox https://example.test ||
   fail "a browser without a singleton socket fails the handoff"

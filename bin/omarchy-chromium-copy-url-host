@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# omarchy:summary=Native messaging host: copy a Chromium tab URL to the clipboard
+# omarchy:summary=Native messaging host: copy a Chrome tab URL to the clipboard
 # omarchy:hidden=true
 
 set -euo pipefail

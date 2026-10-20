@@ -43,11 +43,9 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
     aether \
     cliamp \
     libreoffice-fresh \
-    pinta \
     obsidian \
     monologue \
     omacalc \
-    omawrite \
     hype \
     signed
 fi

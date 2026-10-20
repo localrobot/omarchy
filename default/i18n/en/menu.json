@@ -503,31 +503,6 @@
   "setup.default.agent.pi": {
     "label": "Pi"
   },
-  "setup.default.browser": {
-    "label": "Browser",
-    "title": "Default Browser"
-  },
-  "setup.default.browser.chromium": {
-    "label": "Chromium"
-  },
-  "setup.default.browser.chrome": {
-    "label": "Chrome"
-  },
-  "setup.default.browser.brave": {
-    "label": "Brave"
-  },
-  "setup.default.browser.brave-origin": {
-    "label": "Brave Origin"
-  },
-  "setup.default.browser.edge": {
-    "label": "Edge"
-  },
-  "setup.default.browser.firefox": {
-    "label": "Firefox"
-  },
-  "setup.default.browser.zen": {
-    "label": "Zen"
-  },
   "setup.default.dictation": {
     "label": "Dictation",
     "title": "Default Dictation"
@@ -684,9 +659,6 @@
   "install.style.font.iosevka": {
     "label": "Iosevka"
   },
-  "install.browser": {
-    "label": "Browser"
-  },
   "install.webapp": {
     "label": "Web App"
   },
@@ -701,27 +673,6 @@
   },
   "install.preinstalls": {
     "label": "Preinstalls"
-  },
-  "install.browser.chrome": {
-    "label": "Chrome"
-  },
-  "install.browser.edge": {
-    "label": "Edge"
-  },
-  "install.browser.brave": {
-    "label": "Brave"
-  },
-  "install.browser.brave-origin": {
-    "label": "Brave Origin"
-  },
-  "install.browser.firefox": {
-    "label": "Firefox"
-  },
-  "install.browser.zen": {
-    "label": "Zen"
-  },
-  "install.service.1password": {
-    "label": "1Password"
   },
   "install.service.dropbox": {
     "label": "Dropbox"
@@ -746,9 +697,6 @@
   },
   "install.service.bitwarden": {
     "label": "Bitwarden"
-  },
-  "install.service.chromium-account": {
-    "label": "Chromium Account"
   },
   "install.editor.vscode": {
     "label": "VSCode"
@@ -897,10 +845,6 @@
   "remove.theme": {
     "label": "Theme"
   },
-  "remove.browser": {
-    "label": "Browser",
-    "title": "Remove"
-  },
   "remove.webapp": {
     "label": "Web App"
   },
@@ -928,27 +872,6 @@
   },
   "remove.ai.hermes": {
     "label": "Hermes Desktop"
-  },
-  "remove.browser.chrome": {
-    "label": "Chrome"
-  },
-  "remove.browser.edge": {
-    "label": "Edge"
-  },
-  "remove.browser.brave": {
-    "label": "Brave"
-  },
-  "remove.browser.brave-origin": {
-    "label": "Brave Origin"
-  },
-  "remove.browser.firefox": {
-    "label": "Firefox"
-  },
-  "remove.browser.zen": {
-    "label": "Zen"
-  },
-  "remove.service.1password": {
-    "label": "1Password"
   },
   "remove.service.dropbox": {
     "label": "Dropbox"

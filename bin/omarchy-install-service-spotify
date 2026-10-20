@@ -13,7 +13,7 @@ if omarchy-hw-x86; then
   setsid uwsm-app -- /usr/bin/spotify >/dev/null 2>&1 &
 else
   # Spotify builds its Linux client for x86_64 only (its repository serves amd64
-  # and i386), so ARM gets the web player, which Chromium plays with the Widevine
+  # and i386), so ARM gets the web player, which Chrome plays with the Widevine
   # module it fetches itself.
   echo "Installing Spotify as a web app..."
   omarchy-webapp-install "Spotify" "https://open.spotify.com/" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/spotify.png"

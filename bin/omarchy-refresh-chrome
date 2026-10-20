@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# omarchy:summary=Refresh the ~/.config/chrome-flags.conf file from the Omarchy defaults.
+
+CONFIG_FILE="$HOME/.config/chrome-flags.conf"
+
+# Refresh the Chrome configuration
+omarchy-refresh-config chrome-flags.conf
+
+# Install/refresh the native messaging hosts used by the bundled extensions
+omarchy-install-chromium-copy-url
+omarchy-install-chromium-ytdlp
+

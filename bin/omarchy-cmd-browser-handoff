@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# omarchy:summary=Hand a command line to the running Chromium-based browser
+# omarchy:summary=Hand a command line to the running Chrome browser
 # omarchy:args=<browser-command> [browser-args...]
 # omarchy:hidden=true
 
@@ -13,11 +13,7 @@ config="${XDG_CONFIG_HOME:-$HOME/.config}"
 # Only the browsers themselves: a wrapper in their place may pick a profile or
 # add flags of its own, which only running it can honour.
 case $(type -P "$1") in
-/usr/bin/chromium) profile=chromium flags=chromium-flags.conf ;;
-/usr/bin/google-chrome-stable) profile=google-chrome flags=chrome-flags.conf ;;
-/usr/bin/brave) profile=BraveSoftware/Brave-Browser flags=brave-flags.conf ;;
-/usr/bin/brave-origin) profile=BraveSoftware/Brave-Origin flags=brave-origin-flags.conf ;;
-/usr/bin/microsoft-edge-stable) profile=microsoft-edge flags=microsoft-edge-stable-flags.conf ;;
+/usr/bin/google-chrome-stable|/usr/bin/google-chrome) profile=google-chrome flags=chrome-flags.conf ;;
 *) exit 1 ;;
 esac
 shift

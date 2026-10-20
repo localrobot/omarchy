@@ -36,7 +36,7 @@ omarchy_path=$tmp/omarchy
 mkdir -p "$stub_bin" "$omarchy_path/install/helpers" "$omarchy_path/config"
 printf 'browser_policy_setup_dir() { :; }\nbrowser_policy_setup_firefox_distribution() { :; }\nas_root() { "$@"; }\n' \
   >"$omarchy_path/install/helpers/browser-policy.sh"
-cp "$ROOT/config/chromium-flags.conf" "$omarchy_path/config/"
+cp "$ROOT/config/chrome-flags.conf" "$omarchy_path/config/"
 for command in omarchy-pkg-add omarchy-pkg-aur-add omarchy-pkg-drop; do
   printf '#!/bin/bash\nprintf "%%s %%s\\n" "%s" "$*" >>"%s"\n' "$command" "$tmp/calls" >"$stub_bin/$command"
 done
@@ -59,10 +59,9 @@ run() {
 # ── browsers ─────────────────────────────────────────────────────────────────
 
 declare -A flags=(
-  [chromium]=chromium-flags.conf [chrome]=chrome-flags.conf [edge]=microsoft-edge-stable-flags.conf
-  [brave]=brave-flags.conf [brave-origin]=brave-origin-flags.conf [firefox]="" [zen]=""
+  [chrome]=chrome-flags.conf
 )
-for browser in chromium chrome edge brave brave-origin firefox zen; do
+for browser in chrome; do
   run apple "$ROOT/bin/omarchy-install-browser" "$browser" || fail "apple: $browser installs" "$(cat "$tmp/output")"
   [[ $(grep -c '^post-install ' "$tmp/calls") == 1 ]] && grep -qx "post-install $browser" "$tmp/calls" ||
     fail "apple: a $browser install runs post-install $browser once" "$(cat "$tmp/calls")"
@@ -71,10 +70,10 @@ for browser in chromium chrome edge brave brave-origin firefox zen; do
   [[ $(grep -n . "$tmp/calls" | grep -m1 'post-install' | cut -d: -f1) -gt 1 ]] ||
     fail "apple: the $browser hook runs after its package step" "$(cat "$tmp/calls")"
 done
-pass "apple: every browser install runs post-install <browser> after its package and flags"
+pass "apple: chrome browser install runs post-install chrome after its package and flags"
 
 touch "$tmp/fail"
-for browser in chromium brave; do
+for browser in chrome; do
   if run apple "$ROOT/bin/omarchy-install-browser" "$browser"; then
     fail "apple: a failed $browser hook fails the install"
   fi
@@ -82,7 +81,7 @@ for browser in chromium brave; do
 done
 pass "apple: a failed browser hook fails the install"
 
-for browser in chromium brave-origin zen; do
+for browser in chrome; do
   run x86 "$ROOT/bin/omarchy-install-browser" "$browser" || fail "x86: $browser installs" "$(cat "$tmp/output")"
   ! grep -q '^post-install' "$tmp/calls" || fail "x86: a $browser install runs no hook" "$(cat "$tmp/calls")"
 done

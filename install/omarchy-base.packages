@@ -14,7 +14,6 @@ bluez-utils
 bolt
 brightnessctl
 btop
-chromium
 cliamp
 cups
 cups-filters
@@ -89,7 +88,6 @@ nss-mdns
 nvim
 obsidian
 omacalc
-omawrite
 omarchy-nvim
 omarchy-hyprland-titlebars
 omasnap
@@ -98,7 +96,6 @@ owe
 owe-lockfeed
 pacman-contrib
 pamixer
-pinta
 plocate
 plymouth
 postgresql-libs

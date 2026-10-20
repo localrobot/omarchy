@@ -1,29 +1,26 @@
 #!/bin/bash
 
-# omarchy:summary=Launch the default browser as determined by xdg-settings.
+# omarchy:summary=Launch the default browser
 # omarchy:args=[url]
 
-default_browser=$(omarchy-cmd-default-browser)
-browser_exec=$(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/usr}/share/applications/$default_browser 2>/dev/null | head -1)
+browser_exec="google-chrome-stable"
+omarchy-cmd-present "$browser_exec" || browser_exec="google-chrome"
 
-# Only a private launch needs the browser's flag, and probing a Firefox-family
-# browser's --help starts the whole binary, so ordinary launches skip it and
-# leave their arguments as they are.
-private_flag="--private"
+private_flag=""
 if [[ " $* " == *" --private "* ]]; then
-  if $browser_exec --help 2>/dev/null | grep -q MOZ_LOG; then
-    private_flag="--private-window"
-  elif [[ $browser_exec =~ edge ]]; then
-    private_flag="--inprivate"
-  else
-    private_flag="--incognito"
-  fi
+  private_flag="--incognito"
 fi
 
-if ! omarchy-cmd-browser-handoff "$browser_exec" "${@/--private/$private_flag}"; then
+if [[ -n $private_flag ]]; then
+  args=("${@/--private/$private_flag}")
+else
+  args=("$@")
+fi
+
+if ! omarchy-cmd-browser-handoff "$browser_exec" "${args[@]}"; then
   systemd-run --user --quiet --collect --unit="omarchy-browser-$(date +%s%N)" \
     --property=StandardOutput=null --property=StandardError=null \
-    uwsm-app -- "$browser_exec" "${@/--private/$private_flag}"
+    uwsm-app -- "$browser_exec" "${args[@]}"
 fi
 
 url=""
@@ -35,5 +32,5 @@ for argument in "$@"; do
 done
 
 if [[ -n $url && -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
-  omarchy-hyprland-focus-app "^$(basename "$browser_exec" -stable).*$" || true
+  omarchy-hyprland-focus-app "^google-chrome.*$" || true
 fi

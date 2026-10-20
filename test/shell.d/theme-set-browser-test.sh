@@ -95,12 +95,9 @@ mkdir -p "$browser_bin"
 cat >"$browser_bin/ps" <<'FAKE'
 #!/bin/bash
 printf '%s\n' \
-  'chromium /usr/lib/chromium/chromium --type=renderer' \
-  'chrome /opt/google/chrome/chrome' \
-  'brave /opt/brave-origin-bin/brave --profile' \
-  'bash bash -c pgrep -f brave'
+  'chrome /opt/google/chrome/chrome'
 FAKE
-for command in chromium google-chrome microsoft-edge-stable brave brave-origin; do
+for command in google-chrome; do
   printf '#!/bin/bash\nprintf "%%s\\n" "%s" >>"$REFRESH_LOG"\n' "$command" >"$browser_bin/$command"
 done
 # Only the stubs count as installed, so a real browser on the host, such as
@@ -118,10 +115,7 @@ HOME="$TMPDIR" PATH="$browser_bin:$TMP_BIN:$ROOT/bin:$PATH" OMARCHY_PATH="$ROOT"
   bash "$ROOT/bin/omarchy-theme-set-browser" >/dev/null
 
 refreshed=$(sort "$refresh_log" | tr '\n' ' ')
-# Chrome running as plain google-chrome is refreshed through that name; Edge is
-# installed but not running; brave-origin matches on its binary path, and the
-# running "brave" process refreshes plain brave too.
-[[ $refreshed == "brave brave-origin chromium google-chrome " ]] ||
+[[ $refreshed == "google-chrome " ]] ||
   fail "setter refreshes exactly the running browsers (got: $refreshed)"
 pass "setter refreshes exactly the running browsers"
 

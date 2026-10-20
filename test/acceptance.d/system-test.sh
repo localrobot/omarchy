@@ -39,8 +39,8 @@ verify_kernel_headers() {
 }
 
 verify_defaults() {
-  [[ $(omarchy-default-browser) == "chromium" ]] || fail "Chromium is the default browser"
-  pass "Chromium is the default browser"
+  [[ $(omarchy-default-browser) == "chrome" ]] || fail "Google Chrome is the default browser"
+  pass "Google Chrome is the default browser"
 
   [[ $(omarchy-default-terminal) == "foot" ]] || fail "Foot is the default terminal"
   pass "Foot is the default terminal"

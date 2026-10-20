@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# omarchy:summary=Print the window class Chromium gives a web app opened at a URL
+# omarchy:summary=Print the window class Chrome gives a web app opened at a URL
 # omarchy:args=<url>
 # omarchy:hidden=true
 
-# Chromium names an --app window after the URL's host and path, so a web app's
+# Chrome names an --app window after the URL's host and path, so a web app's
 # launcher can name its window in StartupWMClass, which titlebars use to show
 # the app's name rather than the page title.
 

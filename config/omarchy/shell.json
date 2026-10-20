@@ -72,10 +72,9 @@
     "position": "bottom",
     "pinned": [
       "org.gnome.Nautilus",
-      "chromium",
+      "google-chrome",
       "foot",
-      "omacalc",
-      "omawrite"
+      "omacalc"
     ]
   },
   "plugins": []

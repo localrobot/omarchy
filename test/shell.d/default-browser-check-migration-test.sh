@@ -46,7 +46,7 @@ pass "the migration follows symlinked browser flags"
 [[ ! -e $config_dir/brave-origin-flags.conf ]] || fail "the migration leaves missing browser flags absent"
 pass "the migration skips missing browser flags"
 
-grep -qxF -- '--no-default-browser-check' "$ROOT/config/chromium-flags.conf" ||
+grep -qxF -- '--no-default-browser-check' "$ROOT/config/chrome-flags.conf" ||
   fail "new Chromium-family flags skip the default browser check"
 [[ $(jq '.policies.DontCheckDefaultBrowser' "$ROOT/default/firefox/policies.json") == "true" ]] ||
   fail "Firefox's policies skip the default browser check"

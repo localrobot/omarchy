@@ -153,20 +153,20 @@ const defaultById = Object.fromEntries(defaultItems.map(item => [item.id, item])
 // item count does the order tiebreak alone bury an installed app.
 const rankBase = menu.mergeMenuSources(defaultItems, [])
 const ranked = menu.mergeAppRows(rankBase.items, rankBase.itemOrder, [
-  { id: 'apps.brave', parent: 'apps', kind: 'app', label: 'Brave', description: '', aliases: [] },
+  { id: 'apps.spotify', parent: 'apps', kind: 'app', label: 'Spotify', description: '', aliases: [] },
   { id: 'apps.fontforge', parent: 'apps', kind: 'app', label: 'FontForge', description: '', aliases: [] },
-  { id: 'apps.zen', parent: 'apps', kind: 'app', label: 'Zen Browser', description: '', aliases: [] }
+  { id: 'apps.slack', parent: 'apps', kind: 'app', label: 'Slack', description: '', aliases: [] }
 ])
 const rankScore = (id, query) => menu.searchScore(ranked.items, ranked.items[id], query)
 assert(
-  ['install.browser.brave', 'remove.browser.brave', 'setup.default.browser.brave'].every(
-    id => rankScore('apps.brave', 'brave') < rankScore(id, 'brave')
+  ['install.service.spotify', 'remove.service.spotify'].every(
+    id => rankScore('apps.spotify', 'spotify') < rankScore(id, 'spotify')
   ),
   'menu ranks an installed app above menu entries matching the query equally well'
 )
 assert(
-  ['install.browser.zen', 'remove.browser.zen', 'setup.default.browser.zen'].every(
-    id => rankScore('apps.zen', 'zen') < rankScore(id, 'zen')
+  ['install.service.slack', 'remove.service.slack'].every(
+    id => rankScore('apps.slack', 'slack') < rankScore(id, 'slack')
   ),
   'menu ranks an app matching the query as a whole word above exact-labeled menu entries'
 )
@@ -306,14 +306,14 @@ assert(!defaultById['install.ai.crush'], 'menu removes Crush from Install > AI')
 // web player where its client can't run, so it never hides. Any other `when:`
 // here is a row that went back to vanishing once installed.
 const windowsGuard = 'omarchy-hw-x86'
-const x86OnlyInstalls = ['install.browser.edge']
+const x86OnlyInstalls = []
 const fourKPageGuard = '[[ $(getconf PAGESIZE) == 4096 ]]'
 assertDeepEqual(
   defaultItems
     .filter(item => item.id.startsWith('install.') && item.action && item.when)
     .map(item => item.id)
     .sort(),
-  [...x86OnlyInstalls, 'install.service.dropbox', 'install.service.chromium-account'].sort(),
+  [...x86OnlyInstalls, 'install.service.dropbox'].sort(),
   'menu never hides an Install row because the software is already there'
 )
 assert(
@@ -331,26 +331,19 @@ assert(
   'menu offers Spotify on every platform and dims it once its client or web player is installed'
 )
 assert(
-  ['install.browser.zen', 'install.editor.vscode', 'install.development.rust'].every(
+  ['install.editor.vscode', 'install.development.rust'].every(
     id => defaultById[id].disabled && (!defaultById[id].when || defaultById[id].when === windowsGuard)
   ),
   'menu dims the Install rows for software that is already installed'
 )
 assertEqual(
-  defaultById['install.browser.zen'].disabled,
-  'omarchy-pkg-present zen-browser-bin',
+  defaultById['install.editor.vscode'].disabled,
+  'omarchy-pkg-present visual-studio-code-bin',
   'menu asks the same presence question it used to hide the row with'
-)
-// A guard can still be about something other than having the software: no
-// Chromium at all means no account to wire up, and that row stays hidden.
-assert(
-  defaultById['install.service.chromium-account'].when === '[[ -f ~/.config/chromium-flags.conf ]]'
-    && defaultById['install.service.chromium-account'].disabled.includes('oauth2-client-id'),
-  'menu keeps hiding Chromium Account without Chromium, and dims it once the account is set up'
 )
 assert(
   defaultItems.filter(item => item.id.startsWith('remove.')).every(item => !item.disabled)
-    && defaultById['remove.browser.zen'].when === 'omarchy-pkg-present zen-browser-bin',
+    && defaultById['remove.service.dropbox'].when === 'omarchy-pkg-present dropbox',
   'menu still hides Remove rows for software that is not installed'
 )
 assertDeepEqual(
@@ -364,7 +357,6 @@ assertDeepEqual(
     'remove.service',
     'remove.development',
     'remove.theme',
-    'remove.browser',
     'remove.webapp',
     'remove.tui',
     'remove.preinstalls',

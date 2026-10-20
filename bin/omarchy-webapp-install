@@ -54,7 +54,7 @@ download_icon() {
     [[ -s $2 && $(file -b --mime-type "$2") == image/* ]]
 }
 
-# Chromium --app= treats javascript:, file:, and data: as a document to
+# Chrome --app= treats javascript:, file:, and data: as a document to
 # run. Prefix schemeless input with https as before, then refuse anything
 # that is not http(s).
 normalize_webapp_url() {

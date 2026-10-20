@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# omarchy:summary=Native messaging host: download the URL sent by the yt-dlp Chromium extension
+# omarchy:summary=Native messaging host: download the URL sent by the yt-dlp Chrome extension
 # omarchy:hidden=true
 
 set -euo pipefail
