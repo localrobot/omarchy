@@ -119,29 +119,52 @@ flowchart TD
 
 ---
 
-### Block 4: Biometric Authentication (Fingerprint & FIDO2)
+### Block 4: Biometric Authentication (Fingerprint & FIDO2) [COMPLETED]
 
-- **Objective**: Purge `fprintd` hardware helpers, fingerprint PAM enrollment tools, and FIDO2 setup scripts.
-- **Files to Remove**:
+- **Status**: Completed in working tree; ready for commit.
+- **Objective**: Purge `fprintd` hardware helpers, fingerprint PAM enrollment tools, FIDO2 setup scripts, and fingerprint integration from lock screen and polkit agent.
+- **Files Removed (23 files)**:
   - `bin/omarchy-hw-fingerprint`
-  - `bin/omarchy-security-fingerprint*` (enroll, clear, status, users)
-  - `bin/omarchy-security-fido2*`
   - `bin/omarchy-setup-security-fingerprint`
-  - `bin/omarchy-setup-security-fido2`
   - `bin/omarchy-remove-security-fingerprint`
+  - `bin/omarchy-setup-security-fido2`
   - `bin/omarchy-remove-security-fido2`
-- **Code Paths & Helpers to Update**:
-  - `default/omarchy/omarchy-menu.jsonc`: remove fingerprint/FIDO2 menu rows.
-  - `etc/pam.d/`: ensure no dangling fprintd PAM configuration.
-- **Tests to Prune / Align**:
+  - `install/user/first-run/setup-fingerprint.hook`
+  - `default/systemd/system-sleep/fprintd-resume`
+  - `default/systemd/system/fprintd.service.d/10-stop-timeout.conf`
+  - `shell/plugins/lock/FingerprintModel.js`
   - `test/shell.d/hw-fingerprint-test.sh`
   - `test/shell.d/fingerprint-invitation-test.sh`
   - `test/shell.d/fingerprint-package-test.sh`
   - `test/shell.d/fprintd-resume-hook-test.sh`
-  - `test/shell.d/lock-fingerprint-*.sh`
+  - `test/shell.d/lock-blank-fingerprint-test.sh`
+  - `test/shell.d/lock-fingerprint-indicator-test.sh`
+  - `test/shell.d/lock-fingerprint-retry-test.sh`
+  - `test/shell.d/lock-fingerprint-service-test.sh`
+  - `test/shell.d/fixtures/lock-fingerprint-indicator/shell.qml`
+  - `test/shell.d/fixtures/lock-fingerprint-service/shell.qml`
+  - `test/shell.d/security-fido2-remove-test.sh`
+  - `test/shell.d/security-fido2-test.sh`
   - `test/shell.d/security-fingerprint-remove-test.sh`
-  - `test/shell.d/security-fido2-*.sh`
-- **Verification**: `./test/cli`.
+  - `test/shell.d/security-polkit-faillock-test.sh`
+- **Code Paths & Helpers Updated**:
+  - `bin/omarchy-apply-lock`: writes password PAM only and cleans up legacy fingerprint files.
+  - `bin/omarchy-provision-first-run`: dropped fingerprint hook invocation.
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`: pruned security setup/remove entries for fingerprint & fido2.
+  - `default/i18n/en/shell.json`: dropped `"lock.fingerprintUnavailable"`.
+  - `shell/plugins/lock/manifest.json`: updated description to reflect password-only lock screen.
+  - `shell/plugins/lock/LockView.qml`: pruned fingerprint reserve and indicators.
+  - `shell/plugins/lock/Service.qml`: removed all fingerprint timers, PAM contexts, and recovery loops; reports false in status IPC.
+  - `shell/plugins/polkit/PolkitAgent.qml`: removed fingerprint mode, icon glyph, and PAM watcher.
+  - `shell/plugins/polkit/PolkitModel.js`: removed fingerprint classifier and PAM parser.
+  - `shell/plugins/README.md`: updated lock screen description.
+- **Tests Aligned**:
+  - `test/shell.d/apply-lock-test.sh`: re-focused on trusted path isolation and password PAM creation with legacy cleanup.
+  - `test/shell.d/polkit-test.sh`: tests authorizationLabel without fingerprint prompts.
+- **Verification**:
+  - `bin/omarchy commands --check`: passed (429 commands).
+  - `./test/cli`: 120/120 passed.
+  - `find . -xtype l`: 0 broken symlinks.
 
 ---
 

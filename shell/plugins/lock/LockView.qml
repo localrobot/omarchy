@@ -10,8 +10,6 @@ Item {
   property string backgroundPath: ""
   property string videoPosterPath: ""
   property int backgroundVersion: 0
-  property bool fingerprintConfigured: false
-  property bool fingerprintUnavailable: false
   property bool authenticatingPassword: false
   property string failureMessage: ""
   property int failedAttempts: 0
@@ -32,9 +30,6 @@ Item {
   readonly property int fieldFontSize: Math.round(Style.font.heading * 1.125)
   readonly property int passwordDotFontSize: Math.round(Style.font.heading * 1.33)
   readonly property int passwordDotLetterSpacing: Math.round(Style.font.heading * 0.19)
-  // Space to keep clear on each side of the field for the fingerprint icon
-  // (icon width plus a gap) so the centered dots never run under it.
-  readonly property real fingerprintReserve: fingerprintConfigured ? Math.round(fingerprintIcon.implicitWidth + 12) : 0
   // Shrink the dots to fit once the password outgrows the field, so every
   // keystroke stays visible — otherwise long passwords clip with no feedback.
   readonly property real passwordDotScale: dotMetrics.advanceWidth > 0
@@ -166,11 +161,9 @@ Item {
         id: passwordInput
         anchors.fill: parent
         anchors.topMargin: inputField.borderTop
-        // Reserve the fingerprint icon's width on both sides so the centered
-        // dots stay symmetric and never slide under the icon as they grow.
-        anchors.rightMargin: inputField.borderRight + 18 + root.fingerprintReserve
+        anchors.rightMargin: inputField.borderRight + 18
         anchors.bottomMargin: inputField.borderBottom
-        anchors.leftMargin: inputField.borderLeft + 18 + root.fingerprintReserve
+        anchors.leftMargin: inputField.borderLeft + 18
         verticalAlignment: TextInput.AlignVCenter
         horizontalAlignment: TextInput.AlignHCenter
         activeFocusOnPress: true
@@ -233,45 +226,6 @@ Item {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
       }
-
-      // Fingerprint hint pinned inside the field's right edge when a sensor is
-      // enrolled, so the user knows they can touch to unlock instead of typing.
-      // Matches hyprlock, which draws its fingerprint icon in the same spot.
-      // A reader the shell cannot reach crosses out rather than disappears, so
-      // it stops inviting touches that can never unlock.
-      Text {
-        id: fingerprintIcon
-        objectName: "fingerprintIndicator"
-        textFormat: Text.PlainText
-        anchors.right: parent.right
-        anchors.rightMargin: inputField.borderRight + 18
-        anchors.verticalCenter: parent.verticalCenter
-        visible: root.fingerprintConfigured
-        text: root.fingerprintUnavailable ? "󰺱" : "󰈷"
-        color: root.fingerprintUnavailable ? Commons.Color.lock.textError : Commons.Color.lock.placeholder
-        font.family: Style.font.family
-        font.pixelSize: Math.round(root.fieldFontSize * 1.1)
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-      }
-    }
-
-    // The crossed-out icon has no meaning to a user who has never seen it — it
-    // is not intuitive that it signals a broken reader — so the words carry the
-    // explanation and the icon only reinforces it.
-    Text {
-      objectName: "fingerprintUnavailableNotice"
-      textFormat: Text.PlainText
-      anchors.top: inputField.bottom
-      anchors.topMargin: 18
-      anchors.horizontalCenter: inputField.horizontalCenter
-      visible: root.fingerprintConfigured && root.fingerprintUnavailable
-      text: Commons.I18n.t("lock.fingerprintUnavailable")
-      color: Commons.Color.lock.textError
-      font.family: Style.font.family
-      font.pixelSize: Style.font.heading
-      font.italic: true
-      horizontalAlignment: Text.AlignHCenter
     }
   }
 }

@@ -530,12 +530,6 @@
   "setup.config": {
     "label": "Config"
   },
-  "setup.security.fingerprint": {
-    "label": "Fingerprint"
-  },
-  "setup.security.fido2": {
-    "label": "Fido2"
-  },
   "setup.security.sshd": {
     "label": "SSHD"
   },
@@ -772,12 +766,6 @@
   "remove.security": {
     "label": "Security",
     "title": "Remove"
-  },
-  "remove.security.fingerprint": {
-    "label": "Fingerprint"
-  },
-  "remove.security.fido2": {
-    "label": "Fido2"
   },
   "remove.security.sshd": {
     "label": "SSHD"

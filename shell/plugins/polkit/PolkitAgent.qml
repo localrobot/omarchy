@@ -33,26 +33,14 @@ Item {
   property bool responseVisible: false
   property bool failed: false
   property bool errorFlash: false
-  // pam_fprintd appears in the polkit PAM stack (a sensor is enrolled).
-  property bool fingerprintConfigured: false
   property int shakeOffset: 0
 
   readonly property bool dialogVisible: polkitAgent.isActive || closing
-  // We show one method at a time. Fingerprint owns the dialog while PAM is
-  // waiting on the reader (sensor enrolled); the moment PAM asks for a password,
-  // we switch to the password field instead.
-  readonly property bool fingerprintMode: fingerprintConfigured && dialogVisible && !responseRequired && !submitted && !errorFlash
   readonly property int cardHeight: panel.height > 0 ? Math.min(fieldHeight + contentMargin * 2, panel.height - Style.gapsOut * 2) : fieldHeight + contentMargin * 2
-  // Password mode is a wide field; fingerprint mode collapses to a square that
-  // just frames the centered sensor icon.
-  readonly property int cardWidth: fingerprintMode ? cardHeight : Math.min(Style.space(312), Math.max(Style.space(260), panel.width - Style.gapsOut * 2))
+  readonly property int cardWidth: Math.min(Style.space(312), Math.max(Style.space(260), panel.width - Style.gapsOut * 2))
 
   function authorizationLabel(message) {
     return message ? PolkitModel.authorizationLabel(message, I18n.t) : I18n.t("polkit.authenticationNeeded")
-  }
-
-  function loadPamConfig(raw) {
-    fingerprintConfigured = PolkitModel.fingerprintConfiguredFromPamConfig(raw)
   }
 
   function resetSnapshot() {
@@ -92,10 +80,7 @@ Item {
 
   function refocus() {
     if (!dialogVisible) return
-    // In fingerprint mode there is no field to type into — park focus on the
-    // key catcher so Escape still cancels; otherwise focus the password field.
-    if (fingerprintMode) keyCatcher.forceActiveFocus()
-    else passwordInput.forceActiveFocus()
+    passwordInput.forceActiveFocus()
   }
 
   function submitResponse() {
@@ -148,14 +133,6 @@ Item {
     NumberAnimation { target: root; property: "shakeOffset"; to: -8; duration: Style.duration(35); easing.type: Easing.OutQuad }
     NumberAnimation { target: root; property: "shakeOffset"; to: 8; duration: Style.duration(50); easing.type: Easing.InOutQuad }
     NumberAnimation { target: root; property: "shakeOffset"; to: 0; duration: Style.duration(55); easing.type: Easing.OutQuad }
-  }
-  FileView {
-    path: "/etc/pam.d/polkit-1"
-    watchChanges: true
-    printErrors: false
-    onLoaded: root.loadPamConfig(text())
-    onLoadFailed: root.fingerprintConfigured = false
-    onFileChanged: reload()
   }
 
   PolkitAgent {
@@ -257,22 +234,8 @@ Item {
         }
       }
 
-      // Fingerprint mode shows just the sensor icon, centered and alone \u2014 no
-      // padlock, no field, no prompt text.
-      OpticalGlyph {
-        anchors.centerIn: parent
-        width: Math.round(root.fieldHeight * 0.7)
-        height: width
-        visible: root.fingerprintMode
-        text: "\udb80\ude37"
-        fontFamily: root.fontFamily
-        fontSize: Math.round(root.fieldHeight * 0.7)
-        color: root.errorFlash ? Commons.Color.polkit.textError : root.accent
-      }
-
       Row {
         id: cardRow
-        visible: !root.fingerprintMode
         anchors.fill: parent
         anchors.topMargin: card.contentTopInset
         anchors.rightMargin: card.contentRightInset

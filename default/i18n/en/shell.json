@@ -297,7 +297,6 @@
   "lock.authenticationFailed": "Authentication failed (%1)",
   "lock.checking": "Checking…",
   "lock.enterPassword": "Enter Password",
-  "lock.fingerprintUnavailable": "Fingerprint reader unavailable",
   "media.mediaSource": "Media source",
   "media.next": "Next",
   "media.nothingPlaying": "Nothing playing",

@@ -83,11 +83,10 @@ The carousel renders only the slices that fit on the screen plus one prefetch sl
 
 ## Lock screen
 
-Session-lock surface using Quickshell's native `WlSessionLock` and two
-separate PAM services: `omarchy-lock-password` for password auth and,
-only when fingerprints are enrolled, `omarchy-lock-fingerprint` for
-fingerprint auth. It mirrors the previous lock screen field dimensions,
-colors, blurred wallpaper, placeholder, and Hyprland-driven corners.
+Session-lock surface using Quickshell's native `WlSessionLock` and the
+`omarchy-lock-password` PAM service for password auth. It mirrors the
+lock screen field dimensions, colors, blurred wallpaper, placeholder,
+and Hyprland-driven corners.
 The plugin sets `keepLoaded: true` so a plugin hot-reload (for example
 an installed bar widget changing on disk) does not destroy the lock
 client while Hyprland still holds the session lock.
