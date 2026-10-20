@@ -287,18 +287,29 @@ flowchart TD
 
 ---
 
-### Block 7: Dead Audio Tuning & Unused Dev Environments
+### Block 7: Dead Audio Tuning & Unused Dev Environments [COMPLETED]
 
-- **Objective**: Remove obsolete laptop speaker filter chains and prune unused esoteric language environments.
-- **Files to Remove**:
+- **Status**: Completed in working tree; ready for commit.
+- **Objective**: Remove obsolete laptop speaker filter chains and prune unused esoteric language environments (PHP, Laravel, Symfony, OCaml, Elixir, Phoenix, Clojure, Scala, .NET), keeping modern workstation core (Rust, Go, Python/uv, Node/Bun/Deno, Java/Zig).
+- **Files Removed (5 files)**:
   - `bin/omarchy-audio-tuning`
   - `default/audio/filter-chain-host.conf`
+  - `default/systemd/user/omarchy-speaker-tuning.service`
   - `docs/audio-tuning.md`
-- **Code Paths & Helpers to Update**:
-  - `bin/omarchy-install-dev-env`: prune esoteric/unused language setups (PHP, Laravel, Symfony, OCaml, Elixir, Phoenix, Clojure, Scala, .NET), keeping modern workstation core (Rust, Go, Python/uv, Node/Bun/Deno, Java/Zig).
-- **Tests to Prune / Align**:
-  - Prune dead audio tuning tests and align dev environment CLI assertions.
-- **Verification**: `./test/cli`.
+  - `test/shell.d/remove-dev-env-sudo-security-test.sh`
+- **Code Paths & Helpers Updated**:
+  - `bin/omarchy-audio-output-switch`: eliminated `omarchy-audio-tuning fronted-sink` call and filter.
+  - `bin/omarchy-audio-sink-availability`: removed `fronted` sink suppression logic.
+  - `bin/omarchy-install-dev-env`: pruned PHP, Laravel, Symfony, Elixir, Phoenix, OCaml, .NET, Clojure, and Scala installer cases and helper functions.
+  - `bin/omarchy-remove-dev-env`: pruned PHP, Laravel, Symfony, Elixir, Phoenix, OCaml, .NET, Clojure, and Scala removal cases, dropping sudo boundaries and credential helpers.
+  - `default/omarchy/omarchy-menu.jsonc` & `default/i18n/en/menu.json`: pruned install/remove menu entries for PHP, Laravel, Symfony, Elixir, Phoenix, OCaml, .NET, Clojure, and Scala.
+- **Tests Aligned**:
+  - `test/shell.d/audio-pactl-locale-test.sh`: removed `omarchy-audio-tuning` mock and `app_streams` test.
+  - `test/shell.d/audio-source-availability-test.sh`: removed `omarchy-audio-tuning` mock.
+- **Verification**:
+  - `bin/omarchy commands --check`: passed (385 commands clean).
+  - `./test/cli`: 120/120 passed.
+  - `find . -xtype l`: 0 broken symlinks.
 
 ---
 

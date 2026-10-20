@@ -650,14 +650,8 @@
   "install.development.go": {
     "label": "Go"
   },
-  "install.development.php": {
-    "label": "PHP"
-  },
   "install.development.python": {
     "label": "Python"
-  },
-  "install.development.elixir": {
-    "label": "Elixir"
   },
   "install.development.zig": {
     "label": "Zig"
@@ -668,18 +662,6 @@
   "install.development.java": {
     "label": "Java"
   },
-  "install.development.dotnet": {
-    "label": ".NET"
-  },
-  "install.development.ocaml": {
-    "label": "OCaml"
-  },
-  "install.development.clojure": {
-    "label": "Clojure"
-  },
-  "install.development.scala": {
-    "label": "Scala"
-  },
   "install.development.javascript.node": {
     "label": "Node.js"
   },
@@ -688,21 +670,6 @@
   },
   "install.development.javascript.deno": {
     "label": "Deno"
-  },
-  "install.development.php.php": {
-    "label": "PHP"
-  },
-  "install.development.php.laravel": {
-    "label": "Laravel"
-  },
-  "install.development.php.symfony": {
-    "label": "Symfony"
-  },
-  "install.development.elixir.elixir": {
-    "label": "Elixir"
-  },
-  "install.development.elixir.phoenix": {
-    "label": "Phoenix"
   },
   "remove.package": {
     "label": "Package"
@@ -756,16 +723,8 @@
   "remove.development.go": {
     "label": "Go"
   },
-  "remove.development.php": {
-    "label": "PHP",
-    "title": "Remove"
-  },
   "remove.development.python": {
     "label": "Python"
-  },
-  "remove.development.elixir": {
-    "label": "Elixir",
-    "title": "Remove"
   },
   "remove.development.zig": {
     "label": "Zig"
@@ -776,18 +735,6 @@
   "remove.development.java": {
     "label": "Java"
   },
-  "remove.development.dotnet": {
-    "label": ".NET"
-  },
-  "remove.development.ocaml": {
-    "label": "OCaml"
-  },
-  "remove.development.clojure": {
-    "label": "Clojure"
-  },
-  "remove.development.scala": {
-    "label": "Scala"
-  },
   "remove.development.javascript.node": {
     "label": "Node.js"
   },
@@ -796,21 +743,6 @@
   },
   "remove.development.javascript.deno": {
     "label": "Deno"
-  },
-  "remove.development.php.php": {
-    "label": "PHP"
-  },
-  "remove.development.php.laravel": {
-    "label": "Laravel"
-  },
-  "remove.development.php.symfony": {
-    "label": "Symfony"
-  },
-  "remove.development.elixir.elixir": {
-    "label": "Elixir"
-  },
-  "remove.development.elixir.phoenix": {
-    "label": "Phoenix"
   },
   "update.omarchy": {
     "label": "Omarchy"

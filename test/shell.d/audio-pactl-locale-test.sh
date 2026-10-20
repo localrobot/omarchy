@@ -18,14 +18,6 @@ cat >"$work/bin/omarchy-osd" <<'SH'
 printf 'omarchy-osd %s\n' "$*" >>"$CALLS"
 SH
 
-cat >"$work/bin/omarchy-audio-tuning" <<'SH'
-#!/bin/bash
-case ${1:-} in
-  fronted-sink) exit 1 ;;
-  *) exit 0 ;;
-esac
-SH
-
 cat >"$work/bin/pactl" <<'SH'
 #!/bin/bash
 printf '%s pactl %s\n' "${LC_ALL:-unset}" "$*" >>"$CALLS"
@@ -113,13 +105,3 @@ grep -qx 'C pactl get-sink-volume alsa_output.speakers' "$CALLS" ||
 grep -qx 'C pactl get-sink-mute alsa_output.speakers' "$CALLS" ||
   fail 'audio-output-volume reads sink mute in the C locale' "$(cat "$CALLS")"
 pass 'audio-output-volume reads pactl outputs in the C locale'
-
-# 5. omarchy-audio-tuning app_streams
-: >"$CALLS"
-(
-  eval "$(sed -n '/^app_streams() {/,/^}/p' "$ROOT/bin/omarchy-audio-tuning")"
-  LC_ALL=en_US.UTF-8 PATH="$work/bin:$ROOT/bin:$PATH" app_streams 2>/dev/null >/dev/null
-)
-grep -qx 'C pactl list sink-inputs' "$CALLS" ||
-  fail 'audio-tuning app_streams reads sink-inputs in the C locale' "$(cat "$CALLS")"
-pass 'audio-tuning app_streams reads sink-inputs in the C locale'

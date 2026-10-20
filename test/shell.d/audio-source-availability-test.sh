@@ -16,11 +16,7 @@ case $* in
   "list sinks") cat "$SINKS" ;;
 esac
 SH
-cat >"$work/bin/omarchy-audio-tuning" <<'SH'
-#!/bin/bash
-exit 1
-SH
-chmod +x "$work/bin/pactl" "$work/bin/omarchy-audio-tuning"
+chmod +x "$work/bin/pactl"
 export CALLS="$work/calls" SOURCES="$work/sources" SINKS="$work/sinks"
 
 # A headset jack input with nothing plugged in, a virtual source (no ports)
