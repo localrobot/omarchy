@@ -126,12 +126,7 @@ expected = [
 copies = [e for e in events if e.startswith('step:cp ')]
 assert copies == expected, events
 hook = events.index('step:omarchy-hook pre-refresh-pacman')
-upgrade = 'step:pacman -Syyuu --noconfirm'
-if channel in ('stable', 'rc'):
-  # The -dev pair is edge's: an old build of it in a stable or rc repository is
-  # left to the channel switch's swap.
-  upgrade += ' --ignore omarchy-dev,omarchy-settings-dev'
-transaction = events.index(upgrade)
+transaction = events.index('step:pacman -Syyuu --noconfirm')
 assert events.index(expected[-1]) < hook < transaction, events
 PY
     assert_boundary_cold "$platform $channel"
