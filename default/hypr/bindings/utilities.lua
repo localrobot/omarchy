@@ -10,6 +10,8 @@ o.bind("XF86PowerOff", "Power menu", { menu = "system" }, { locked = true })
 o.bind("SUPER + K", "Keybindings", "omarchy-menu-keybindings")
 o.bind("SUPER + ALT + K", "Tmux keybindings", "omarchy-menu-tmux-keybindings")
 o.bind("SUPER + CTRL + K", "Herdr keybindings", "omarchy-menu-herdr-keybindings")
+o.bind("SUPER + CTRL + Q", "Calculator", "omacalc")
+o.bind("XF86Calculator", "Calculator", "omacalc")
 o.bind_toggle("SUPER + SHIFT + SPACE", "Toggle top bar", "bar")
 o.bind("SUPER + CTRL + SPACE", "Background switcher", { menu = "background" })
 o.bind("SUPER + SHIFT + CTRL + SPACE", "Theme menu", { menu = "theme" })
@@ -26,7 +28,6 @@ o.bind("SUPER + ALT + comma", "Invoke last notification", { ipc = "notifications
 o.bind("SUPER + SHIFT + ALT + comma", "Open notification history", { ipc = "notifications.showHistory" })
 
 o.bind_toggle("SUPER + CTRL + I", "Toggle locking on idle", "idle")
-o.bind_toggle("SUPER + CTRL + N", "Toggle nightlight", "nightlight")
 
 o.bind("PRINT", "Screenshot", "omarchy-capture-screenshot")
 o.bind("SUPER + SHIFT + S", "Screenshot", "omarchy-capture-screenshot")
